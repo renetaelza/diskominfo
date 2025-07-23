@@ -28,7 +28,7 @@
                     <li><a href="#">Profil Pimpinan</a></li>
                 </ul>
             </li>
-            <li><a href="#">Berita</a></li>
+            <li><a href="{{route('berita.index')}}">Berita</a></li>
             <li class="dropdown">
                 <a href="#">Galeri <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">

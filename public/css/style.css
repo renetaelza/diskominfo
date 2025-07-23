@@ -12,7 +12,7 @@
     flex-wrap: wrap;
 }
 
-.office-hours{
+.office-hours {
     font-size: 12px;
 }
 
@@ -183,4 +183,193 @@
 .fa-caret-down {
     font-size: 10px;
     margin-left: 4px;
+}
+
+.berita {
+    padding: 60px;
+}
+
+.search-group {
+    margin-top: -20px;
+    max-width: 1500px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+.search-group .form-control {
+    border: none;
+    padding: 12px 16px;
+    font-size: 15px;
+}
+
+.search-group .input-group-text {
+    border: none;
+    background-color: transparent;
+    padding-left: 16px;
+}
+
+.search-group .form-control:focus {
+    box-shadow: none;
+    border-color: transparent;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.btn-filter {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border-radius: 20px;
+    border: 1px solid #18417F;
+    background-color: white;
+    color: #18417F;
+    transition: all 0.3s ease;
+}
+
+.btn-filter:hover {
+    background-color: #FF6B00;
+    border-color: #FF6B00;
+    color: white;
+}
+
+.btn-filter.active {
+    background-color: #18417F;
+    color: white;
+    border-color: #18417F;
+}
+
+.hero-carousel {
+    border-radius: 20px;
+    overflow: hidden;
+    height: 500px;
+    position: relative;
+}
+
+.hero-carousel .carousel-item {
+    position: relative;
+    height: 500px;
+}
+
+.hero-carousel .bg-carousel {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.hero-carousel .carousel-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: flex-start;
+    background: linear-gradient(to top, #000000, rgba(0, 0, 0, 0));
+    z-index: 2;
+    text-align: left;
+    transition: background 1s ease-in-out;
+}
+
+.hero-carousel .carousel-item:hover .carousel-caption {
+    background: linear-gradient(to top, #18417F, rgba(0, 0, 0, 0));
+}
+
+.hero-carousel .meta {
+    font-size: 15px;
+    opacity: 0.9;
+    margin-bottom: 10px;
+}
+
+.hero-carousel h5 {
+    font-size: 25px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 0;
+}
+
+.hero-carousel .carousel-indicators {
+    position: absolute;
+    bottom: 15px;
+    justify-content: center;
+    margin: 0 auto;
+    width: 100%;
+    z-index: 3;
+}
+
+.hero-carousel .carousel-indicators button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: none;
+    margin: 0 5px;
+    background-color: rgba(255, 255, 255, 0.6);
+    transition: background-color 0.3s ease;
+}
+
+.hero-carousel .carousel-indicators .active {
+    background-color: #fff;
+}
+
+.card-news {
+    position: relative;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 420px;
+    color: white;
+    transition: 0.3s ease;
+}
+
+.card-news .image {
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.card-news .overlay {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, #000000, rgba(0, 0, 0, 0));
+    transition: 0.3s ease;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+.card-news:hover .overlay {
+    background: linear-gradient(to top, #18417F, rgba(0, 0, 0, 0));
+}
+
+.card-news .meta {
+    font-size: 14px;
+    margin-bottom: 10px;
+    opacity: 0.9;
+}
+
+.card-news .eye-counter {
+    background-color: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 20px;
+    padding: 2px 12px;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
 }
