@@ -20,6 +20,5 @@ Route::middleware(['auth:admin', IsAdmin::class])->group(function () {
 });
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
-Route::get('/sejarah', function () {return view('sejarah');})->name('sejarah.index');
-Route::get('/agenda', function () {return view('agenda');})->name('agenda.index');
-
+Route::get('/profile/sejarah', function () {return view('profile.sejarah');})->name('sejarah.index');
+Route::get('informasi/agenda', function () {return view('informasi.agenda');})->name('agenda.index');
