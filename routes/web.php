@@ -20,3 +20,6 @@ Route::middleware(['auth:admin', IsAdmin::class])->group(function () {
 });
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
+Route::get('/sejarah', function () {return view('sejarah');})->name('sejarah.index');
+Route::get('/agenda', function () {return view('agenda');})->name('agenda.index');
+

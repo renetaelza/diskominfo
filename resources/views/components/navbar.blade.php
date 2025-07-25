@@ -21,7 +21,7 @@
             <li class="dropdown">
                 <a href="#">Profile <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Sejarah</a></li>
+                    <li><a href="{{route('sejarah.index')}}">Sejarah</a></li>
                     <li><a href="#">Sasaran dan Tujuan</a></li>
                     <li><a href="#">Struktur Organisasi</a></li>
                     <li><a href="#">Tupoksi</a></li>
@@ -40,7 +40,7 @@
                 <a href="#">Informasi <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="#">Dokumen Informasi</a></li>
-                    <li><a href="#">Agenda</a></li>
+                    <li><a href="{{route('agenda.index')}}">Agenda</a></li>
                     <li><a href="#">Pengumuman</a></li>
                     <li><a href="#">Open Data</a></li>
                     <li><a href="#">Kelompok Informasi Masyarakat</a></li>
