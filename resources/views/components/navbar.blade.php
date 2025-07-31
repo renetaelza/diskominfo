@@ -17,6 +17,9 @@
         <div class="logo">
             <img src="{{ asset('pictures/logo_diskominfo.png') }}" alt="Diskominfo Logo" />
         </div>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </button>
         <ul class="nav-links">
             <li class="dropdown">
                 <a href="#">Profile <i class="fa fa-caret-down"></i></a>
@@ -162,4 +165,34 @@
             <li><a href="#">Hubungi Kami</a></li>
         </ul>
     </nav>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const isMobile = () => window.innerWidth < 768;
+
+            document.querySelectorAll('.dropdown > a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (isMobile()) {
+                        e.preventDefault();
+                        this.parentElement.classList.toggle('open');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.submenu-parent > a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (isMobile()) {
+                        e.preventDefault();
+                        this.parentElement.classList.toggle('open');
+                    }
+                });
+            });
+        });
+    </script>
+
+
 </header>
