@@ -20,6 +20,7 @@ return new class extends Migration
         });
 
         DB::table('bidang')->insert([
+            ['nama' => 'Semua Bidang'],
             ['nama' => 'Kepala Dinas'],
             ['nama' => 'Sektretariat'],
             ['nama' => 'Bidang Perencanaan, Evaluasi dan Pengembangan Sumberdaya Teknologi Informasi dan Komunikasi'],
