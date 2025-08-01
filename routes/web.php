@@ -10,9 +10,10 @@ use App\Http\Controllers\Admin\DashboardController;
 //USER
 Route::get('/', function () {
     return view('landing');
-});
+})->name('landing');
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
+Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.detail');
 
 Route::get('/layanan/opendata', [LayananController::class, 'index_opendata'])->name('opendata.index');
 Route::get('/layanan/kim', [LayananController::class, 'index_kim'])->name('kim.index');

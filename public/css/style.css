@@ -71,7 +71,7 @@ body {
 .main-nav {
     background: white;
     border-top: 3px solid #f7941e;
-    padding: 0 20px;
+    padding: 0 50px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -296,13 +296,13 @@ body {
 .hero-carousel {
     border-radius: 20px;
     overflow: hidden;
-    height: 500px;
+    height: 700px;
     position: relative;
 }
 
 .hero-carousel .carousel-item {
     position: relative;
-    height: 500px;
+    height: 700px;
 }
 
 .hero-carousel .bg-carousel {
@@ -535,4 +535,8 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 12px;
+}
+
+.berita-content p {
+    margin-bottom: 1rem;
 }

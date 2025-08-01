@@ -11,10 +11,49 @@ use Illuminate\Http\Request;
 
 class BeritaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('berita');
+        $query = Berita::where('status', 'publikasi');
+
+        // Filter: Pencarian judul
+        if ($request->has('search') && $request->search != '') {
+            $query->where('judul', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter: Berdasarkan kategori_id
+        if ($request->has('kategori_id') && $request->kategori_id != '') {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        // Data berita
+        $semuaBerita = $query->orderByDesc('tanggal')->get();
+
+        // Data carousel (3 berita terbaru)
+        $beritaTerbaru = $query->orderByDesc('tanggal')->take(3)->get();
+
+        // Kategori unik dari berita (bukan semua kategori dari tabel bidang)
+        $kategoriTerpakai = Berita::select('kategori_id')
+            ->where('status', 'publikasi')
+            ->distinct()
+            ->with('kategori') // pastikan relasi kategori tersedia
+            ->get()
+            ->pluck('kategori')
+            ->unique('id');
+
+        return view('berita.index', compact('semuaBerita', 'beritaTerbaru', 'kategoriTerpakai'));
     }
+
+    public function show($id)
+    {
+        $berita = Berita::findOrFail($id);
+        $berita->increment('views');
+
+        $terpopuler = Berita::orderByDesc('views')->take(3)->get();
+
+        return view('berita.detail', compact('berita', 'terpopuler'));
+    }
+
+
 
     public function indexAdmin(Request $request)
     {
