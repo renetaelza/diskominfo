@@ -252,7 +252,7 @@
 
                 <div class="mt-6">
                     <h3 class="font-semibold text-gray-500 dark:text-gray-400 mb-1">Tupoksi</h3>
-                    <p class="text-sm whitespace-pre-line leading-relaxed" x-text="detailPegawai.tupoksi || 'Tidak Ada'"></p>
+                    <p class="text-sm whitespace-pre-line leading-relaxed" x-text="detailPegawai.tupoksi || 'Tidak Ada'" style="word-wrap: break-word;"></p>
                 </div>
             </div>
         </div>
