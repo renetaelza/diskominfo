@@ -6,6 +6,7 @@ use App\Http\Controllers\LayananController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\StrukturOrganisasiController;
 
 //USER
 Route::get('/', function () {
@@ -45,3 +46,12 @@ Route::post('/admin/berita', [BeritaController::class, 'store'])->name('admin.be
 Route::delete('/admin/berita/{id}', [BeritaController::class, 'destroy'])->name('admin.berita.destroy');
 Route::get('/admin/berita/{id}/edit', [BeritaController::class, 'edit'])->name('admin.berita.edit');
 Route::put('/admin/berita/{id}', [BeritaController::class, 'update'])->name('admin.berita.update');
+
+// ADMIN-PEGAWAI
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class])->group(function () {
+    // Pegawai
+    Route::get('/struktur-organisasi', [StrukturOrganisasiController::class, 'index'])->name('strukturOrganisasi.index');
+    Route::post('/struktur-organisasi', [StrukturOrganisasiController::class, 'store'])->name('strukturOrganisasi.store');
+    Route::put('/struktur-organisasi/edit-pegawai/{pegawai}', [StrukturOrganisasiController::class, 'update'])->name('strukturOrganisasi.update');
+    Route::delete('/struktur-organisasi/{pegawai}', [StrukturOrganisasiController::class, 'destroy'])->name('strukturOrganisasi.destroy');
+});
