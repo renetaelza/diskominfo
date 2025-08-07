@@ -54,12 +54,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('/struktur-organisasi', [StrukturOrganisasiController::class, 'store'])->name('strukturOrganisasi.store');
     Route::put('/struktur-organisasi/edit-pegawai/{pegawai}', [StrukturOrganisasiController::class, 'update'])->name('strukturOrganisasi.update');
     Route::delete('/struktur-organisasi/{pegawai}', [StrukturOrganisasiController::class, 'destroy'])->name('strukturOrganisasi.destroy');
-  
-  // Pengumuman
-    Route::get('/pengumuman', [PengumumanController::class, 'indexAdmin'])->name('admin.pengumuman.index');
-    Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('admin.pengumuman.create');
-    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('admin.pengumuman.store');
-    Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('admin.pengumuman.destroy');
-    Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('admin.pengumuman.edit');
-    Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('admin.pengumuman.update');
+
+    //ADMIN-PENGUMUMAN
+    Route::get('/pengumuman', [PengumumanController::class, 'indexAdmin'])->name('pengumuman.index');
+    Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('pengumuman.create');
+    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+    Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+    Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
+    Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
 });
