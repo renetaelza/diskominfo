@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
@@ -47,11 +48,18 @@ Route::delete('/admin/berita/{id}', [BeritaController::class, 'destroy'])->name(
 Route::get('/admin/berita/{id}/edit', [BeritaController::class, 'edit'])->name('admin.berita.edit');
 Route::put('/admin/berita/{id}', [BeritaController::class, 'update'])->name('admin.berita.update');
 
-// ADMIN-PEGAWAI
 Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class])->group(function () {
     // Pegawai
     Route::get('/struktur-organisasi', [StrukturOrganisasiController::class, 'index'])->name('strukturOrganisasi.index');
     Route::post('/struktur-organisasi', [StrukturOrganisasiController::class, 'store'])->name('strukturOrganisasi.store');
     Route::put('/struktur-organisasi/edit-pegawai/{pegawai}', [StrukturOrganisasiController::class, 'update'])->name('strukturOrganisasi.update');
     Route::delete('/struktur-organisasi/{pegawai}', [StrukturOrganisasiController::class, 'destroy'])->name('strukturOrganisasi.destroy');
+  
+  // Pengumuman
+    Route::get('/pengumuman', [PengumumanController::class, 'indexAdmin'])->name('admin.pengumuman.index');
+    Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('admin.pengumuman.create');
+    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('admin.pengumuman.store');
+    Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('admin.pengumuman.destroy');
+    Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('admin.pengumuman.edit');
+    Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('admin.pengumuman.update');
 });
