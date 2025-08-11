@@ -27,7 +27,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="{{route('sejarah.index')}}">Sejarah</a></li>
                     <li><a href="#">Sasaran dan Tujuan</a></li>
-                    <li><a href="#">Struktur Organisasi</a></li>
+                    <li><a href="{{route('profile.strukturOrganisasi')}}">Struktur Organisasi</a></li>
                     <li><a href="#">Tupoksi</a></li>
                     <li><a href="#">Profil Pimpinan</a></li>
                 </ul>
