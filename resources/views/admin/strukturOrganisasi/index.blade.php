@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Manajemen Pegawai')
+@section('title', 'Struktur Organisasi')
 
 @section('content')
 <div x-data="pegawaiModal()" x-cloak>
@@ -9,7 +9,7 @@
 
     <!-- 🔘 Header & Tombol Tambah -->
     <div class="bg-white dark:bg-gray-800 shadow-md px-10 py-3 mb-6 flex justify-between items-center">
-        <h3 class="font-semibold text-gray-800 dark:text-white">Manajemen Pegawai</h3>
+        <h3 class="font-semibold text-gray-800 dark:text-white">Struktur Organisasi</h3>
         <button 
             @click="showModal = true" 
             class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow text-sm"
