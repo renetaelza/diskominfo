@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
+use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 
 //USER
@@ -29,9 +30,14 @@ Route::get('/layanan/csirt', [LayananController::class, 'index_csirt'])->name('c
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
 Route::get('/layanan/kunjungan', [LayananController::class, 'index_kunjungan'])->name('kunjungan.index');
 
+//PROFILE
+Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
 Route::get('/profile/sejarah', function () {
     return view('profile.sejarah');
 })->name('sejarah.index');
+
+//INFORMASI
+Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
 Route::get('informasi/agenda', function () {
     return view('informasi.agenda');
 })->name('agenda.index');
@@ -44,14 +50,6 @@ Route::middleware(['auth:admin', IsAdmin::class])->group(function () {
     Route::get('/admin/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 });
 
-
-//ADMIN-BERITA
-Route::get('/admin/berita', [BeritaController::class, 'indexAdmin'])->name('admin.berita.index');
-Route::get('/admin/berita/create', [BeritaController::class, 'create'])->name('admin.berita.create');
-Route::post('/admin/berita', [BeritaController::class, 'store'])->name('admin.berita.store');
-Route::delete('/admin/berita/{id}', [BeritaController::class, 'destroy'])->name('admin.berita.destroy');
-Route::get('/admin/berita/{id}/edit', [BeritaController::class, 'edit'])->name('admin.berita.edit');
-Route::put('/admin/berita/{id}', [BeritaController::class, 'update'])->name('admin.berita.update');
 
 Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class])->group(function () {
     // Pegawai
@@ -67,4 +65,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
     Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
     Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
+
+    //ADMIN-BERITA
+    Route::get('/admin/berita', [BeritaController::class, 'indexAdmin'])->name('berita.index');
+    Route::get('/admin/berita/create', [BeritaController::class, 'create'])->name('berita.create');
+    Route::post('/admin/berita', [BeritaController::class, 'store'])->name('berita.store');
+    Route::delete('/admin/berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('/admin/berita/{id}/edit', [BeritaController::class, 'edit'])->name('berita.edit');
+    Route::put('/admin/berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
 });

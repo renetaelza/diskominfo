@@ -10,6 +10,15 @@ use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
 {
+    public function index()
+    {
+        $pengumumans = Pengumuman::where('status', 'publikasi')
+            ->orderByRaw('COALESCE(tanggal, created_at) DESC')
+            ->get();
+
+        return view('informasi.pengumuman', compact('pengumumans'));
+    }
+
     public function indexAdmin(Request $request)
     {
         $query = Pengumuman::with('kategori')->latest();
