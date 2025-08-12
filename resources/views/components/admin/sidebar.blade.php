@@ -32,7 +32,7 @@
         'label' => 'Informasi',
         'children' => [
         ['icon' => 'fa-file', 'label' => 'Dokumen Informasi', 'route' => '#'],
-        ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => '#'],
+        ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
         ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => '#'],
         ]
         ],
@@ -47,7 +47,7 @@
         ];
 
         $others = [
-        ['icon' => 'fa-users', 'label' => 'Pegawai', 'route' => '#'],
+        ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
         ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => '#'],
         ];
         @endphp

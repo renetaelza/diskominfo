@@ -2,10 +2,13 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\LayananController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\StrukturOrganisasiController;
+use App\Http\Controllers\StrukturOrganisasiUserController;
 
 //USER
 Route::get('/', function () {
@@ -21,6 +24,9 @@ Route::get('/layanan/opd', [LayananController::class, 'index_opd'])->name('opd.i
 Route::get('/layanan/lapor', [LayananController::class, 'index_lapor'])->name('lapor.index');
 Route::get('/layanan/wbs', [LayananController::class, 'index_wbs'])->name('wbs.index');
 Route::get('/layanan/csirt', [LayananController::class, 'index_csirt'])->name('csirt.index');
+
+// profile
+Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
 
 Route::get('/profile/sejarah', function () {
     return view('profile.sejarah');
@@ -45,3 +51,19 @@ Route::post('/admin/berita', [BeritaController::class, 'store'])->name('admin.be
 Route::delete('/admin/berita/{id}', [BeritaController::class, 'destroy'])->name('admin.berita.destroy');
 Route::get('/admin/berita/{id}/edit', [BeritaController::class, 'edit'])->name('admin.berita.edit');
 Route::put('/admin/berita/{id}', [BeritaController::class, 'update'])->name('admin.berita.update');
+
+Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class])->group(function () {
+    // Pegawai
+    Route::get('/struktur-organisasi', [StrukturOrganisasiController::class, 'index'])->name('strukturOrganisasi.index');
+    Route::post('/struktur-organisasi', [StrukturOrganisasiController::class, 'store'])->name('strukturOrganisasi.store');
+    Route::put('/struktur-organisasi/edit-pegawai/{pegawai}', [StrukturOrganisasiController::class, 'update'])->name('strukturOrganisasi.update');
+    Route::delete('/struktur-organisasi/{pegawai}', [StrukturOrganisasiController::class, 'destroy'])->name('strukturOrganisasi.destroy');
+
+    //ADMIN-PENGUMUMAN
+    Route::get('/pengumuman', [PengumumanController::class, 'indexAdmin'])->name('pengumuman.index');
+    Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('pengumuman.create');
+    Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
+    Route::delete('/pengumuman/{id}', [PengumumanController::class, 'destroy'])->name('pengumuman.destroy');
+    Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
+    Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
+});
