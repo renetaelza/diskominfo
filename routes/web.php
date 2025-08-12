@@ -9,6 +9,7 @@ use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\StrukturOrganisasiUserController;
+use App\Http\Controllers\KunjunganController;
 
 //USER
 Route::get('/', function () {
@@ -24,6 +25,10 @@ Route::get('/layanan/opd', [LayananController::class, 'index_opd'])->name('opd.i
 Route::get('/layanan/lapor', [LayananController::class, 'index_lapor'])->name('lapor.index');
 Route::get('/layanan/wbs', [LayananController::class, 'index_wbs'])->name('wbs.index');
 Route::get('/layanan/csirt', [LayananController::class, 'index_csirt'])->name('csirt.index');
+
+// Kunjungan
+Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
+Route::get('/layanan/kunjungan', [LayananController::class, 'index_kunjungan'])->name('kunjungan.index');
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
