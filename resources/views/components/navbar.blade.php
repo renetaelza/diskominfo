@@ -151,7 +151,7 @@
                 <a href="#">Layanan <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{route('opd.index')}}">Layanan OPD</a></li>
-                    <li><a href="#">Kunjungan</a></li>
+                    <li><a href="{{route('kunjungan.index')}}">Kunjungan</a></li>
                     <li><a href="#">Penelitian, Survey, Magang/PKL</a></li>
                 </ul>
             </li>
