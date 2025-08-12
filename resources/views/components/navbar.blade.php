@@ -45,7 +45,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="#">Dokumen Informasi</a></li>
                     <li><a href="{{route('agenda.index')}}">Agenda</a></li>
-                    <li><a href="#">Pengumuman</a></li>
+                    <li><a href="{{route('pengumuman.index')}}">Pengumuman</a></li>
                     <li><a href="{{route('opendata.index')}}">Open Data</a></li>
                     <li><a href="{{route('kim.index')}}">Kelompok Informasi Masyarakat</a></li>
                 </ul>
