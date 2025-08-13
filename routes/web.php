@@ -11,6 +11,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
+use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
+use App\Http\Controllers\AgendaController as PublicAgendaController;
 
 // //USER
 // Route::get('/', function () {
@@ -72,6 +74,9 @@ Route::get('informasi/agenda', function () {
     return view('informasi.agenda');
 })->name('agenda.index');
 
+// Public-facing API for FullCalendar
+Route::get('/api/agenda-events', [PublicAgendaController::class, 'getEventsForCalendar']);
+
 //ADMIN
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
 Route::post('/admin/login', [AuthController::class, 'login'])->name('admin.login.submit');
@@ -103,4 +108,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::delete('/berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
     Route::get('/berita/{id}/edit', [BeritaController::class, 'edit'])->name('berita.edit');
     Route::put('/berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
+
+    //ADMIN-AGENDA
+    Route::resource('agenda', AdminAgendaController::class);
 });
