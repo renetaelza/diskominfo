@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\LayananController;
@@ -11,10 +12,39 @@ use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 
-//USER
+// //USER
+// Route::get('/', function () {
+//     return view('landing');
+// })->name('landing');
+
 Route::get('/', function () {
-    return view('landing');
-})->name('landing');
+    // Arahkan ke view 'home.blade.php'
+    return view('home');
+})->name('home');
+
+Route::get('/api/weather', function () {
+    // Ambil API Key yang sudah aman dari file .env
+    $apiKey = env('OPENWEATHER_API_KEY');
+
+    // Jika API Key tidak ada, kembalikan error
+    if (!$apiKey) {
+        return response()->json(['error' => 'API Key tidak ditemukan'], 500);
+    }
+
+    // Gunakan nama kota untuk query yang lebih andal
+    $cityQuery = 'Bandung,ID'; 
+
+    // Panggil API OpenWeatherMap menggunakan HTTP Client Laravel
+    $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+        'q'     => $cityQuery,
+        'appid' => $apiKey,
+        'units' => 'metric',
+        'lang'  => 'id',
+    ]);
+
+    // Kembalikan hasil dari API sebagai response JSON
+    return $response->json();
+});
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.detail');
@@ -67,10 +97,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
 
     //ADMIN-BERITA
-    Route::get('/admin/berita', [BeritaController::class, 'indexAdmin'])->name('berita.index');
-    Route::get('/admin/berita/create', [BeritaController::class, 'create'])->name('berita.create');
-    Route::post('/admin/berita', [BeritaController::class, 'store'])->name('berita.store');
-    Route::delete('/admin/berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
-    Route::get('/admin/berita/{id}/edit', [BeritaController::class, 'edit'])->name('berita.edit');
-    Route::put('/admin/berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
+    Route::get('/berita', [BeritaController::class, 'indexAdmin'])->name('berita.index');
+    Route::get('/berita/create', [BeritaController::class, 'create'])->name('berita.create');
+    Route::post('/berita', [BeritaController::class, 'store'])->name('berita.store');
+    Route::delete('/berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
+    Route::get('/berita/{id}/edit', [BeritaController::class, 'edit'])->name('berita.edit');
+    Route::put('/berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
 });

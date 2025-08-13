@@ -54,18 +54,18 @@
         }
     </style>
 </head>
-<body>
+<body class="bg-gray-100">
     <x-navbar />
 
-    <header class="position-relative" style="height: 250px; background: url('https://plus.unsplash.com/premium_photo-1691850197766-a47d9cddfee1?q=80&w=779&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=2070&auto=format&fit=crop') center center / cover no-repeat;">
-        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.7;"></div>
-        <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
-            <h1 style="font-size: 40px;" class="fw-bold">Struktur Organisasi</h1>
+    <header class="relative h-[250px]" style="background: url('https://plus.unsplash.com/premium_photo-1691850197766-a47d9cddfee1?q=80&w=779&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=2070&auto=format&fit=crop') center center / cover no-repeat;">
+        <div class="absolute inset-0 bg-black/70"></div>
+        <div class="absolute inset-0 flex items-center justify-center text-white text-center">
+            <h1 class="text-4xl font-bold">Struktur Organisasi</h1>
         </div>
     </header>
 
-    <main class="container-fluid py-5">
-        <div class="card shadow-lg p-4">
+    <main class="container mx-auto py-10 px-4">
+        <div class="bg-white rounded-lg shadow-lg p-4">
             <div id="tree-wrapper">
                 <div id="tree"></div>
             </div>
@@ -117,7 +117,7 @@
                     <i class="fas fa-times text-xl"></i>
                 </button>
                 <div class="relative z-[1] flex flex-col items-center">
-                    <img :src="detailPegawai.foto_url" alt="Foto Pegawai" class="w-32 h-32 mx-auto mb-4 object-cover rounded-full border-4 border-white shadow-lg" id="modalImg">
+                    <img :src="detailPegawai.foto_url" alt="Foto Pegawai" class="w-32 h-32 mx-auto mb-4 object-cover rounded-full border-4 border-white shadow-lg">
                     <h2 class="text-2xl font-bold" x-text="detailPegawai.name"></h2>
                     <p class="text-sm font-light opacity-80" x-text="detailPegawai.title"></p>
                 </div>
@@ -150,22 +150,22 @@
 
                 <div class="mt-6">
                     <h3 class="font-semibold">Tupoksi</h3>
-                    <p class="text-sm whitespace-pre-line leading-relaxed" x-text="detailPegawai.tupoksi || 'Tidak Ada'" style="word-wrap: break-word;"></p>
+                    <p class="text-sm whitespace-pre-line leading-relaxed break-words" x-text="detailPegawai.tupoksi || 'Tidak Ada'"></p>
                 </div>
 
                 <div class="mt-6" x-show="(detailPegawai.bawahan && detailPegawai.bawahan.length > 0) && detailPegawai.bidang !== 'Kepala Dinas'">
-                    <h3 class="font-semibold text-lg border-b pb-2 mb-3">Bawahan</h3>
+                    <h3 class="font-semibold text-lg border-b pb-2 mb-3">Subordinat</h3>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <template x-for="bawahanItem in detailPegawai.bawahan" :key="bawahanItem.id">
-                            <div class="flex items-center p-3 border rounded-lg bg-gray-50 shadow-sm hover:bg-gray-100 transition-colors duration-200">
+                            <div class="flex items-center p-3 border rounded-lg bg-gray-50  shadow-sm hover:bg-gray-100 transition-colors duration-200">
                                 <img 
-                                    :src="bawahanItem.foto ? '/storage/foto_pegawai/' + bawahanItem.foto : '{{ asset('pictures/default-user.png') }}'" 
+                                    :src="bawahanItem.foto ? '/storage/foto_pegawai/' + bawahanItem.foto : defaultUserImageUrl" 
                                     alt="Foto Bawahan" 
                                     class="w-12 h-12 rounded-full object-cover mr-4 border-2 border-white"
                                 >
                                 <div>
-                                    <p class="font-semibold text-gray-800" x-text="bawahanItem.nama"></p>
+                                    <p class="font-semibold text-black" x-text="bawahanItem.nama"></p>
                                     <p class="text-sm text-gray-500" x-text="bawahanItem.jabatan"></p>
                                 </div>
                             </div>
@@ -178,6 +178,9 @@
     
     <script src="https://balkan.app/js/OrgChart.js"></script>
     <script>
+        // Variabel ini dibuat untuk menyelesaikan konflik antara sintaks Blade dan JS.
+        const defaultUserImageUrl = '{{ asset('pictures/default-user.png') }}';
+
         document.addEventListener('DOMContentLoaded', function() {
             const pegawaiData = @json($pegawai);
 
@@ -185,7 +188,7 @@
                 const tags = p.is_assistant == 1 ? ["assistant"] : [];
                 const fotoUrl = p.foto 
                     ? `/storage/foto_pegawai/${p.foto}` 
-                    : `{{ asset('pictures/default-user.png') }}`;
+                    : defaultUserImageUrl; // Menggunakan variabel JS
                 
                 return {
                     id: p.id,
@@ -225,6 +228,9 @@
                 nodes: nodes
             });
 
+            // CATATAN: Logika setTimeout tidak diubah sesuai permintaan.
+            // Namun, sangat disarankan untuk mencari event 'ready' atau 'rendered'
+            // dari dokumentasi OrgChart.js agar lebih andal.
             setTimeout(function() {
                 chart.fit();
 
@@ -238,5 +244,6 @@
             }, 100);
         });
     </script>
+    <x-footer />
 </body>
 </html>
