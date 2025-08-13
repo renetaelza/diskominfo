@@ -21,7 +21,7 @@
             <i class="fa fa-bars"></i>
         </button>
         <ul class="nav-links">
-            <li><a href="{{route('landing')}}">Beranda</a></li>
+            <li><a href="{{route('home')}}">Beranda</a></li>
             <li class="dropdown">
                 <a href="#">Profile <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
