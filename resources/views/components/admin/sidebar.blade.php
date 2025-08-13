@@ -33,7 +33,7 @@
         'children' => [
         ['icon' => 'fa-file', 'label' => 'Dokumen Informasi', 'route' => '#'],
         ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
-        ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => '#'],
+        ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => route('admin.agenda.index')],
         ]
         ],
         [
