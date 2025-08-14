@@ -16,7 +16,7 @@
 
 <body class="min-h-screen flex flex-col">
     <x-navbar />
-    <header class="position-relative" style="height: 250px; background: url('/pictures/layanan/wbs.jpg') center center / cover no-repeat;">
+    <header class="position-relative" style="height: 250px; background: url('/pictures/aplikasi/wbs.jpg') center center / cover no-repeat;">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.75;"></div>
         <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
             <h1 style="font-size: 40px;" class="fw-bold">Whistle Blowing System</h1>
@@ -27,34 +27,34 @@
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <div class="pictures-layanan">
-                    <a href="https://aplikasi.bandung.go.id/aplikasi/whistle-blowing-system-wbs/" target="_blank" class="img-wrapper">
-                        <img src="/pictures/layanan/wbs_page.png" alt="Whistle Blowing System" class="img-hover-effect" />
+                    <a href="{{ $aplikasi->link }}" target="_blank" class="img-wrapper">
+                        <img src="{{ asset($aplikasi->foto) }}" alt="Whistle Blowing System" class="img-hover-effect" />
                         <div class="hover-overlay">
                             <div class="overlay-text">Klik di sini untuk mengunjungi website</div>
                         </div>
                     </a>
 
                 </div>
-                <a href="https://aplikasi.bandung.go.id/aplikasi/whistle-blowing-system-wbs/" target="_blank" class="btn btn-kunjungi mt-3 d-block text-center">
+                <a href="{{ $aplikasi->link }}" target="_blank" class="btn btn-kunjungi mt-3 d-block text-center">
                     Klik di sini untuk mengunjungi website
                 </a>
             </div>
             <div class="col-lg-6 text-area-layanan">
-                <h1 class="mb-4">Saluran Aman untuk Laporan Pelanggaran</h1>
+                <h1 class="mb-4">{{ $aplikasi->tagline }}</h1>
 
                 <p class="mb-4">
-                    Whistle Blowing System (WBS) Kota Bandung adalah platform resmi yang disediakan untuk masyarakat dan aparatur pemerintah melaporkan dugaan pelanggaran hukum, etika, atau penyalahgunaan wewenang secara rahasia dan aman. Sistem ini membantu menjaga integritas dan akuntabilitas di lingkungan pemerintahan.
+                    {{ $aplikasi->deskripsi }}
                 </p>
 
                 <div class="icon-list-layanan">
-                    <p><i class="fas fa-user-secret"></i><strong> Pelaporan Rahasia & Aman</strong></p>
-                    <p>Identitas pelapor dijamin kerahasiaannya untuk memberikan rasa aman dalam menyampaikan laporan.</p>
+                    <p><i class="fas fa-user-secret"></i><strong>{{ $aplikasi->subheading1 }}</strong></p>
+                    <p>{{ $aplikasi->text1 }}</p>
 
-                    <p><i class="fas fa-gavel"></i><strong> Tindak Lanjut Profesional</strong></p>
-                    <p>Setiap laporan yang masuk akan diverifikasi dan ditindaklanjuti oleh tim yang berwenang secara objektif.</p>
+                    <p><i class="fas fa-gavel"></i><strong>{{ $aplikasi->subheading2 }}</strong></p>
+                    <p>{{ $aplikasi->text2 }}</p>
 
-                    <p><i class="fas fa-shield-alt"></i><strong> Pencegahan & Transparansi</strong></p>
-                    <p>WBS berfungsi sebagai alat pencegahan korupsi dan upaya mewujudkan pemerintahan yang bersih dan transparan.</p>
+                    <p><i class="fas fa-shield-alt"></i><strong>{{ $aplikasi->subheading3 }}</strong></p>
+                    <p>{{ $aplikasi->text3 }}</p>
                 </div>
             </div>
         </div>

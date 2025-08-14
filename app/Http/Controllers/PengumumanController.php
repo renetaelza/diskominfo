@@ -85,12 +85,10 @@ class PengumumanController extends Controller
     {
         $pengumuman = Pengumuman::findOrFail($id);
 
-        // Hapus foto utama jika ada
         if ($pengumuman->foto_utama && file_exists(public_path($pengumuman->foto_utama))) {
             unlink(public_path($pengumuman->foto_utama));
         }
 
-        // Hapus foto tambahan jika ada
         if ($pengumuman->foto_tambahan) {
             foreach (json_decode($pengumuman->foto_tambahan) as $foto) {
                 if (file_exists(public_path($foto))) {
@@ -126,7 +124,6 @@ class PengumumanController extends Controller
         $pengumuman = Pengumuman::findOrFail($id);
         $lampiranPaths = json_decode($pengumuman->lampiran ?? '[]', true);
 
-        // Hapus lampiran yang dicentang
         if ($request->has('hapus_lampiran')) {
             foreach ($request->hapus_lampiran as $fileUrl) {
                 $relativePath = str_replace('/storage/', '', parse_url($fileUrl, PHP_URL_PATH));
@@ -136,8 +133,6 @@ class PengumumanController extends Controller
             $lampiranPaths = array_values($lampiranPaths);
         }
 
-
-        // ✅ Upload lampiran baru
         if ($request->hasFile('lampiran')) {
             foreach ($request->file('lampiran') as $file) {
                 $originalName = $file->getClientOriginalName();
@@ -149,7 +144,6 @@ class PengumumanController extends Controller
             }
         }
 
-        // Update data
         $pengumuman->update([
             'judul' => $request->judul,
             'isi_pengumuman' => $request->isi_pengumuman,

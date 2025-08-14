@@ -38,9 +38,11 @@
                     <button type="submit" name="kategori_id" value="" class="btn btn-filter {{ request('kategori_id') == '' ? 'active' : '' }}">Semua</button>
 
                     @foreach($kategoriTerpakai as $kategori)
+                    @if(strtolower($kategori->nama) !== 'semua bidang')
                     <button type="submit" name="kategori_id" value="{{ $kategori->id }}" class="btn btn-filter {{ request('kategori_id') == $kategori->id ? 'active' : '' }}">
                         {{ $kategori->nama }}
                     </button>
+                    @endif
                     @endforeach
                 </div>
             </form>

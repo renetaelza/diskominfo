@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\PengumumanController;
-use App\Http\Controllers\LayananController;
+use App\Http\Controllers\AplikasiController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
@@ -34,7 +34,7 @@ Route::get('/api/weather', function () {
     }
 
     // Gunakan nama kota untuk query yang lebih andal
-    $cityQuery = 'Bandung,ID'; 
+    $cityQuery = 'Bandung,ID';
 
     // Panggil API OpenWeatherMap menggunakan HTTP Client Laravel
     $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
@@ -51,16 +51,11 @@ Route::get('/api/weather', function () {
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.detail');
 
-Route::get('/layanan/opendata', [LayananController::class, 'index_opendata'])->name('opendata.index');
-Route::get('/layanan/kim', [LayananController::class, 'index_kim'])->name('kim.index');
-Route::get('/layanan/opd', [LayananController::class, 'index_opd'])->name('opd.index');
-Route::get('/layanan/lapor', [LayananController::class, 'index_lapor'])->name('lapor.index');
-Route::get('/layanan/wbs', [LayananController::class, 'index_wbs'])->name('wbs.index');
-Route::get('/layanan/csirt', [LayananController::class, 'index_csirt'])->name('csirt.index');
+Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
 
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
-Route::get('/layanan/kunjungan', [LayananController::class, 'index_kunjungan'])->name('kunjungan.index');
+Route::get('/aplikasi/kunjungan', [AplikasiController::class, 'index_kunjungan'])->name('kunjungan.index');
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
@@ -111,4 +106,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
 
     //ADMIN-AGENDA
     Route::resource('agenda', AdminAgendaController::class);
+
+    //ADMIN-LAYANAN
+    Route::get('/aplikasi', [AplikasiController::class, 'indexAdmin'])->name('aplikasi.index');
+    Route::get('/aplikasi/{judul}', [AplikasiController::class, 'get'])->name('aplikasi.get');
+    Route::put('/aplikasi/update', [AplikasiController::class, 'update'])->name('aplikasi.update');
 });
