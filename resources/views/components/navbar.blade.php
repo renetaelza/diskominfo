@@ -46,8 +46,8 @@
                     <li><a href="#">Dokumen Informasi</a></li>
                     <li><a href="{{route('agenda.index')}}">Agenda</a></li>
                     <li><a href="{{route('pengumuman.index')}}">Pengumuman</a></li>
-                    <li><a href="{{route('opendata.index')}}">Open Data</a></li>
-                    <li><a href="{{route('kim.index')}}">Kelompok Informasi Masyarakat</a></li>
+                    <li><a href="{{ route('aplikasi.show', 'opendata') }}">Open Data</a></li>
+                    <li><a href="{{ route('aplikasi.show', 'kim') }}">Kelompok Informasi Masyarakat</a></li>
                 </ul>
             </li>
             <li class="dropdown">
@@ -150,7 +150,7 @@
             <li class="dropdown">
                 <a href="#">Layanan <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{route('opd.index')}}">Layanan OPD</a></li>
+                    <li><a href="{{ route('aplikasi.show', 'opd') }}">Layanan OPD</a></li>
                     <li><a href="{{route('kunjungan.index')}}">Kunjungan</a></li>
                     <li><a href="#">Penelitian, Survey, Magang/PKL</a></li>
                 </ul>
@@ -158,9 +158,9 @@
             <li class="dropdown">
                 <a href="#">Pengaduan <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="{{route('lapor.index')}}">SP4N Lapor</a></li>
-                    <li><a href="{{route('wbs.index')}}">Whistle Blowing System</a></li>
-                    <li><a href="{{route('csirt.index')}}">BandungKota-CSIRT Aduan Siber</a></li>
+                    <li><a href="{{ route('aplikasi.show', 'lapor') }}">SP4N Lapor</a></li>
+                    <li><a href="{{ route('aplikasi.show', 'wbs') }}">Whistle Blowing System</a></li>
+                    <li><a href="{{ route('aplikasi.show', 'csirt') }}">BandungKota-CSIRT Aduan Siber</a></li>
                 </ul>
             </li>
             <li><a href="#">Hubungi Kami</a></li>

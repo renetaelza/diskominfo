@@ -47,6 +47,7 @@
         ];
 
         $others = [
+        ['icon' => 'fa-solid fa-globe', 'label' => 'Aplikasi', 'route' => route('admin.aplikasi.index')],
         ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
         ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => '#'],
         ];

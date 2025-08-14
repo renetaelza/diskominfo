@@ -16,7 +16,7 @@
 
 <body class="min-h-screen flex flex-col">
     <x-navbar />
-    <header class="position-relative" style="height: 250px; background: url('/pictures/layanan/data.jpg') center center / cover no-repeat;">
+    <header class="position-relative" style="height: 250px; background: url('/pictures/aplikasi/data.jpg') center center / cover no-repeat;">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.75;"></div>
         <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
             <h1 style="font-size: 40px;" class="fw-bold">Open Data Kota Bandung</h1>
@@ -27,34 +27,34 @@
         <div class="row align-items-center">
             <div class="col-lg-6">
                 <div class="pictures-layanan">
-                    <a href="https://opendata.bandung.go.id/" target="_blank" class="img-wrapper">
-                        <img src="/pictures/layanan/opendata_page.png" alt="Open Data" class="img-hover-effect" />
+                    <a href="{{ $aplikasi->link }}" target="_blank" class="img-wrapper">
+                        <img src="{{ asset($aplikasi->foto) }}" alt="Open Data" class="img-hover-effect" />
                         <div class="hover-overlay">
                             <div class="overlay-text">Klik di sini untuk mengunjungi website</div>
                         </div>
                     </a>
 
                 </div>
-                <a href="https://opendata.bandung.go.id/" target="_blank" class="btn btn-kunjungi mt-3 d-block text-center">
+                <a href="{{ $aplikasi->link }}" target="_blank" class="btn btn-kunjungi mt-3 d-block text-center">
                     Klik di sini untuk mengunjungi website
                 </a>
             </div>
             <div class="col-lg-6 text-area-layanan">
-                <h1 class="mb-4">Transparansi Data Publik untuk Semua.</h1>
+                <h1 class="mb-4">{{ $aplikasi->tagline }}</h1>
 
                 <p class="mb-4">
-                    Akses mudah dan terbuka terhadap berbagai data resmi dari Pemerintah Kota Bandung. Platform ini memungkinkan masyarakat, peneliti, dan pengembang untuk mengeksplorasi, mengunduh, dan memanfaatkan data sebagai dasar pengambilan keputusan atau pengembangan inovasi.
+                    {{ $aplikasi->deskripsi }}
                 </p>
 
                 <div class="icon-list-layanan">
-                    <p><i class="fas fa-database"></i><strong> Akses Data Terbuka</strong></p>
-                    <p>Menyediakan kumpulan data publik dari berbagai sektor pemerintahan yang dapat diunduh bebas.</p>
+                    <p><i class="fas fa-database"></i><strong>{{ $aplikasi->subheading1 }}</strong></p>
+                    <p>{{ $aplikasi->text1 }}</p>
 
-                    <p><i class="fas fa-chart-line"></i><strong> Visualisasi Interaktif</strong></p>
-                    <p>Grafik dan dashboard untuk mempermudah pemahaman tren dan pola dari data yang tersedia.</p>
+                    <p><i class="fas fa-chart-line"></i><strong> {{ $aplikasi->subheading2 }}</strong></p>
+                    <p>{{ $aplikasi->text2 }}</p>
 
-                    <p><i class="fas fa-code-branch"></i><strong> API untuk Pengembang</strong></p>
-                    <p>Integrasi data lebih fleksibel melalui API bagi pengembang atau pihak ketiga.</p>
+                    <p><i class="fas fa-code-branch"></i><strong> {{ $aplikasi->subheading3 }}</strong></p>
+                    <p>{{ $aplikasi->text3 }}</p>
                 </div>
             </div>
         </div>

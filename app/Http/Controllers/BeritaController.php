@@ -15,27 +15,22 @@ class BeritaController extends Controller
     {
         $query = Berita::where('status', 'publikasi');
 
-        // Filter: Pencarian judul
         if ($request->has('search') && $request->search != '') {
             $query->where('judul', 'like', '%' . $request->search . '%');
         }
 
-        // Filter: Berdasarkan kategori_id
         if ($request->has('kategori_id') && $request->kategori_id != '') {
             $query->where('kategori_id', $request->kategori_id);
         }
 
-        // Data berita
         $semuaBerita = $query->orderByDesc('tanggal')->get();
 
-        // Data carousel (3 berita terbaru)
         $beritaTerbaru = $query->orderByDesc('tanggal')->take(3)->get();
 
-        // Kategori unik dari berita (bukan semua kategori dari tabel bidang)
         $kategoriTerpakai = Berita::select('kategori_id')
             ->where('status', 'publikasi')
             ->distinct()
-            ->with('kategori') // pastikan relasi kategori tersedia
+            ->with('kategori')
             ->get()
             ->pluck('kategori')
             ->unique('id');
@@ -59,17 +54,14 @@ class BeritaController extends Controller
     {
         $query = Berita::with('kategori')->latest();
 
-        // Filter judul
         if ($request->filled('q')) {
             $query->where('judul', 'like', '%' . $request->q . '%');
         }
 
-        // Filter status (array)
         if ($request->has('status')) {
             $query->whereIn('status', $request->status);
         }
 
-        // Filter bidang (kategori_id)
         if ($request->has('bidang')) {
             $query->whereIn('kategori_id', $request->bidang);
         }
@@ -98,7 +90,6 @@ class BeritaController extends Controller
             'foto_lain.*' => 'nullable|image',
         ]);
 
-        // Buat berita dulu untuk mendapatkan ID
         $berita = Berita::create([
             'judul' => $request->judul,
             'isi_berita' => $request->isi_berita,
@@ -108,7 +99,6 @@ class BeritaController extends Controller
             'views' => 0,
         ]);
 
-        // Simpan foto utama dengan nama [id]_utama.ext
         if ($request->hasFile('foto_utama')) {
             $fotoUtama = $request->file('foto_utama');
             $namaUtama = "{$berita->id}_utama." . $fotoUtama->getClientOriginalExtension();
@@ -117,7 +107,6 @@ class BeritaController extends Controller
             $berita->foto_utama = 'storage/' . $pathUtama;
         }
 
-        // Simpan foto tambahan sebagai array path
         $fotoTambahanPaths = [];
 
         if ($request->hasFile('foto_lain')) {
@@ -129,7 +118,6 @@ class BeritaController extends Controller
             }
         }
 
-        // Simpan path-path ke kolom
         $berita->foto_tambahan = json_encode($fotoTambahanPaths);
         $berita->save();
 
@@ -140,12 +128,9 @@ class BeritaController extends Controller
     {
         $berita = Berita::findOrFail($id);
 
-        // Hapus foto utama jika ada
         if ($berita->foto_utama && file_exists(public_path($berita->foto_utama))) {
             unlink(public_path($berita->foto_utama));
         }
-
-        // Hapus foto tambahan jika ada
         if ($berita->foto_tambahan) {
             foreach (json_decode($berita->foto_tambahan) as $foto) {
                 if (file_exists(public_path($foto))) {
@@ -188,7 +173,6 @@ class BeritaController extends Controller
             'status' => $request->status,
         ]);
 
-        // Ganti foto utama jika ada
         if ($request->hasFile('foto_utama')) {
             if ($berita->foto_utama && file_exists(public_path($berita->foto_utama))) {
                 unlink(public_path($berita->foto_utama));
@@ -199,8 +183,6 @@ class BeritaController extends Controller
             $path = $file->storeAs('berita', $namaUtama, 'public');
             $berita->foto_utama = 'storage/' . $path;
         }
-
-        // Proses foto tambahan
         $existingPaths = json_decode($request->existing_foto_tambahan, true) ?? [];
         $pathsBaru = [];
 

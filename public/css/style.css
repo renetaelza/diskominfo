@@ -511,8 +511,10 @@ body {
 }
 
 .btn-kunjungi:hover {
-    background-color: #2053a0;
-    color: #fff;
+    background-color: #1450A3;
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-5px);
 }
 
 .section-layanan h1 {
