@@ -17,13 +17,17 @@
         <div class="logo">
             <img src="{{ asset('pictures/logo_diskominfo.png') }}" alt="Diskominfo Logo" />
         </div>
+        <button class="menu-toggle" onclick="toggleMenu()">
+            <i class="fa fa-bars"></i>
+        </button>
         <ul class="nav-links">
+            <li><a href="{{route('home')}}">Beranda</a></li>
             <li class="dropdown">
                 <a href="#">Profile <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{route('sejarah.index')}}">Sejarah</a></li>
                     <li><a href="#">Sasaran dan Tujuan</a></li>
-                    <li><a href="#">Struktur Organisasi</a></li>
+                    <li><a href="{{route('profile.strukturOrganisasi')}}">Struktur Organisasi</a></li>
                     <li><a href="#">Tupoksi</a></li>
                     <li><a href="#">Profil Pimpinan</a></li>
                 </ul>
@@ -41,7 +45,7 @@
                 <ul class="dropdown-menu">
                     <li><a href="#">Dokumen Informasi</a></li>
                     <li><a href="{{route('agenda.index')}}">Agenda</a></li>
-                    <li><a href="#">Pengumuman</a></li>
+                    <li><a href="{{route('pengumuman.index')}}">Pengumuman</a></li>
                     <li><a href="{{route('opendata.index')}}">Open Data</a></li>
                     <li><a href="{{route('kim.index')}}">Kelompok Informasi Masyarakat</a></li>
                 </ul>
@@ -147,7 +151,7 @@
                 <a href="#">Layanan <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="{{route('opd.index')}}">Layanan OPD</a></li>
-                    <li><a href="#">Kunjungan</a></li>
+                    <li><a href="{{route('kunjungan.index')}}">Kunjungan</a></li>
                     <li><a href="#">Penelitian, Survey, Magang/PKL</a></li>
                 </ul>
             </li>
@@ -162,4 +166,34 @@
             <li><a href="#">Hubungi Kami</a></li>
         </ul>
     </nav>
+
+    <script>
+        function toggleMenu() {
+            document.querySelector('.nav-links').classList.toggle('active');
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const isMobile = () => window.innerWidth < 768;
+
+            document.querySelectorAll('.dropdown > a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (isMobile()) {
+                        e.preventDefault();
+                        this.parentElement.classList.toggle('open');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.submenu-parent > a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    if (isMobile()) {
+                        e.preventDefault();
+                        this.parentElement.classList.toggle('open');
+                    }
+                });
+            });
+        });
+    </script>
+
+
 </header>

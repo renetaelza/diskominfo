@@ -1,83 +1,81 @@
 <!DOCTYPE html>
 <html lang="id"
-      x-data="{ sidebarOpen: true, darkMode: localStorage.getItem('darkMode') === 'true' }"
-      x-init="$watch('darkMode', val => localStorage.setItem('darkMode', val));"
-      :class="{ 'dark': darkMode }">
+    x-data="{ sidebarOpen: true}">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Admin Dashboard</title>
-  
-  <!-- Tailwind & Alpine -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://unpkg.com/alpinejs" defer></script>
-  @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard Admin DISKOMINFO</title>
 
-  <script src="https://unpkg.com/heroicons@2.0.16/24/outline/index.js"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#2196f3',
+                        secondary: '#f50057'
+                    }
+                }
+            }
+        }
+    </script>
 </head>
+
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-900 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <x-admin.sidebar />
 
-<div class="flex h-screen">
+        <!-- Main Content -->
+        <main class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
+            <!-- Header -->
+            <header class="flex justify-between items-center px-5 py-4 bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700">
+                <div>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">Selamat datang, {{ Auth::guard('admin')->user()->name }}</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <i class="fas fa-user-circle text-xl text-gray-700 dark:text-gray-200"></i>
+                    <span class="text-sm font-medium text-gray-800 dark:text-white">{{ Auth::guard('admin')->user()->name }}</span>
+                </div>
+            </header>
 
-  <!-- Sidebar -->
-  <div :class="sidebarOpen ? 'w-64' : 'w-16'"
-       class="bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transition-all duration-300 flex flex-col">
+            <!-- Cards Section -->
+            <div class="p-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                @php
+                $cards = [
+                ['icon' => 'fa-newspaper', 'label' => 'Total Berita', 'value' => $totalBerita ?? 0, 'color' => 'blue'],
+                ['icon' => 'fa-bullhorn', 'label' => 'Total Pengumuman', 'value' => $totalPengumuman ?? 0, 'color' => 'red'],
+                ['icon' => 'fa-calendar-alt', 'label' => 'Total Agenda', 'value' => $totalAgenda ?? 0, 'color' => 'green'],
+                ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'value' => $totalKunjungan ?? 0, 'color' => 'indigo'],
+                ];
+                @endphp
 
-    <!-- Sidebar Header -->
-    <div class="flex items-center justify-between h-16 px-4 border-b dark:border-gray-700">
-      <span x-show="sidebarOpen" class="text-lg font-bold">Admin Panel</span>
-      <button @click="sidebarOpen = !sidebarOpen"
-              class="p-1 text-gray-500 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white focus:outline-none">
-        <!-- Toggle Sidebar Icon -->
-        <svg x-show="sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-        <svg x-show="!sidebarOpen" xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none"
-             viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-      </button>
+                @foreach($cards as $card)
+                <div class="bg-white dark:bg-gray-800 shadow rounded-xl p-5 transition hover:shadow-lg">
+                    <div class="flex items-center">
+                        <div class="p-3 rounded-full bg-{{ $card['color'] }}-100 text-{{ $card['color'] }}-600 dark:bg-{{ $card['color'] }}-900 dark:text-{{ $card['color'] }}-300">
+                            <i class="fas {{ $card['icon'] }} fa-lg"></i>
+                        </div>
+                        <div class="ml-4">
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $card['label'] }}</p>
+                            <p class="text-xl font-bold">{{ $card['value'] }}</p>
+                        </div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </main>
     </div>
-
-    <!-- Sidebar Links -->
-    <nav class="flex-1 px-2 py-4 space-y-2">
-      <a href="#" class="block px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" x-show="sidebarOpen">Dashboard</a>
-      <a href="#" class="block px-4 py-2 rounded hover:bg-gray-100 dark:hover:bg-gray-700" x-show="sidebarOpen">Berita</a>
-      <form method="POST" action="{{ route('admin.logout') }}">
-        @csrf
-        <button type="submit"
-                class="w-full text-left px-4 py-2 rounded hover:bg-red-100 dark:hover:bg-red-700 text-red-600 dark:text-red-400"
-                x-show="sidebarOpen">Logout</button>
-      </form>
-    </nav>
-
-    <!-- Sidebar Footer: Toggle Dark Mode -->
-    <div class="px-2 py-2 border-t dark:border-gray-700 mt-auto">
-        <button @click="darkMode = !darkMode"
-                class="flex items-center gap-2 text-sm w-full px-3 py-2 rounded">
-            <i :class="darkMode ? 'fas fa-sun text-yellow-400' : 'fas fa-moon text-gray-500'"></i>
-            <span x-show="sidebarOpen" x-text="darkMode ? 'Light Mode' : 'Dark Mode'"></span>
-        </button>
-    </div>
-  </div>
-
-  <!-- Main Content -->
-  <div :class="sidebarOpen ? 'ml-64' : 'ml-16'" class="flex-1 transition-all duration-300 p-6">
-    <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-semibold">Dashboard</h1>
-    </div>
-    <p>Selamat datang di halaman admin dashboard. Gunakan sidebar untuk navigasi.</p>
-  </div>
-</div>
-
 </body>
+
 </html>

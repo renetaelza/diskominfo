@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Bidang;
 
 class LayananController extends Controller
 {
@@ -29,5 +30,11 @@ class LayananController extends Controller
     public function index_csirt()
     {
         return view('layanan.csirt');
+    }
+    public function index_kunjungan()
+    {
+
+        $bidang = Bidang::all();
+        return view('layanan.kunjungan', compact('bidang'));
     }
 }
