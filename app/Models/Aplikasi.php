@@ -10,5 +10,5 @@ class Aplikasi extends Model
     use HasFactory;
 
     protected $table = 'aplikasi';
-    protected $fillable = ['halaman', 'tagline', 'deskripsi', 'subheading1', 'text1', 'subheading2', 'text2', 'subheading3', 'text3', 'foto', 'link'];
+    protected $fillable = ['halaman', 'tagline', 'deskripsi', 'subheading1', 'text1', 'subheading2', 'text2', 'subheading3', 'text3', 'landing', 'foto', 'link'];
 }
