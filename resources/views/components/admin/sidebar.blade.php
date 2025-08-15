@@ -32,8 +32,8 @@
         'label' => 'Informasi',
         'children' => [
         ['icon' => 'fa-file', 'label' => 'Dokumen Informasi', 'route' => '#'],
-        ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => '#'],
-        ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => '#'],
+        ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
+        ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => route('admin.agenda.index')],
         ]
         ],
         [
@@ -47,7 +47,8 @@
         ];
 
         $others = [
-        ['icon' => 'fa-users', 'label' => 'Pegawai', 'route' => '#'],
+        ['icon' => 'fa-solid fa-globe', 'label' => 'Aplikasi', 'route' => route('admin.aplikasi.index')],
+        ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
         ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => '#'],
         ];
         @endphp
