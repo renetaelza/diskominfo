@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\AplikasiController;
+use App\Http\Controllers\AplikasiLandingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
@@ -13,16 +14,11 @@ use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
 use App\Http\Controllers\AgendaController as PublicAgendaController;
+use App\Http\Controllers\HomeController;
 
-// //USER
-// Route::get('/', function () {
-//     return view('landing');
-// })->name('landing');
+//USER
 
-Route::get('/', function () {
-    // Arahkan ke view 'home.blade.php'
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/api/weather', function () {
     // Ambil API Key yang sudah aman dari file .env
@@ -108,7 +104,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::resource('agenda', AdminAgendaController::class);
 
     //ADMIN-LAYANAN
-    Route::get('/aplikasi', [AplikasiController::class, 'indexAdmin'])->name('aplikasi.index');
-    Route::get('/aplikasi/{judul}', [AplikasiController::class, 'get'])->name('aplikasi.get');
-    Route::put('/aplikasi/update', [AplikasiController::class, 'update'])->name('aplikasi.update');
+    // navigasi
+    Route::get('/aplikasi/navigasi', [AplikasiController::class, 'indexAdmin'])->name('aplikasi.indexNavigasi');
+    Route::get('/aplikasi/navigasi/{judul}', [AplikasiController::class, 'get'])->name('aplikasi.get');
+    Route::put('/aplikasi/navigasi/update', [AplikasiController::class, 'update'])->name('aplikasi.update');
+
+    // landing
+    Route::get('/aplikasi/landing', [AplikasiLandingController::class, 'indexAdmin'])->name('aplikasi.indexLanding');
+    Route::post('/aplikasi/landing/store', [AplikasiLandingController::class, 'store'])->name('aplikasi.landing.store');
+    Route::put('/aplikasi/landing/update', [AplikasiLandingController::class, 'update'])->name('aplikasi.landing.update');
+    Route::delete('/aplikasi/landing/{aplikasi}', [AplikasiLandingController::class, 'destroy'])->name('aplikasi.landing.destroy');
 });

@@ -139,8 +139,9 @@
 </body>
 <script>
     function loadHalamanData(judul) {
+        if (!judul) return;
         document.getElementById('judulInput').value = judul;
-        fetch(`/admin/aplikasi/${judul}`)
+        fetch(`/admin/aplikasi/navigasi/${encodeURIComponent(judul)}`)
             .then(res => res.json())
             .then(data => {
                 document.getElementById('tagline').value = data.tagline ?? '';
@@ -155,7 +156,7 @@
                     document.getElementById('fotoPreview').classList.remove('hidden');
                 }
             })
-            .catch(err => console.error(err));
+        .catch(err => console.error(err));
     }
 </script>
 

@@ -550,8 +550,7 @@
 <script>
 
     document.addEventListener("DOMContentLoaded", function() {
-        // Ambil data pegawai dari Laravel dan konversi ke JSON
-        // Pastikan variabel $pegawai dikirim dari controller
+        // Ambil data pegawai dan konversi ke JSON
         const pegawaiData = @json($pegawai);
 
         // Buat array nodes dari data pegawai
@@ -604,8 +603,6 @@
         const searchInput = document.getElementById('search-input');
         const daftarPegawaiContainer = document.getElementById('daftar-pegawai-container');
         
-        // Asumsi fungsi openDetailModal, openEditModal, dan confirmDelete sudah ada di Alpine.js atau global scope.
-        // Kita akan pastikan mereka bisa diakses dari window object.
         window.openDetailModal = function(pegawai) {
             // Logika untuk membuka modal detail
             // Ini akan memicu Alpine.data('pegawaiModal')
