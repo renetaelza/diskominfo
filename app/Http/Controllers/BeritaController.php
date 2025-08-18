@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Berita;
-use App\Models\Bidang;
+use App\Models\Topik;
 
 use Illuminate\Http\Request;
 
@@ -19,23 +19,23 @@ class BeritaController extends Controller
             $query->where('judul', 'like', '%' . $request->search . '%');
         }
 
-        if ($request->has('kategori_id') && $request->kategori_id != '') {
-            $query->where('kategori_id', $request->kategori_id);
+        if ($request->has('topik_id') && $request->topik_id != '') {
+            $query->where('topik_id', $request->topik_id);
         }
 
         $semuaBerita = $query->orderByDesc('tanggal')->get();
 
         $beritaTerbaru = $query->orderByDesc('tanggal')->take(3)->get();
 
-        $kategoriTerpakai = Berita::select('kategori_id')
+        $topikTerpakai = Berita::select('topik_id')
             ->where('status', 'publikasi')
             ->distinct()
-            ->with('kategori')
+            ->with('topik')
             ->get()
-            ->pluck('kategori')
+            ->pluck('topik')
             ->unique('id');
 
-        return view('berita.index', compact('semuaBerita', 'beritaTerbaru', 'kategoriTerpakai'));
+        return view('berita.index', compact('semuaBerita', 'beritaTerbaru', 'topikTerpakai'));
     }
 
     public function show($id)
@@ -48,34 +48,35 @@ class BeritaController extends Controller
         return view('berita.detail', compact('berita', 'terpopuler'));
     }
 
-
-
     public function indexAdmin(Request $request)
     {
-        $query = Berita::with('kategori')->latest();
+        $query = Berita::with('topik')->latest();
 
+        // Search judul
         if ($request->filled('q')) {
             $query->where('judul', 'like', '%' . $request->q . '%');
         }
 
+        // Filter status
         if ($request->has('status')) {
             $query->whereIn('status', $request->status);
         }
 
-        if ($request->has('bidang')) {
-            $query->whereIn('kategori_id', $request->bidang);
+        // Filter topik
+        if ($request->has('topik')) {
+            $query->whereIn('topik_id', $request->topik);
         }
 
         $beritas = $query->get();
-        $bidang = Bidang::all();
+        $topiks = Topik::all();
 
-        return view('admin.berita.index', compact('beritas', 'bidang'));
+        return view('admin.berita.index', compact('beritas', 'topiks'));
     }
 
     public function create()
     {
-        $bidang = Bidang::all();
-        return view('admin.berita.create', compact('bidang'));
+        $topiks = Topik::all();
+        return view('admin.berita.create', compact('topiks'));
     }
 
     public function store(Request $request)
@@ -83,20 +84,22 @@ class BeritaController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi_berita' => 'required|string',
-            'kategori_id' => 'required|exists:bidang,id',
+            'topik_id' => 'required|exists:topik,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:publikasi,draft',
-            'foto_utama' => 'required|image',
+            'foto_utama' => 'nullable|image',
             'foto_lain.*' => 'nullable|image',
         ]);
 
         $berita = Berita::create([
             'judul' => $request->judul,
             'isi_berita' => $request->isi_berita,
-            'kategori_id' => $request->kategori_id,
+            'topik_id' => $request->topik_id,
             'tanggal' => $request->tanggal,
             'status' => $request->status,
             'views' => 0,
+            'foto_utama' => '',
+            'foto_tambahan' => '[]',
         ]);
 
         if ($request->hasFile('foto_utama')) {
@@ -104,22 +107,24 @@ class BeritaController extends Controller
             $namaUtama = "{$berita->id}_utama." . $fotoUtama->getClientOriginalExtension();
             $pathUtama = $fotoUtama->storeAs('berita', $namaUtama, 'public');
 
-            $berita->foto_utama = 'storage/' . $pathUtama;
+            $berita->update([
+                'foto_utama' => 'storage/' . $pathUtama
+            ]);
         }
 
-        $fotoTambahanPaths = [];
-
         if ($request->hasFile('foto_lain')) {
+            $fotoTambahanPaths = [];
             foreach ($request->file('foto_lain') as $index => $foto) {
                 $namaFoto = "{$berita->id}_detail" . ($index + 1) . "." . $foto->getClientOriginalExtension();
                 $pathFoto = $foto->storeAs('berita', $namaFoto, 'public');
 
                 $fotoTambahanPaths[] = 'storage/' . $pathFoto;
             }
-        }
 
-        $berita->foto_tambahan = json_encode($fotoTambahanPaths);
-        $berita->save();
+            $berita->update([
+                'foto_tambahan' => json_encode($fotoTambahanPaths)
+            ]);
+        }
 
         return redirect()->route('admin.berita.index')->with('success', 'Berita berhasil disimpan.');
     }
@@ -147,8 +152,8 @@ class BeritaController extends Controller
     public function edit($id)
     {
         $berita = Berita::findOrFail($id);
-        $bidang = Bidang::all();
-        return view('admin.berita.edit', compact('berita', 'bidang'));
+        $topiks = Topik::all();
+        return view('admin.berita.edit', compact('berita', 'topiks'));
     }
 
     public function update(Request $request, $id)
@@ -158,7 +163,7 @@ class BeritaController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi_berita' => 'required|string',
-            'kategori_id' => 'required|exists:bidang,id',
+            'topik_id' => 'required|exists:topik,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:publikasi,draft',
             'foto_utama' => 'nullable|image',
@@ -168,7 +173,7 @@ class BeritaController extends Controller
         $berita->update([
             'judul' => $request->judul,
             'isi_berita' => $request->isi_berita,
-            'kategori_id' => $request->kategori_id,
+            'topik_id' => $request->topik_id,
             'tanggal' => $request->tanggal,
             'status' => $request->status,
         ]);
@@ -183,6 +188,7 @@ class BeritaController extends Controller
             $path = $file->storeAs('berita', $namaUtama, 'public');
             $berita->foto_utama = 'storage/' . $path;
         }
+
         $existingPaths = json_decode($request->existing_foto_tambahan, true) ?? [];
         $pathsBaru = [];
 
