@@ -4,14 +4,14 @@
 
 <!-- HERO SECTION -->
 <header class="relative bg-gray-800 text-white overflow-hidden">
-    
+
     <!-- Gambar Latar Belakang -->
     <img src="{{ asset('pictures/hero_landing.png') }}" alt="Balai Kota Bandung" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
-    
+
     <!-- Konten Hero -->
     <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
-            
+
             <!-- Grup Teks Utama (Kiri) -->
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
@@ -52,29 +52,29 @@
                 <!-- Track -->
                 <div class="flex gap-8 ml-4 transition-transform duration-500 ease-in-out" id="slider-track">
                     @forelse($aplikasi as $app)
-                        <!-- Card Dinamis -->
-                        <a href="{{ $app->link }}" target="_blank"
+                    <!-- Card Dinamis -->
+                    <a href="{{ $app->link }}" target="_blank"
                         class="flex-shrink-0 w-[80vw] sm:w-64 h-64 rounded-2xl shadow-md overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
 
-                            <!-- Gambar -->
-                            @if($app->foto && Storage::disk('public')->exists(str_replace('storage/', '', $app->foto)))
-                                <img src="{{ asset($app->foto) }}" alt="{{ $app->judul }}"
-                                    class="w-full h-full object-cover block">
-                            @else
-                                <div class="w-full h-full flex items-center justify-center bg-gray-200">
-                                    <i class="fas fa-image text-4xl text-gray-400"></i>
-                                </div>
-                            @endif
-
-                            <!-- Overlay Hover -->
-                            <div class="absolute inset-0 bg-gradient-to-t from-blue-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center p-4 z-50">
-                                <h3 class="text-white font-bold text-lg text-center">{{ $app->judul }}</h3>
-                            </div>
-                        </a>
-                    @empty
-                        <div class="w-full text-center text-gray-300 italic py-6">
-                            <p>Belum ada aplikasi tersedia.</p>
+                        <!-- Gambar -->
+                        @if($app->foto && Storage::disk('public')->exists(str_replace('storage/', '', $app->foto)))
+                        <img src="{{ asset($app->foto) }}" alt="{{ $app->judul }}"
+                            class="w-full h-full object-cover block">
+                        @else
+                        <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                            <i class="fas fa-image text-4xl text-gray-400"></i>
                         </div>
+                        @endif
+
+                        <!-- Overlay Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center p-4 z-50">
+                            <h3 class="text-white font-bold text-lg text-center">{{ $app->judul }}</h3>
+                        </div>
+                    </a>
+                    @empty
+                    <div class="w-full text-center text-gray-300 italic py-6">
+                        <p>Belum ada aplikasi tersedia.</p>
+                    </div>
                     @endforelse
                 </div>
             </div>
@@ -94,7 +94,7 @@
         <div id="announcement-carousel" class="relative rounded-2xl shadow-lg bg-white mt-16 md:mt-0">
             <!-- Image positioned absolutely -->
             <div class="absolute bottom-0 left-6 w-1/3 h-full hidden md:block">
-                 <img src="{{ asset('pictures/karakter_pengumuman1.png') }}" alt="Maskot Pengumuman" class="absolute bottom-0 h-[140%] w-auto max-w-none drop-shadow-lg">
+                <img src="{{ asset('pictures/karakter_pengumuman1.png') }}" alt="Maskot Pengumuman" class="absolute bottom-0 h-[140%] w-auto max-w-none drop-shadow-lg">
             </div>
             <!-- Slides Wrapper with margin to avoid overlap -->
             <div class="md:ml-[18%] h-64">
@@ -110,7 +110,7 @@
                                     <button class="announcement-toggle p-1 rounded-full hover:bg-gray-100 transition-colors">
                                         <i class="fas fa-chevron-right transition-transform duration-300"></i>
                                     </button>
-                                    <a href="{{route('pengumuman.index')}}"class="announcement-link text-orange-500 font-semibold text-sm hidden pointer-events-none transition-all duration-300">Lihat Selengkapnya &rarr;</a>
+                                    <a href="{{route('pengumuman.index')}}" class="announcement-link text-orange-500 font-semibold text-sm hidden pointer-events-none transition-all duration-300">Lihat Selengkapnya &rarr;</a>
                                 </div>
                             </div>
                             <h3 class="text-lg font-bold text-blue-950 truncate">{{ $pengumuman->judul }}</h3>
@@ -131,6 +131,61 @@
                     <div id="dots-container" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2"></div>
                 </div>
             </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-12 bg-slate-100 px-10">
+    <div class="container mx-auto px-4">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold">Berita Terkini</h2>
+            <a href="{{ route('berita.index') }}" class="text-sm font-medium text-black hover:underline">
+                Lihat Semua Berita
+            </a>
+        </div>
+
+        <!-- Grid Cards -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @foreach ($semuaBerita as $berita)
+            <a href="{{ route('berita.detail', $berita->id) }}" class="text-decoration-none block">
+                <div class="rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 card-news">
+                    <!-- Image -->
+                    <div class="h-60 bg-center bg-cover image"
+                        style="background-image: url('{{ asset($berita->foto_utama ?? 'pictures/dummy_berita.jpg') }}')">
+                    </div>
+
+                    <!-- Overlay -->
+                    <div class="bg-black/70 text-white p-4 overlay">
+                        <div class="text-sm mb-2 meta flex items-center gap-4">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ \Carbon\Carbon::parse($berita->tanggal)->translatedFormat('d F Y') }}
+                            </span>
+                            <span class="flex items-center gap-2">
+                                <i class="fas fa-tags"></i>
+                                {{ $berita->topik->nama ?? 'Tanpa Topik' }}
+                            </span>
+                        </div>
+
+                        <h5 class="font-semibold text-lg mb-3 fw-semibold line-clamp-2">
+                            {{ $berita->judul }}
+                        </h5>
+
+                        <div class="flex items-center justify-between">
+                            <button class="text-white text-sm hover:text-gray-300"
+                                onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')">
+                                <i class="fa-solid fa-share"></i>
+                            </button>
+                            <div class="text-sm flex items-center gap-1 eye-counter">
+                                <i class="fa-regular fa-eye"></i>
+                                {{ $berita->views ?? 0 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            @endforeach
         </div>
     </div>
 </section>
@@ -199,7 +254,7 @@
         const track = document.getElementById('slider-track');
         const prevButton = document.getElementById('prev-slide');
         const nextButton = document.getElementById('next-slide');
-        
+
         if (!container || !track || !prevButton || !nextButton) return;
 
         const cards = Array.from(track.children);
@@ -234,7 +289,7 @@
         function handlePrev() {
             if (isMoving) return;
             isMoving = true;
-            
+
             if (currentIndex === 0) {
                 // 1. Matikan animasi untuk lompatan
                 track.style.transition = 'none';
@@ -256,7 +311,7 @@
                 moveSlider();
             }
         }
-        
+
         nextButton.addEventListener('click', handleNext);
         prevButton.addEventListener('click', handlePrev);
 
@@ -328,9 +383,9 @@
                 toggleButton.addEventListener('click', () => {
                     rotation += 360;
                     icon.style.transform = `rotate(${rotation}deg)`;
-                    
+
                     isLinkVisible = !isLinkVisible;
-                    
+
                     if (isLinkVisible) {
                         link.classList.remove('hidden', 'pointer-events-none');
                     } else {
@@ -356,7 +411,7 @@
             stopInterval();
             startInterval();
         }
-        
+
         carousel.addEventListener('mouseenter', stopInterval);
         carousel.addEventListener('mouseleave', startInterval);
 
@@ -379,6 +434,5 @@
         // Inisialisasi slider pengumuman
         initAnnouncementSlider();
     });
-
 </script>
 @endsection
