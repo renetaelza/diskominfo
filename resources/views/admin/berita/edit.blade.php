@@ -66,13 +66,13 @@ $fotoTambahanArray = is_array($berita->foto_tambahan)
                             class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
 
-                    <!-- Kategori -->
+                    <!-- Topik -->
                     <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Kategori (Bidang)</label>
-                        <select name="kategori_id"
+                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Topik</label>
+                        <select name="topik_id"
                             class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            @foreach($bidang as $item)
-                            <option value="{{ $item->id }}" {{ old('kategori_id', $berita->kategori_id ?? '') == $item->id ? 'selected' : '' }}>
+                            @foreach($topiks as $item)
+                            <option value="{{ $item->id }}" {{ old('topik_id', $berita->topik_id ?? '') == $item->id ? 'selected' : '' }}>
                                 {{ $item->nama }}
                             </option>
                             @endforeach

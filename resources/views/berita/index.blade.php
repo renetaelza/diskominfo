@@ -35,12 +35,18 @@
                 </div>
 
                 <div class="filter-buttons mb-5">
-                    <button type="submit" name="kategori_id" value="" class="btn btn-filter {{ request('kategori_id') == '' ? 'active' : '' }}">Semua</button>
+                    {{-- Tombol Semua --}}
+                    <button type="submit" name="topik_id" value=""
+                        class="btn btn-filter {{ request('topik_id') == '' ? 'active' : '' }}">
+                        Semua
+                    </button>
 
-                    @foreach($kategoriTerpakai as $kategori)
-                    @if(strtolower($kategori->nama) !== 'semua bidang')
-                    <button type="submit" name="kategori_id" value="{{ $kategori->id }}" class="btn btn-filter {{ request('kategori_id') == $kategori->id ? 'active' : '' }}">
-                        {{ $kategori->nama }}
+                    {{-- Tombol per Topik --}}
+                    @foreach($topikTerpakai as $topik)
+                    @if(strtolower($topik->nama) !== 'semua topik')
+                    <button type="submit" name="topik_id" value="{{ $topik->id }}"
+                        class="btn btn-filter {{ request('topik_id') == $topik->id ? 'active' : '' }}">
+                        {{ $topik->nama }}
                     </button>
                     @endif
                     @endforeach
@@ -56,7 +62,7 @@
                             <div class="carousel-caption text-white">
                                 <div class="meta">
                                     <i class="fa-regular fa-calendar me-2"></i>{{ \Carbon\Carbon::parse($item->tanggal)->translatedFormat('d F Y') }}
-                                    <i class="fa-solid fa-building ms-3 me-2"></i>{{ $item->kategori->nama ?? 'Tanpa Kategori' }}
+                                    <i class="fas fa-tags mr-2 me-2"></i>{{ $item->topik->nama ?? 'Tanpa Topik' }}
                                 </div>
                                 <h5>{{ $item->judul }}</h5>
                             </div>
@@ -83,7 +89,7 @@
                             <div class="overlay text-white">
                                 <div class="meta mb-1">
                                     <i class="fa-regular fa-calendar me-2"></i>{{ \Carbon\Carbon::parse($berita->tanggal)->translatedFormat('d F Y') }}
-                                    <span class="ms-3"><i class="fa-solid fa-building me-2"></i>{{ $berita->kategori->nama ?? 'Tanpa Kategori' }}</span>
+                                    <span class="ms-3"><i class="fas fa-tags mr-2"></i>{{ $item->topik->nama ?? 'Tanpa Topik' }}</span>
                                 </div>
                                 <h5 class="fw-semibold mb-3">
                                     {{ $berita->judul }}

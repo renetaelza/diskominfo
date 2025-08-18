@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\TopikController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\AplikasiController;
 use App\Http\Controllers\AplikasiLandingController;
@@ -99,6 +100,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::delete('/berita/{id}', [BeritaController::class, 'destroy'])->name('berita.destroy');
     Route::get('/berita/{id}/edit', [BeritaController::class, 'edit'])->name('berita.edit');
     Route::put('/berita/{id}', [BeritaController::class, 'update'])->name('berita.update');
+    Route::get('/topik', [TopikController::class, 'index'])->name('topik.index');
+    Route::post('/topik', [TopikController::class, 'store'])->name('topik.store');
+    Route::put('/topik/{id}', [TopikController::class, 'update'])->name('topik.update');
+    Route::delete('/topik/{id}', [TopikController::class, 'destroy'])->name('topik.destroy');
+
 
     //ADMIN-AGENDA
     Route::resource('agenda', AdminAgendaController::class);

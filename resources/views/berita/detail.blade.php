@@ -15,12 +15,14 @@
 <body class="bg-light">
     <x-navbar />
 
-    <div class="container py-5">
+    <div class="container p-5">
         <!-- Judul & Meta -->
         <h1 class="fw-bold mb-2" style="font-size: 30px;">{{ $berita->judul }}</h1>
         <div class="d-flex align-items-center text-muted mb-4">
             <i class="fa-regular fa-calendar me-2"></i>{{ $berita->tanggal->translatedFormat('d F Y') }}
-            <span class="ms-4"><i class="fa-solid fa-building me-2"></i>{{ $berita->kategori->nama ?? 'Tanpa Kategori' }}</span>
+            <span class="ms-4">
+                <i class="fas fa-tags mr-2 me-2"></i>{{ $berita->topik->nama ?? 'Tanpa Topik' }}
+            </span>
             <span class="ms-auto">
                 <strong>Bagikan:</strong>
                 <button onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')"><i class="fa-solid fa-share-nodes"></i></button>
