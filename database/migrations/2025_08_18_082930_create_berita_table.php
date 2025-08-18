@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('judul');
             $table->text('isi_berita');
-            $table->foreignId('kategori_id')->constrained('bidang')->onDelete('cascade');
+            $table->foreignId('topik_id')->constrained('topik')->onDelete('cascade');
             $table->dateTime('tanggal');
             $table->unsignedInteger('views')->default(0);
             $table->enum('status', ['publikasi', 'draft'])->default('draft');
