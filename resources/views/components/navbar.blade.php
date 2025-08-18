@@ -8,9 +8,19 @@
         </div>
         <div class="office-hours">Jam Beroperasi Senin - Jumat: 8.00 am - 6.00 pm</div>
         <div class="search-box">
-            <input type="text" placeholder="Cari berita ..." style="font-size: 12px;" />
-            <button><span>&#128269;</span></button>
+            <form action="{{ route('berita.index') }}" method="GET" class="flex">
+                <input
+                    type="text"
+                    name="search"
+                    value="{{ request('search') }}"
+                    placeholder="Cari berita ..."
+                    class="text-sm px-2 py-1 border rounded-l-md focus:outline-none" />
+                <button type="submit" class="bg-blue-600 text-white px-3 rounded-r-md">
+                    <i class="fa fa-search"></i>
+                </button>
+            </form>
         </div>
+
     </div>
 
     <nav class="main-nav">
