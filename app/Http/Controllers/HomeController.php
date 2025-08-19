@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Pengumuman;
 use App\Models\Aplikasi;
 use App\Models\Berita;
+use App\Models\HeroBanner;
 
 class HomeController extends Controller
 {
@@ -24,6 +25,8 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        return view('home', compact('pengumuman', 'aplikasi', 'semuaBerita'));
+        $hero = HeroBanner::first(); 
+
+        return view('home', compact('pengumuman', 'aplikasi', 'semuaBerita', 'hero'));
     }
 }

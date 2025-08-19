@@ -23,6 +23,7 @@
         @php
         $menus = [
         ['icon' => 'fa-tachometer-alt', 'label' => 'Dashboard', 'route' => route('admin.dashboard')],
+        ['icon' => 'fa-television', 'label' => 'Banner Utama', 'route' => route('admin.banner.index')],
         ['icon' => 'fa-newspaper', 'label' => 'Berita', 'route' => route('admin.berita.index')],
         ];
 

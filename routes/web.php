@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\AgendaController as PublicAgendaController;
 use App\Http\Controllers\HomeController;
 
@@ -120,4 +121,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('/aplikasi/landing/store', [AplikasiLandingController::class, 'store'])->name('aplikasi.landing.store');
     Route::put('/aplikasi/landing/update', [AplikasiLandingController::class, 'update'])->name('aplikasi.landing.update');
     Route::delete('/aplikasi/landing/{aplikasi}', [AplikasiLandingController::class, 'destroy'])->name('aplikasi.landing.destroy');
+
+    //banner
+    Route::get('/banner-utama', [BannerController::class, 'index'])->name('banner.index');
+    Route::put('/banner-utama/update', [BannerController::class, 'update'])->name('banner.update');
 });
