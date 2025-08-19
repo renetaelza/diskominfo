@@ -5,24 +5,25 @@
 <!-- HERO SECTION -->
 <header class="relative bg-gray-800 text-white overflow-hidden">
 
-    <!-- Gambar Latar Belakang -->
-    <img src="{{ asset('pictures/hero_landing.png') }}" alt="Balai Kota Bandung" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
+    <img 
+        src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}" 
+        alt="Gedung Diskominfo Bandung" 
+        class="absolute inset-0 w-full h-full object-cover opacity-20 z-0"
+    >
 
-    <!-- Konten Hero -->
     <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
 
-            <!-- Grup Teks Utama (Kiri) -->
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
-                    DINAS KOMUNIKASI DAN INFORMASI <span class="text-orange-400">KOTA BANDUNG</span>
+                    DINAS KOMUNIKASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
                 </h1>
-                <p class="mt-6 max-w-2xl text-lg text-gray-200">
-                    Mewujudkan Bandung Smart City melalui Transformasi dan Inovasi Digital yang Inklusif.
+
+                <p class="mt-6 ml-1 max-w-2xl text-lg text-gray-200">
+                    {{ $hero->tagline ?? 'Belum ada tagline yang diatur' }}
                 </p>
             </div>
 
-            <!-- Info Jam & Cuaca (Kanan) -->
             <div class="mt-8 lg:mt-0 flex flex-col items-start lg:items-end gap-2 text-lg font-semibold text-gray-200">
                 <div id="live-clock" class="flex items-center gap-3">
                     <i class="far fa-clock text-xl"></i>
