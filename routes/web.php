@@ -48,11 +48,12 @@ Route::get('/api/weather', function () {
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.detail');
 
-Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
-
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
-Route::get('/aplikasi/kunjungan', [AplikasiController::class, 'index_kunjungan'])->name('kunjungan.index');
+Route::get('/aplikasi/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+
+Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
+
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
@@ -120,4 +121,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('/aplikasi/landing/store', [AplikasiLandingController::class, 'store'])->name('aplikasi.landing.store');
     Route::put('/aplikasi/landing/update', [AplikasiLandingController::class, 'update'])->name('aplikasi.landing.update');
     Route::delete('/aplikasi/landing/{aplikasi}', [AplikasiLandingController::class, 'destroy'])->name('aplikasi.landing.destroy');
+
+    // Kunjungan
+    Route::get('kunjungan', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::get('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'show'])->name('kunjungan.show');
+    Route::post('kunjungan/{kunjungan}/update-status', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'updateStatus'])->name('kunjungan.updateStatus');
 });
