@@ -5,24 +5,25 @@
 <!-- HERO SECTION -->
 <header class="relative bg-gray-800 text-white overflow-hidden">
 
-    <!-- Gambar Latar Belakang -->
-    <img src="{{ asset('pictures/hero_landing.png') }}" alt="Balai Kota Bandung" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
+    <img 
+        src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}" 
+        alt="Gedung Diskominfo Bandung" 
+        class="absolute inset-0 w-full h-full object-cover opacity-20 z-0"
+    >
 
-    <!-- Konten Hero -->
     <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
 
-            <!-- Grup Teks Utama (Kiri) -->
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
-                    DINAS KOMUNIKASI DAN INFORMASI <span class="text-orange-400">KOTA BANDUNG</span>
+                    DINAS KOMUNIKASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
                 </h1>
-                <p class="mt-6 max-w-2xl text-lg text-gray-200">
-                    Mewujudkan Bandung Smart City melalui Transformasi dan Inovasi Digital yang Inklusif.
+
+                <p class="mt-6 ml-1 max-w-2xl text-lg text-gray-200">
+                    {{ $hero->tagline ?? 'Belum ada tagline yang diatur' }}
                 </p>
             </div>
 
-            <!-- Info Jam & Cuaca (Kanan) -->
             <div class="mt-8 lg:mt-0 flex flex-col items-start lg:items-end gap-2 text-lg font-semibold text-gray-200">
                 <div id="live-clock" class="flex items-center gap-3">
                     <i class="far fa-clock text-xl"></i>
@@ -103,7 +104,7 @@
                     <div id="slides-container" class="flex transition-transform duration-500 ease-in-out">
                         @forelse ($pengumuman as $pengumuman)
                         <!-- Slide Dinamis -->
-                        <div class="w-full flex-shrink-0 p-8">
+                        <div class="w-full flex-shrink-0 p-8 mt-6">
                             <div class="flex items-center mb-2">
                                 <span class="text-black font-semibold">Pengumuman</span>
                                 <div class="flex items-center gap-2">
@@ -136,7 +137,7 @@
 </section>
 
 <section class="py-12 bg-slate-100 px-10">
-    <div class="container mx-auto px-4">
+    <div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
         <!-- Header -->
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-2xl font-bold">Berita Terkini</h2>
@@ -190,8 +191,102 @@
     </div>
 </section>
 
-<!-- SCRIPT UNTUK JAM DAN CUACA -->
+<!-- GALERI VIDEO SECTION -->
+@if($latestVideos->isNotEmpty())
+<section x-data="videoGallery()" @mouseleave="resetOnLeave()" class="bg-white text-grey-900 antialiased">
+    <!-- Main container for the gallery -->
+    <div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <header class="text-center mb-10">
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Galeri Video</h2>
+            <p class="mt-3 text-lg text-gray-400">Lihat lebih dekat kegiatan dan informasi dari kami.</p>
+        </header>
+        
+        <!-- Alpine.js component initialization -->
+        <div class="flex gap-4 h-[480px]">
+            <!-- Loop through each video in the data -->
+            <template x-for="(video, index) in videos" :key="index">
+                <div
+                    @mouseenter="setActive(index)"
+                    class="relative flex-grow cursor-pointer overflow-hidden rounded-2xl shadow-2xl custom-transition group"
+                    :class="{
+                        'flex-grow-[5]': activeIndex === index,
+                        'flex-grow-[2]': activeIndex !== index
+                    }"
+                >
+                    <div 
+                        class="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-in-out"
+                        :style="'background-image: url(https://img.youtube.com/vi/' + video.youtubeId + '/maxresdefault.jpg)'"
+                        :class="{ 'blur-0 brightness-100': activeIndex === index, 'blur-sm brightness-50': activeIndex !== index }"
+                    ></div>
+
+                    <template x-if="playerIndex === index">
+                        <iframe
+                            class="w-full h-full object-cover absolute inset-0"
+                            :src="'https://www.youtube.com/embed/' + video.youtubeId + '?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=' + video.youtubeId"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                        ></iframe>
+                    </template>
+                    
+                    <div 
+                        class="absolute bottom-0 left-0 right-0 p-6 text-white transition-all duration-500"
+                        style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);"
+                    >
+                        <div 
+                            class="transform transition-all duration-500 ease-in-out"
+                            :class="{
+                                'translate-y-0 opacity-100': activeIndex === index,
+                                'translate-y-10 opacity-0': activeIndex !== index
+                            }"
+                        >
+                            <h2 class="text-2xl font-bold" x-text="video.title"></h2>
+                            <p class="text-sm mt-2 opacity-80 max-w-md" x-text="video.description"></p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</section>
+@endif
+
 <script>
+
+    // --- SCRIPT UNTUK GALERI VIDEO ---
+    const videoData = @json($latestVideos);
+
+    function videoGallery() {
+      return {
+        activeIndex: 0,
+        playerIndex: null,
+        videos: videoData,
+        setActive(index) {
+          // Atur status visual aktif secara langsung
+          this.activeIndex = index;
+
+          // Jika video untuk kartu ini sudah diputar, jangan lakukan apa-apa
+          if (this.playerIndex === index) return;
+
+          // Hentikan video yang sedang berjalan
+          this.playerIndex = null;
+
+          // Atur jeda untuk memulai video baru, agar animasi selesai dulu
+          setTimeout(() => {
+            // Hanya putar video jika pengguna masih berada di kartu yang sama
+            if (this.activeIndex === index) {
+              this.playerIndex = index;
+            }
+          }, 600); // Durasi ini harus sama dengan durasi transisi CSS
+        },
+        resetOnLeave() {
+            this.activeIndex = 0; // Kembalikan ke kartu pertama
+            this.playerIndex = null; // Hentikan video
+        }
+      }
+    }
+
     // Fungsi untuk mengupdate jam real-time
     function updateClock() {
         const clockElement = document.getElementById('live-clock');
@@ -435,4 +530,11 @@
         initAnnouncementSlider();
     });
 </script>
+
+{{-- Style untuk galeri video --}}
+<style>
+    .custom-transition {
+        transition: all 600ms cubic-bezier(0.65, 0, 0.35, 1);
+    }
+</style>
 @endsection
