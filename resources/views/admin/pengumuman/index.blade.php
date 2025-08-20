@@ -176,7 +176,7 @@
                                     </button>
 
                                     <!-- Edit -->
-                                    <a href="{{ route('admin.pengumuman.edit', $pengumuman->id) }}" class="text-blue-600 hover:text-blue-800">
+                                    <a href="{{ route('admin.pengumuman.edit', $pengumuman->id) }}" class="text-yellow-600 hover:text-yellow-800">
                                         <i class="fas fa-pen"></i>
                                     </a>
 
