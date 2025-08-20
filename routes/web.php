@@ -15,6 +15,7 @@ use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\AgendaController as PublicAgendaController;
 use App\Http\Controllers\HomeController;
 
@@ -66,6 +67,10 @@ Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->nam
 Route::get('informasi/agenda', function () {
     return view('informasi.agenda');
 })->name('agenda.index');
+
+// GALERI
+// galeri-video
+Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('main.galeri.video');
 
 // Public-facing API for FullCalendar
 Route::get('/api/agenda-events', [PublicAgendaController::class, 'getEventsForCalendar']);
@@ -125,4 +130,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     //banner
     Route::get('/banner-utama', [BannerController::class, 'index'])->name('banner.index');
     Route::put('/banner-utama/update', [BannerController::class, 'update'])->name('banner.update');
+
+    // gallery-video
+    Route::get('/galeri/video', [GalleryController::class, 'indexVideo'])->name('galeri.video');
+    Route::post('/galeri/video/store', [GalleryController::class, 'storeVideo'])->name('galeri.video.store');
+    Route::put('/galeri/video/update', [GalleryController::class, 'updateVideo'])->name('galeri.video.update');
+    Route::delete('/galeri/video/{video}', [GalleryController::class, 'destroy'])->name('galeri.video.destroy');
 });
