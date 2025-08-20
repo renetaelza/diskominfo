@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('nama_dokumen');
             $table->text('deskripsi_dokumen');
-            $table->string('kategori');
+            $table->foreignId('kategoriDokumen_id')->constrained('kategori_dokumen')->onDelete('cascade');
             $table->date('tanggal');
-            $table->unsignedInteger('total_unduh')->default(0);
+            $table->enum('status', ['publikasi', 'draft'])->default('draft');
             $table->json('lampiran');
             $table->timestamps();
         });

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dokumen;
+use App\Models\KategoriDokumen;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -10,28 +11,43 @@ class DokumenController extends Controller
 {
     public function index()
     {
-        $dokumens = Dokumen::orderByRaw('COALESCE(tanggal, created_at) DESC')->get();
+        $dokumens = Dokumen::where('status', 'publikasi')
+            ->orderByRaw('COALESCE(tanggal, created_at) DESC')
+            ->get();
+
         return view('informasi.dokumen', compact('dokumens'));
     }
 
     public function indexAdmin(Request $request)
     {
-        $query = Dokumen::latest();
+        $query = Dokumen::query();
 
         if ($request->filled('q')) {
-            $query->where('nama_dokumen', 'like', '%' . $request->q . '%');
-        }
-        if ($request->filled('kategori')) {
-            $query->where('kategori', $request->kategori);
+            $query->where(function ($q) use ($request) {
+                $q->where('nama_dokumen', 'like', "%{$request->q}%")
+                    ->orWhere('deskripsi_dokumen', 'like', "%{$request->q}%");
+            });
         }
 
-        $dokumens = $query->paginate(10)->withQueryString();
-        return view('admin.dokumen.index', compact('dokumens'));
+        if ($request->filled('status')) {
+            $query->whereIn('status', $request->status);
+        }
+
+        if ($request->filled('kategori')) {
+            $query->whereIn('kategoriDokumen_id', $request->kategori);
+        }
+
+        $dokumens = $query->latest()->get();
+
+        $kategoriDokumen = KategoriDokumen::all();
+
+        return view('admin.dokumen.index', compact('dokumens', 'kategoriDokumen'));
     }
 
     public function create()
     {
-        return view('admin.dokumen.create');
+        $kategoriDokumen = KategoriDokumen::all();
+        return view('admin.dokumen.create', compact('kategoriDokumen'));
     }
 
     public function store(Request $request)
@@ -39,25 +55,26 @@ class DokumenController extends Controller
         $request->validate([
             'nama_dokumen' => 'required|string|max:255',
             'deskripsi_dokumen' => 'required|string',
-            'kategori' => 'required|string|max:100',
+            'kategoriDokumen_id' => 'required|exists:kategori_dokumen,id',
             'tanggal' => 'required|date',
-            'lampiran.*' => 'required|mimes:pdf,doc,docx',
+            'status' => 'required|in:publikasi,draft',
+            'lampiran.*' => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
 
         $dokumen = Dokumen::create([
             'nama_dokumen' => $request->nama_dokumen,
             'deskripsi_dokumen' => $request->deskripsi_dokumen,
-            'kategori' => $request->kategori,
+            'kategoriDokumen_id' => $request->kategoriDokumen_id,
             'tanggal' => $request->tanggal,
-            'total_unduh' => 0,
+            'status' => $request->status,
+            'lampiran' => json_encode([]),
         ]);
 
         $lampiranPaths = [];
         if ($request->hasFile('lampiran')) {
             foreach ($request->file('lampiran') as $file) {
-                $originalName = preg_replace('/\s+/', '_', $file->getClientOriginalName());
-                $filename = uniqid() . '_' . $originalName;
-                $path = $file->storeAs('lampiran_dokumen', $filename, 'public');
+                $originalName = time() . '_' . $file->getClientOriginalName();
+                $path = $file->storeAs('lampiran_dokumen', $originalName, 'public');
                 $lampiranPaths[] = $path;
             }
         }
@@ -71,33 +88,35 @@ class DokumenController extends Controller
     public function edit($id)
     {
         $dokumen = Dokumen::findOrFail($id);
-        return view('admin.dokumen.edit', compact('dokumen'));
+        $kategoriDokumen = KategoriDokumen::all();
+        return view('admin.dokumen.edit', compact('dokumen', 'kategoriDokumen'));
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
-            'nama_dokumen' => 'required|string|max:255',
-            'deskripsi_dokumen' => 'required|string',
-            'kategori' => 'required|string|max:100',
-            'tanggal' => 'required|date',
-            'lampiran.*' => 'nullable|mimes:pdf,doc,docx,jpeg,png,jpg',
+            'nama_dokumen'       => 'required|string|max:255',
+            'deskripsi_dokumen'  => 'required|string',
+            'kategoriDokumen_id' => 'required|exists:kategori_dokumen,id',
+            'tanggal'            => 'required|date',
+            'status'             => 'required|in:publikasi,draft',
+            'lampiran.*'         => 'nullable|mimes:pdf,doc,docx,jpg,jpeg,png|max:2048',
         ]);
 
         $dokumen = Dokumen::findOrFail($id);
-        $lampiranPaths = json_decode($dokumen->lampiran ?? '[]', true);
 
-        // Hapus lampiran lama
-        if ($request->has('hapus_lampiran')) {
-            foreach ($request->hapus_lampiran as $fileUrl) {
-                $relativePath = str_replace('/storage/', '', parse_url($fileUrl, PHP_URL_PATH));
+        $lampiranPaths = is_array($dokumen->lampiran)
+            ? $dokumen->lampiran
+            : json_decode($dokumen->lampiran ?? '[]', true);
+
+        if ($request->filled('hapus_lampiran')) {
+            $hapusLampiran = (array) $request->hapus_lampiran;
+            foreach ($hapusLampiran as $relativePath) {
                 Storage::disk('public')->delete($relativePath);
-                $lampiranPaths = array_filter($lampiranPaths, fn($item) => $item !== $fileUrl);
             }
-            $lampiranPaths = array_values($lampiranPaths);
+            $lampiranPaths = array_values(array_diff($lampiranPaths, $hapusLampiran));
         }
 
-        // Tambah lampiran baru
         if ($request->hasFile('lampiran')) {
             foreach ($request->file('lampiran') as $file) {
                 $originalName = preg_replace('/\s+/', '_', $file->getClientOriginalName());
@@ -108,11 +127,12 @@ class DokumenController extends Controller
         }
 
         $dokumen->update([
-            'nama_dokumen' => $request->nama_dokumen,
-            'deskripsi_dokumen' => $request->deskripsi_dokumen,
-            'kategori' => $request->kategori,
-            'tanggal' => $request->tanggal,
-            'lampiran' => json_encode($lampiranPaths),
+            'nama_dokumen'       => $request->nama_dokumen,
+            'deskripsi_dokumen'  => $request->deskripsi_dokumen,
+            'kategoriDokumen_id' => $request->kategoriDokumen_id,
+            'tanggal'            => $request->tanggal,
+            'status'             => $request->status,
+            'lampiran'           => json_encode(array_values($lampiranPaths)),
         ]);
 
         return redirect()->route('admin.dokumen.index')->with('success', 'Dokumen berhasil diperbarui.');

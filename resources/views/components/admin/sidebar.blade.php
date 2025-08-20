@@ -27,31 +27,31 @@
         ];
 
         $groups = [
-            [
-                'icon' => 'fa-info-circle',
-                'label' => 'Informasi',
-                'children' => [
-                    ['icon' => 'fa-file', 'label' => 'Dokumen Informasi', 'route' => '#'],
-                    ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
-                    ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => route('admin.agenda.index')],
-                ]
-            ],
-            [
-                'icon' => 'fa-photo-video',
-                'label' => 'Galeri',
-                'children' => [
-                    ['icon' => 'fa-video', 'label' => 'Galeri Video', 'route' => '#'],
-                    ['icon' => 'fa-image', 'label' => 'Galeri Foto', 'route' => '#'],
-                ]
-            ],
-            [
-                'icon' => 'fa-solid fa-cubes',
-                'label' => 'Aplikasi',
-                'children' => [
-                    ['icon' => 'fa-compass', 'label' => 'Navigasi', 'route' => route('admin.aplikasi.indexNavigasi')],
-                    ['icon' => 'fa-plane', 'label' => 'Landing Page', 'route' => route('admin.aplikasi.indexLanding')],
-                ]
-            ]
+        [
+        'icon' => 'fa-info-circle',
+        'label' => 'Informasi',
+        'children' => [
+        ['icon' => 'fa-file', 'label' => 'Dokumen Informasi', 'route' => route('admin.dokumen.index')],
+        ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
+        ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => route('admin.agenda.index')],
+        ]
+        ],
+        [
+        'icon' => 'fa-photo-video',
+        'label' => 'Galeri',
+        'children' => [
+        ['icon' => 'fa-video', 'label' => 'Galeri Video', 'route' => '#'],
+        ['icon' => 'fa-image', 'label' => 'Galeri Foto', 'route' => '#'],
+        ]
+        ],
+        [
+        'icon' => 'fa-solid fa-cubes',
+        'label' => 'Aplikasi',
+        'children' => [
+        ['icon' => 'fa-compass', 'label' => 'Navigasi', 'route' => route('admin.aplikasi.indexNavigasi')],
+        ['icon' => 'fa-plane', 'label' => 'Landing Page', 'route' => route('admin.aplikasi.indexLanding')],
+        ]
+        ]
         ];
 
         $others = [

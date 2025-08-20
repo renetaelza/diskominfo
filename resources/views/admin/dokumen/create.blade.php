@@ -39,48 +39,46 @@
         <!-- Main Content -->
         <main class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
             <div class="bg-white dark:bg-gray-800 shadow-md pl-6 pr-6 py-5 mb-6 flex items-center">
-                <h3 class="font-semibold text-gray-800 dark:text-white px-4">Tambah Pengumuman Baru</h3>
+                <h3 class="font-semibold text-gray-800 dark:text-white px-4">Tambah Dokumen Baru</h3>
             </div>
 
-            <form id="form-pengumuman" action="{{ route('admin.pengumuman.store') }}" method="POST" enctype="multipart/form-data" class="px-10">
+            <form id="form-dokumen" action="{{ route('admin.dokumen.store') }}" method="POST" enctype="multipart/form-data" class="px-10">
                 @csrf
 
                 <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
-                    <!-- Judul -->
+                    <!-- Nama Dokumen -->
                     <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Judul</label>
-                        <input type="text" name="judul" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Nama Dokumen</label>
+                        <input type="text" name="nama_dokumen" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
                     </div>
 
                     <!-- Kategori -->
                     <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Kategori (Bidang)</label>
-                        <select name="kategori_id" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option disabled selected>Pilih Bidang</option>
-                            @foreach($bidang as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama }}</option>
+                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Kategori Dokumen</label>
+                        <select name="kategoriDokumen_id" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option disabled {{ old('kategoriDokumen_id') ? '' : 'selected' }}>Pilih Kategori</option>
+                            @foreach($kategoriDokumen as $item)
+                            <option value="{{ $item->id }}" {{ old('kategoriDokumen_id') == $item->id ? 'selected' : '' }}>
+                                {{ $item->nama }}
+                            </option>
                             @endforeach
                         </select>
                     </div>
 
-                    <!-- Isi pengumuman -->
+
+                    <!-- Deskripsi Dokumen -->
                     <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Isi Pengumuman</label>
-                        <textarea name="isi_pengumuman" rows="6" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Deskripsi Dokumen</label>
+                        <textarea name="deskripsi_dokumen" rows="6" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" required></textarea>
                     </div>
 
-                    <!-- Lampiran (Opsional) -->
+                    <!-- Lampiran -->
                     <div class="mb-6">
-                        <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
-                            <label class="block mb-2 font-medium text-gray-700 dark:text-gray-300">Lampiran (PDF, Word, Foto - Opsional)</label>
-                            <input type="file" id="lampiran-input" name="lampiran[]" accept=".pdf,.doc,.docx,image/*" multiple class="w-full p-2 border rounded">
-                            <p class="text-sm text-gray-500 mt-2">Bisa unggah lebih dari satu file. Maks: PDF, DOC, DOCX, JPG, PNG.</p>
-                        </div>
-
-                        <!-- Preview file -->
-                        <div id="lampiran-preview" class="mt-4 space-y-2">
-                            <!-- Preview items will be inserted here -->
-                        </div>
+                        <label class="block mb-2 font-medium text-gray-700 dark:text-gray-300">Lampiran</label>
+                        <input type="file" id="lampiran-input" name="lampiran[]" accept=".pdf" multiple class="w-full p-2 border rounded" required>
+                        <p class="text-sm text-gray-500 mt-2">Bisa upload lebih dari satu file. Format: PDF maksimal 2 MB</p>
+                        <div id="lampiran-preview" class="mt-4 space-y-2"></div>
+                        <p id="lampiran-error" class="text-sm text-red-600 mt-2 hidden"></p>
                     </div>
 
                     <!-- Hidden Field for Date -->
@@ -89,15 +87,8 @@
 
                     <!-- Tombol Aksi -->
                     <div class="flex gap-4 mt-8">
-                        <!-- Publikasi -->
-                        <div class="relative w-1/2">
-                            <button type="button" onclick="setStatusAndSubmit('publikasi')" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">Publikasi</button>
-                        </div>
-
-                        <!-- Simpan Draft -->
-                        <div class="w-1/2">
-                            <button type="button" onclick="setStatusAndSubmit('draft')" class="w-full py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition">Simpan Draft</button>
-                        </div>
+                        <button type="button" onclick="setStatusAndSubmit('publikasi')" class="w-1/2 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Publikasi</button>
+                        <button type="button" onclick="setStatusAndSubmit('draft')" class="w-1/2 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700">Simpan Draft</button>
                     </div>
                 </div>
             </form>
@@ -106,15 +97,21 @@
 </body>
 <script>
     const inputLampiran = document.getElementById('lampiran-input');
+    const errorMsg = document.getElementById('lampiran-error');
     const previewContainer = document.getElementById('lampiran-preview');
     let fileList = [];
 
     inputLampiran.addEventListener('change', function(e) {
         const files = Array.from(e.target.files);
+        errorMsg.classList.add('hidden');
 
-        // Tambahkan file baru ke list
         for (const file of files) {
-            // Cek apakah file sudah ada berdasarkan nama
+            if (file.size > 2 * 1024 * 1024) {
+                errorMsg.textContent = `File "${file.name}" melebihi 2MB dan tidak ditambahkan.`;
+                errorMsg.classList.remove('hidden');
+                continue;
+            }
+
             if (!fileList.find(f => f.name === file.name)) {
                 fileList.push(file);
             }
@@ -151,7 +148,6 @@
         });
     }
 
-    // Trik agar form bisa mengirim fileList manual
     function syncFileInput() {
         const dataTransfer = new DataTransfer();
         fileList.forEach(file => dataTransfer.items.add(file));
@@ -162,7 +158,7 @@
     function setStatusAndSubmit(status) {
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();
-        document.getElementById('form-pengumuman').submit();
+        document.getElementById('form-dokumen').submit();
     }
 </script>
 
