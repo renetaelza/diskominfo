@@ -15,9 +15,11 @@ class DashboardController extends Controller
     public function index()
     {
         $totalAgenda = Agenda::count();
+        $totalKunjungan = Kunjungan::count();
 
         return view('admin.dashboard', compact(
-            'totalAgenda'
+            'totalAgenda',
+            'totalKunjungan'
         ));
     }
 }

@@ -57,7 +57,7 @@
 
         $others = [
         ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
-        ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => '#'],
+        ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => route('admin.kunjungan.index')],
         ];
         @endphp
 

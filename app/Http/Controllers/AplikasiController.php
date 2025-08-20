@@ -16,13 +16,6 @@ class AplikasiController extends Controller
         return view("aplikasi.$slug", compact('aplikasi'));
     }
 
-    public function index_kunjungan()
-    {
-
-        $bidang = Bidang::all();
-        return view('aplikasi.kunjungan', compact('bidang'));
-    }
-
     public function indexAdmin(Request $request)
     {
         return view('admin.aplikasi.indexNavigasi');
