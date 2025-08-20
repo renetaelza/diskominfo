@@ -14,6 +14,8 @@ use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\AgendaController as PublicAgendaController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriDokumenController;
@@ -50,11 +52,12 @@ Route::get('/api/weather', function () {
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.detail');
 
-Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
-
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
-Route::get('/aplikasi/kunjungan', [AplikasiController::class, 'index_kunjungan'])->name('kunjungan.index');
+Route::get('/aplikasi/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+
+Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
+
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
@@ -67,6 +70,10 @@ Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->nam
 Route::get('informasi/agenda', function () {
     return view('informasi.agenda');
 })->name('agenda.index');
+
+// GALERI
+// galeri-video
+Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('main.galeri.video');
 
 // Public-facing API for FullCalendar
 Route::get('/api/agenda-events', [PublicAgendaController::class, 'getEventsForCalendar']);
@@ -123,7 +130,22 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::put('/aplikasi/landing/update', [AplikasiLandingController::class, 'update'])->name('aplikasi.landing.update');
     Route::delete('/aplikasi/landing/{aplikasi}', [AplikasiLandingController::class, 'destroy'])->name('aplikasi.landing.destroy');
 
-    //DOKUMEN INFORMASI
+    // Kunjungan
+    Route::get('kunjungan', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::get('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'show'])->name('kunjungan.show');
+    Route::post('kunjungan/{kunjungan}/update-status', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'updateStatus'])->name('kunjungan.updateStatus');
+
+    //banner
+    Route::get('/banner-utama', [BannerController::class, 'index'])->name('banner.index');
+    Route::put('/banner-utama/update', [BannerController::class, 'update'])->name('banner.update');
+
+    // gallery-video
+    Route::get('/galeri/video', [GalleryController::class, 'indexVideo'])->name('galeri.video');
+    Route::post('/galeri/video/store', [GalleryController::class, 'storeVideo'])->name('galeri.video.store');
+    Route::put('/galeri/video/update', [GalleryController::class, 'updateVideo'])->name('galeri.video.update');
+    Route::delete('/galeri/video/{video}', [GalleryController::class, 'destroy'])->name('galeri.video.destroy');
+  
+    // dokumen informasi
     Route::get('/dokumen', [DokumenController::class, 'indexAdmin'])->name('dokumen.index');
     Route::get('/dokumen/create', [DokumenController::class, 'create'])->name('dokumen.create');
     Route::post('/dokumen', [DokumenController::class, 'store'])->name('dokumen.store');

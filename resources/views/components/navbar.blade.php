@@ -47,7 +47,7 @@
                 <a href="#">Galeri <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
                     <li><a href="#">Gambar</a></li>
-                    <li><a href="#">Video</a></li>
+                    <li><a href="{{route('main.galeri.video')}}">Video</a></li>
                 </ul>
             </li>
             <li class="dropdown">

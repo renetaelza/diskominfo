@@ -23,6 +23,7 @@
         @php
         $menus = [
         ['icon' => 'fa-tachometer-alt', 'label' => 'Dashboard', 'route' => route('admin.dashboard')],
+        ['icon' => 'fa-television', 'label' => 'Banner Utama', 'route' => route('admin.banner.index')],
         ['icon' => 'fa-newspaper', 'label' => 'Berita', 'route' => route('admin.berita.index')],
         ];
 
@@ -40,7 +41,7 @@
         'icon' => 'fa-photo-video',
         'label' => 'Galeri',
         'children' => [
-        ['icon' => 'fa-video', 'label' => 'Galeri Video', 'route' => '#'],
+        ['icon' => 'fa-video', 'label' => 'Galeri Video', 'route' => route('admin.galeri.video')],
         ['icon' => 'fa-image', 'label' => 'Galeri Foto', 'route' => '#'],
         ]
         ],
@@ -56,7 +57,7 @@
 
         $others = [
         ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
-        ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => '#'],
+        ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => route('admin.kunjungan.index')],
         ];
         @endphp
 
