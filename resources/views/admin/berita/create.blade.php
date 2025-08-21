@@ -135,7 +135,6 @@
     document.getElementById('foto-lain').addEventListener('change', function(event) {
         const files = Array.from(event.target.files);
 
-        // Cegah melebihi 5
         if (fotoTambahan.length + files.length > MAX_FILES) {
             alert(`Maksimal ${MAX_FILES} foto tambahan.`);
             return;
@@ -146,7 +145,7 @@
         });
 
         updatePreview();
-        event.target.value = ''; // Clear input
+        event.target.value = '';
     });
 
     function updatePreview() {
@@ -181,7 +180,6 @@
             reader.readAsDataURL(file);
         });
 
-        // Simpan semua file ke FormData manual via hidden input (Trick)
         fotoTambahan.forEach((file, i) => {
             const input = document.createElement('input');
             input.type = 'file';
@@ -198,7 +196,6 @@
         return dataTransfer.files;
     }
 
-    // Fungsi untuk set status dan submit form
     function setStatusAndSubmit(status) {
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Storage;
 
 use App\Models\Pengumuman;
-use App\Models\Bidang;
+use App\Models\Topik;
 use Illuminate\Http\Request;
 
 class PengumumanController extends Controller
@@ -21,27 +21,26 @@ class PengumumanController extends Controller
 
     public function indexAdmin(Request $request)
     {
-        $query = Pengumuman::with('kategori')->latest();
+        $query = Pengumuman::with('topik')->latest();
         if ($request->filled('q')) {
             $query->where('judul', 'like', '%' . $request->q . '%');
         }
         if ($request->has('status')) {
             $query->whereIn('status', $request->status);
         }
-        if ($request->has('bidang')) {
-            $query->whereIn('kategori_id', $request->bidang);
+        if ($request->has('topik')) {
+            $query->whereIn('topik_id', $request->topik);
         }
         $pengumumans = $query->paginate(10)->withQueryString();
-        $bidang = Bidang::all();
+        $topiks = Topik::all();
 
-        return view('admin.pengumuman.index', compact('pengumumans', 'bidang'));
+        return view('admin.pengumuman.index', compact('pengumumans', 'topiks'));
     }
-
 
     public function create()
     {
-        $bidang = Bidang::all();
-        return view('admin.pengumuman.create', compact('bidang'));
+        $topiks = Topik::all();
+        return view('admin.pengumuman.create', compact('topiks'));
     }
 
     public function store(Request $request)
@@ -49,7 +48,7 @@ class PengumumanController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi_pengumuman' => 'required|string',
-            'kategori_id' => 'required|exists:bidang,id',
+            'topik_id' => 'required|exists:topik,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:publikasi,draft',
             'lampiran.*' => 'nullable|mimes:pdf,doc,docx,jpeg,png,jpg',
@@ -58,10 +57,9 @@ class PengumumanController extends Controller
         $pengumuman = Pengumuman::create([
             'judul' => $request->judul,
             'isi_pengumuman' => $request->isi_pengumuman,
-            'kategori_id' => $request->kategori_id,
+            'topik_id' => $request->topik_id,
             'tanggal' => $request->tanggal,
             'status' => $request->status,
-            'views' => 0,
         ]);
 
         $lampiranPaths = [];
@@ -105,9 +103,9 @@ class PengumumanController extends Controller
     public function edit($id)
     {
         $pengumuman = Pengumuman::findOrFail($id);
-        $bidang = Bidang::all();
+        $topiks = Topik::all();
 
-        return view('admin.pengumuman.edit', compact('pengumuman', 'bidang'));
+        return view('admin.pengumuman.edit', compact('pengumuman', 'topiks'));
     }
 
     public function update(Request $request, $id)
@@ -115,7 +113,7 @@ class PengumumanController extends Controller
         $request->validate([
             'judul' => 'required|string|max:255',
             'isi_pengumuman' => 'required|string',
-            'kategori_id' => 'required|exists:bidang,id',
+            'topik_id' => 'required|exists:topik,id',
             'tanggal' => 'required|date',
             'status' => 'required|in:publikasi,draft',
             'lampiran.*' => 'nullable|mimes:pdf,doc,docx,jpeg,png,jpg',
@@ -147,7 +145,7 @@ class PengumumanController extends Controller
         $pengumuman->update([
             'judul' => $request->judul,
             'isi_pengumuman' => $request->isi_pengumuman,
-            'kategori_id' => $request->kategori_id,
+            'topik_id' => $request->topik_id,
             'tanggal' => $request->tanggal,
             'status' => $request->status,
             'lampiran' => json_encode($lampiranPaths),

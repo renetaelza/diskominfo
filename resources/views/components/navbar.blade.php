@@ -53,7 +53,7 @@
             <li class="dropdown">
                 <a href="#">Informasi <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Dokumen Informasi</a></li>
+                    <li><a href="{{route('dokumen.index')}}">Dokumen Informasi</a></li>
                     <li><a href="{{route('agenda.index')}}">Agenda</a></li>
                     <li><a href="{{route('pengumuman.index')}}">Pengumuman</a></li>
                     <li><a href="{{ route('aplikasi.show', 'opendata') }}">Open Data</a></li>

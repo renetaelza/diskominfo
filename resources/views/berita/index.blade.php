@@ -94,11 +94,11 @@
                                 <h5 class="fw-semibold mb-3">
                                     {{ $berita->judul }}
                                 </h5>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <button class="btn btn-sm text-white p-0" onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')"><i class="fa-solid fa-share"></i></button>
-                                    <div class="eye-counter">
-                                        <i class="fa-regular fa-eye"></i> {{ $berita->views ?? 0 }}
-                                    </div>
+                                <div class="flex items-center justify-end">
+                                    <button class="text-white text-sm hover:text-gray-300"
+                                        onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')">
+                                        <i class="fa-solid fa-share-nodes"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>

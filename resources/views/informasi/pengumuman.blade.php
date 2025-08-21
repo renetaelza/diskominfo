@@ -57,6 +57,17 @@
                             <h3 class="fw-semibold text-dark" style="font-size: 20px;">
                                 {{ $pengumuman->judul }}
                             </h3>
+
+                            <!-- Topik -->
+                            @if($pengumuman->topik)
+                            <div class="mt-1">
+                                <span class="badge rounded-pill"
+                                    style="background-color: #f0f0f0; color: #555; font-size: 13px;">
+                                    <i class="bi bi-tag-fill"></i> {{ $pengumuman->topik->nama }}
+                                </span>
+                            </div>
+                            @endif
+
                         </div>
                     </div>
 
