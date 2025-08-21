@@ -9,13 +9,36 @@ use Illuminate\Support\Facades\Storage;
 
 class DokumenController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $dokumens = Dokumen::where('status', 'publikasi')
-            ->orderByRaw('COALESCE(tanggal, created_at) DESC')
-            ->get();
+        $query = Dokumen::where('status', 'publikasi')
+            ->orderByRaw('COALESCE(tanggal, created_at) DESC');
 
-        return view('informasi.dokumen', compact('dokumens'));
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where('nama_dokumen', 'like', "%$search%")
+                ->orWhere('deskripsi_dokumen', 'like', "%$search%");
+        }
+
+        if ($request->filled('kategori')) {
+            $query->where('kategoriDokumen_id', $request->kategori);
+        }
+
+        if ($request->filled('tahun')) {
+            $query->whereYear('tanggal', $request->tahun);
+        }
+
+        $dokumens = $query->paginate(9)->withQueryString();
+
+        $kategoriDokumens = \App\Models\KategoriDokumen::whereHas('dokumens')->get();
+
+        $tahunList = Dokumen::selectRaw('YEAR(COALESCE(tanggal, created_at)) as tahun')
+            ->where('status', 'publikasi')
+            ->groupBy('tahun')
+            ->orderByDesc('tahun')
+            ->pluck('tahun');
+
+        return view('informasi.dokumen', compact('dokumens', 'kategoriDokumens', 'tahunList'));
     }
 
     public function indexAdmin(Request $request)

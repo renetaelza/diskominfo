@@ -212,7 +212,7 @@
                             <tr>
                                 <th class="px-4 py-3">Foto</th>
                                 <th class="px-4 py-3">Judul</th>
-                                <th class="px-4 py-3">Topik</th> <!-- ganti dari Kategori -->
+                                <th class="px-4 py-3">Topik</th>
                                 <th class="px-4 py-3">Tanggal</th>
                                 <th class="px-4 py-3">Status</th>
                                 <th class="px-4 py-3">Views</th>

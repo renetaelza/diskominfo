@@ -5,11 +5,10 @@
 <!-- HERO SECTION -->
 <header class="relative bg-gray-800 text-white overflow-hidden">
 
-    <img 
-        src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}" 
-        alt="Gedung Diskominfo Bandung" 
-        class="absolute inset-0 w-full h-full object-cover opacity-20 z-0"
-    >
+    <img
+        src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}"
+        alt="Gedung Diskominfo Bandung"
+        class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
 
     <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
@@ -173,16 +172,13 @@
                             {{ $berita->judul }}
                         </h5>
 
-                        <div class="flex items-center justify-between">
+                        <div class="flex items-center justify-end">
                             <button class="text-white text-sm hover:text-gray-300"
                                 onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')">
-                                <i class="fa-solid fa-share"></i>
+                                <i class="fa-solid fa-share-nodes"></i>
                             </button>
-                            <div class="text-sm flex items-center gap-1 eye-counter">
-                                <i class="fa-regular fa-eye"></i>
-                                {{ $berita->views ?? 0 }}
-                            </div>
                         </div>
+
                     </div>
                 </div>
             </a>
@@ -200,7 +196,7 @@
             <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Galeri Video</h2>
             <p class="mt-3 text-lg text-gray-400">Lihat lebih dekat kegiatan dan informasi dari kami.</p>
         </header>
-        
+
         <!-- Alpine.js component initialization -->
         <div class="flex gap-4 h-[480px]">
             <!-- Loop through each video in the data -->
@@ -211,13 +207,11 @@
                     :class="{
                         'flex-grow-[5]': activeIndex === index,
                         'flex-grow-[2]': activeIndex !== index
-                    }"
-                >
-                    <div 
+                    }">
+                    <div
                         class="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-in-out"
                         :style="'background-image: url(https://img.youtube.com/vi/' + video.youtubeId + '/maxresdefault.jpg)'"
-                        :class="{ 'blur-0 brightness-100': activeIndex === index, 'blur-sm brightness-50': activeIndex !== index }"
-                    ></div>
+                        :class="{ 'blur-0 brightness-100': activeIndex === index, 'blur-sm brightness-50': activeIndex !== index }"></div>
 
                     <template x-if="playerIndex === index">
                         <iframe
@@ -226,21 +220,18 @@
                             title="YouTube video player"
                             frameborder="0"
                             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowfullscreen
-                        ></iframe>
+                            allowfullscreen></iframe>
                     </template>
-                    
-                    <div 
+
+                    <div
                         class="absolute bottom-0 left-0 right-0 p-6 text-white transition-all duration-500"
-                        style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);"
-                    >
-                        <div 
+                        style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);">
+                        <div
                             class="transform transition-all duration-500 ease-in-out"
                             :class="{
                                 'translate-y-0 opacity-100': activeIndex === index,
                                 'translate-y-10 opacity-0': activeIndex !== index
-                            }"
-                        >
+                            }">
                             <h2 class="text-2xl font-bold" x-text="video.title"></h2>
                             <p class="text-sm mt-2 opacity-80 max-w-md" x-text="video.description"></p>
                         </div>
@@ -253,38 +244,37 @@
 @endif
 
 <script>
-
     // --- SCRIPT UNTUK GALERI VIDEO ---
     const videoData = @json($latestVideos);
 
     function videoGallery() {
-      return {
-        activeIndex: 0,
-        playerIndex: null,
-        videos: videoData,
-        setActive(index) {
-          // Atur status visual aktif secara langsung
-          this.activeIndex = index;
+        return {
+            activeIndex: 0,
+            playerIndex: null,
+            videos: videoData,
+            setActive(index) {
+                // Atur status visual aktif secara langsung
+                this.activeIndex = index;
 
-          // Jika video untuk kartu ini sudah diputar, jangan lakukan apa-apa
-          if (this.playerIndex === index) return;
+                // Jika video untuk kartu ini sudah diputar, jangan lakukan apa-apa
+                if (this.playerIndex === index) return;
 
-          // Hentikan video yang sedang berjalan
-          this.playerIndex = null;
+                // Hentikan video yang sedang berjalan
+                this.playerIndex = null;
 
-          // Atur jeda untuk memulai video baru, agar animasi selesai dulu
-          setTimeout(() => {
-            // Hanya putar video jika pengguna masih berada di kartu yang sama
-            if (this.activeIndex === index) {
-              this.playerIndex = index;
+                // Atur jeda untuk memulai video baru, agar animasi selesai dulu
+                setTimeout(() => {
+                    // Hanya putar video jika pengguna masih berada di kartu yang sama
+                    if (this.activeIndex === index) {
+                        this.playerIndex = index;
+                    }
+                }, 600); // Durasi ini harus sama dengan durasi transisi CSS
+            },
+            resetOnLeave() {
+                this.activeIndex = 0; // Kembalikan ke kartu pertama
+                this.playerIndex = null; // Hentikan video
             }
-          }, 600); // Durasi ini harus sama dengan durasi transisi CSS
-        },
-        resetOnLeave() {
-            this.activeIndex = 0; // Kembalikan ke kartu pertama
-            this.playerIndex = null; // Hentikan video
         }
-      }
     }
 
     // Fungsi untuk mengupdate jam real-time

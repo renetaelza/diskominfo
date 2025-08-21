@@ -70,6 +70,7 @@ Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->nam
 Route::get('informasi/agenda', function () {
     return view('informasi.agenda');
 })->name('agenda.index');
+Route::get('/informasi/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 
 // GALERI
 // galeri-video
@@ -144,7 +145,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('/galeri/video/store', [GalleryController::class, 'storeVideo'])->name('galeri.video.store');
     Route::put('/galeri/video/update', [GalleryController::class, 'updateVideo'])->name('galeri.video.update');
     Route::delete('/galeri/video/{video}', [GalleryController::class, 'destroy'])->name('galeri.video.destroy');
-  
+
     // dokumen informasi
     Route::get('/dokumen', [DokumenController::class, 'indexAdmin'])->name('dokumen.index');
     Route::get('/dokumen/create', [DokumenController::class, 'create'])->name('dokumen.create');

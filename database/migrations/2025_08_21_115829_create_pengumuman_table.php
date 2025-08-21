@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('pengumuman', function (Blueprint $table) {
             $table->id();
             $table->string('judul');
             $table->text('isi_pengumuman');
-            $table->foreignId('kategori_id')->nullable()->constrained('bidang')->nullOnDelete();
+            $table->foreignId('topik_id')->constrained('topik')->onDelete('cascade');
             $table->date('tanggal');
             $table->enum('status', ['publikasi', 'draft'])->default('draft');
             $table->json('lampiran')->nullable();

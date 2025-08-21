@@ -52,12 +52,12 @@
                         <input type="text" name="judul" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
 
-                    <!-- Kategori -->
+                    <!-- Topik -->
                     <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Kategori (Bidang)</label>
-                        <select name="kategori_id" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option disabled selected>Pilih Bidang</option>
-                            @foreach($bidang as $item)
+                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Topik</label>
+                        <select name="topik_id" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                            <option value="" disabled selected>Pilih Topik</option>
+                            @foreach($topiks as $item)
                             <option value="{{ $item->id }}">{{ $item->nama }}</option>
                             @endforeach
                         </select>
@@ -92,19 +92,6 @@
                         <!-- Publikasi -->
                         <div class="relative w-1/2">
                             <button type="button" onclick="setStatusAndSubmit('publikasi')" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">Publikasi</button>
-                            <!-- <button type="button" onclick="toggleJadwal()" class="absolute top-1/2 right-4 transform -translate-y-1/2 text-sm text-white hover:text-gray-200">&#9662;</button>
-
-                            <!-- Pop-up Jadwal -->
-                            <!-- <div id="jadwal-popup" class="absolute mt-2 w-64 bg-white border rounded-lg shadow-lg z-50 p-4 hidden">
-                                <p class="font-semibold mb-2">Jadwalkan pengiriman</p>
-                                <ul class="space-y-2 text-sm">
-                                    <li><a href="#" onclick="jadwalkan('tomorrow-08')">Besok pagi <span class="float-right">08.00</span></a></li>
-                                    <li><a href="#" onclick="jadwalkan('tomorrow-13')">Besok siang <span class="float-right">13.00</span></a></li>
-                                    <li><a href="#" onclick="jadwalkan('nextday-08')">Lusa pagi <span class="float-right">08.00</span></a></li>
-                                </ul>
-                                <hr class="my-2">
-                                <button type="button" onclick="document.getElementById('date-picker').showModal()" class="w-full mt-2 text-sm border p-2 rounded">Pilih tanggal & waktu</button>
-                            </div> -->
                         </div>
 
                         <!-- Simpan Draft -->
@@ -114,16 +101,6 @@
                     </div>
                 </div>
             </form>
-
-            <!-- Modal Tanggal -->
-            <dialog id="date-picker" class="rounded-lg p-4 max-w-md mx-auto bg-white dark:bg-gray-800">
-                <p class="font-semibold mb-4">Pilih tanggal & waktu</p>
-                <input type="datetime-local" id="custom-date" class="w-full border p-2 rounded mb-4 min-w-0" min="{{ now()->addMinute()->format('Y-m-d\TH:i') }}">
-                <div class="flex justify-end gap-2">
-                    <button onclick="document.getElementById('date-picker').close()" class="text-sm px-4 py-2">Batal</button>
-                    <button onclick="jadwalkan('custom')" class="bg-blue-600 text-white text-sm px-4 py-2 rounded">Simpan</button>
-                </div>
-            </dialog>
         </main>
     </div>
 </body>
@@ -135,9 +112,7 @@
     inputLampiran.addEventListener('change', function(e) {
         const files = Array.from(e.target.files);
 
-        // Tambahkan file baru ke list
         for (const file of files) {
-            // Cek apakah file sudah ada berdasarkan nama
             if (!fileList.find(f => f.name === file.name)) {
                 fileList.push(file);
             }
@@ -174,14 +149,12 @@
         });
     }
 
-    // Trik agar form bisa mengirim fileList manual
     function syncFileInput() {
         const dataTransfer = new DataTransfer();
         fileList.forEach(file => dataTransfer.items.add(file));
         inputLampiran.files = dataTransfer.files;
     }
 
-    // Fungsi untuk set status dan submit form
     function setStatusAndSubmit(status) {
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();
