@@ -6,6 +6,7 @@ use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\AplikasiController;
+use App\Http\Controllers\AplikasiLandingController;
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
@@ -13,17 +14,16 @@ use App\Http\Controllers\Admin\StrukturOrganisasiController;
 use App\Http\Controllers\StrukturOrganisasiUserController;
 use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\AgendaController as PublicAgendaController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\KategoriDokumenController;
+use App\Http\Controllers\DokumenController;
 
-// //USER
-// Route::get('/', function () {
-//     return view('landing');
-// })->name('landing');
+//USER
 
-Route::get('/', function () {
-    // Arahkan ke view 'home.blade.php'
-    return view('home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/api/weather', function () {
     // Ambil API Key yang sudah aman dari file .env
@@ -52,11 +52,12 @@ Route::get('/api/weather', function () {
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
 Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.detail');
 
-Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
-
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
-Route::get('/aplikasi/kunjungan', [AplikasiController::class, 'index_kunjungan'])->name('kunjungan.index');
+Route::get('/aplikasi/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+
+Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
+
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
@@ -69,6 +70,10 @@ Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->nam
 Route::get('informasi/agenda', function () {
     return view('informasi.agenda');
 })->name('agenda.index');
+
+// GALERI
+// galeri-video
+Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('main.galeri.video');
 
 // Public-facing API for FullCalendar
 Route::get('/api/agenda-events', [PublicAgendaController::class, 'getEventsForCalendar']);
@@ -89,7 +94,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::put('/struktur-organisasi/edit-pegawai/{pegawai}', [StrukturOrganisasiController::class, 'update'])->name('strukturOrganisasi.update');
     Route::delete('/struktur-organisasi/{pegawai}', [StrukturOrganisasiController::class, 'destroy'])->name('strukturOrganisasi.destroy');
 
-    //ADMIN-PENGUMUMAN
+    //PENGUMUMAN
     Route::get('/pengumuman', [PengumumanController::class, 'indexAdmin'])->name('pengumuman.index');
     Route::get('/pengumuman/create', [PengumumanController::class, 'create'])->name('pengumuman.create');
     Route::post('/pengumuman', [PengumumanController::class, 'store'])->name('pengumuman.store');
@@ -97,7 +102,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::get('/pengumuman/{id}/edit', [PengumumanController::class, 'edit'])->name('pengumuman.edit');
     Route::put('/pengumuman/{id}', [PengumumanController::class, 'update'])->name('pengumuman.update');
 
-    //ADMIN-BERITA
+    //BERITA
     Route::get('/berita', [BeritaController::class, 'indexAdmin'])->name('berita.index');
     Route::get('/berita/create', [BeritaController::class, 'create'])->name('berita.create');
     Route::post('/berita', [BeritaController::class, 'store'])->name('berita.store');
@@ -110,11 +115,45 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::delete('/topik/{id}', [TopikController::class, 'destroy'])->name('topik.destroy');
 
 
-    //ADMIN-AGENDA
+    //AGENDA
     Route::resource('agenda', AdminAgendaController::class);
 
-    //ADMIN-LAYANAN
-    Route::get('/aplikasi', [AplikasiController::class, 'indexAdmin'])->name('aplikasi.index');
-    Route::get('/aplikasi/{judul}', [AplikasiController::class, 'get'])->name('aplikasi.get');
-    Route::put('/aplikasi/update', [AplikasiController::class, 'update'])->name('aplikasi.update');
+    // LAYANAN
+    // navigasi
+    Route::get('/aplikasi/navigasi', [AplikasiController::class, 'indexAdmin'])->name('aplikasi.indexNavigasi');
+    Route::get('/aplikasi/navigasi/{judul}', [AplikasiController::class, 'get'])->name('aplikasi.get');
+    Route::put('/aplikasi/navigasi/update', [AplikasiController::class, 'update'])->name('aplikasi.update');
+
+    // landing
+    Route::get('/aplikasi/landing', [AplikasiLandingController::class, 'indexAdmin'])->name('aplikasi.indexLanding');
+    Route::post('/aplikasi/landing/store', [AplikasiLandingController::class, 'store'])->name('aplikasi.landing.store');
+    Route::put('/aplikasi/landing/update', [AplikasiLandingController::class, 'update'])->name('aplikasi.landing.update');
+    Route::delete('/aplikasi/landing/{aplikasi}', [AplikasiLandingController::class, 'destroy'])->name('aplikasi.landing.destroy');
+
+    // Kunjungan
+    Route::get('kunjungan', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'index'])->name('kunjungan.index');
+    Route::get('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'show'])->name('kunjungan.show');
+    Route::post('kunjungan/{kunjungan}/update-status', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'updateStatus'])->name('kunjungan.updateStatus');
+
+    //banner
+    Route::get('/banner-utama', [BannerController::class, 'index'])->name('banner.index');
+    Route::put('/banner-utama/update', [BannerController::class, 'update'])->name('banner.update');
+
+    // gallery-video
+    Route::get('/galeri/video', [GalleryController::class, 'indexVideo'])->name('galeri.video');
+    Route::post('/galeri/video/store', [GalleryController::class, 'storeVideo'])->name('galeri.video.store');
+    Route::put('/galeri/video/update', [GalleryController::class, 'updateVideo'])->name('galeri.video.update');
+    Route::delete('/galeri/video/{video}', [GalleryController::class, 'destroy'])->name('galeri.video.destroy');
+  
+    // dokumen informasi
+    Route::get('/dokumen', [DokumenController::class, 'indexAdmin'])->name('dokumen.index');
+    Route::get('/dokumen/create', [DokumenController::class, 'create'])->name('dokumen.create');
+    Route::post('/dokumen', [DokumenController::class, 'store'])->name('dokumen.store');
+    Route::delete('/dokumen/{id}', [DokumenController::class, 'destroy'])->name('dokumen.destroy');
+    Route::get('/dokumen/{id}/edit', [DokumenController::class, 'edit'])->name('dokumen.edit');
+    Route::put('/dokumen/{id}', [DokumenController::class, 'update'])->name('dokumen.update');
+    Route::get('/kategori-dokumen', [KategoriDokumenController::class, 'index'])->name('kategoriDokumen.index');
+    Route::post('/kategori-dokumen', [KategoriDokumenController::class, 'store'])->name('kategoriDokumen.store');
+    Route::put('/kategori-dokumen/{id}', [KategoriDokumenController::class, 'update'])->name('kategoriDokumen.update');
+    Route::delete('/kategori-dokumen/{id}', [KategoriDokumenController::class, 'destroy'])->name('kategoriDokumen.destroy');
 });

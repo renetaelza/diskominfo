@@ -31,6 +31,10 @@
         }
     </script>
 
+    <style>
+        [x-cloak] { display: none !important; }
+    </style>
+
     
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-900 font-sans">

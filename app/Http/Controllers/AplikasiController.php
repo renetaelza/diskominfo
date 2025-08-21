@@ -16,23 +16,18 @@ class AplikasiController extends Controller
         return view("aplikasi.$slug", compact('aplikasi'));
     }
 
-    public function index_kunjungan()
-    {
-
-        $bidang = Bidang::all();
-        return view('aplikasi.kunjungan', compact('bidang'));
-    }
-
     public function indexAdmin(Request $request)
     {
-        return view('admin.aplikasi.index');
+        return view('admin.aplikasi.indexNavigasi');
     }
 
     // GET
     public function get($judul)
     {
-        $aplikasi = Aplikasi::where('judul', $judul)->first();
-
+        $aplikasi = Aplikasi::where('judul', $judul)
+        ->where('landing', false) // hanya ambil aplikasi non-landing
+        ->first();
+        
         if (!$aplikasi) {
             return response()->json([
                 'message' => 'Data tidak ditemukan'

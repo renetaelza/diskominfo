@@ -3,12 +3,12 @@
 @section('title', 'Struktur Organisasi')
 
 @section('content')
-<div x-data="pegawaiModal()" x-cloak>
+<div x-data="pegawaiModal()" x-cloak class="h-screen flex flex-col">
     <!-- Tambahkan style untuk x-cloak -->
     <style>[x-cloak] { display: none !important; }</style>
 
     <!-- 🔘 Header & Tombol Tambah -->
-    <div class="bg-white dark:bg-gray-800 shadow-md px-10 py-3 mb-6 flex justify-between items-center">
+    <div class="sticky top-0 z-40 bg-white dark:bg-gray-800 md:px-10 shadow-md px-10 py-3 flex justify-between items-center">
         <h3 class="font-semibold text-gray-800 dark:text-white">Struktur Organisasi</h3>
         <button 
             @click="showModal = true" 
@@ -441,7 +441,7 @@
     @endif
 
     <!-- 🔳 Layout Konten -->
-    <div class="flex gap-4 px-6">
+    <div class="flex-1 flex gap-4 px-6 py-5 overflow-y-auto bg-gray-200">
         <div class="w-3/4 bg-gray-100 dark:bg-gray-900 rounded-lg shadow-md p-4 min-h-[820px]">
             <h3 class="text-gray-600 dark:text-gray-300 font-semibold mb-2">Preview Struktur Organisasi</h3>
             <div id="tree" class="h-[750px] overflow-auto"></div>
@@ -474,9 +474,11 @@
                 @endif
             </div>
 
-            <div id="daftar-pegawai-container" class="overflow-y-auto max-h-[730px] grid gap-3 pr-2">
+            <div id="daftar-pegawai-container" class="overflow-y-auto max-h-[730px] grid gap-3 p-2">
                 @forelse($pegawai as $item)
-                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-xl hover:shadow-2xl transition duration-300 hover:-translate-y-1 hover:scale-[1.02]">
+                    <div class="bg-white dark:bg-gray-800 rounded-lg p-4 shadow-lg 
+                    transition duration-300 hover:-translate-y-1 hover:scale-[1.02] 
+                    hover:relative hover:z-10">
                         <div>
                             <h4 class="font-semibold text-gray-800 dark:text-white">{{ $item->nama }}</h4>
                             <p class="text-sm text-gray-500 dark:text-gray-300">
@@ -550,8 +552,7 @@
 <script>
 
     document.addEventListener("DOMContentLoaded", function() {
-        // Ambil data pegawai dari Laravel dan konversi ke JSON
-        // Pastikan variabel $pegawai dikirim dari controller
+        // Ambil data pegawai dan konversi ke JSON
         const pegawaiData = @json($pegawai);
 
         // Buat array nodes dari data pegawai
@@ -604,8 +605,6 @@
         const searchInput = document.getElementById('search-input');
         const daftarPegawaiContainer = document.getElementById('daftar-pegawai-container');
         
-        // Asumsi fungsi openDetailModal, openEditModal, dan confirmDelete sudah ada di Alpine.js atau global scope.
-        // Kita akan pastikan mereka bisa diakses dari window object.
         window.openDetailModal = function(pegawai) {
             // Logika untuk membuka modal detail
             // Ini akan memicu Alpine.data('pegawaiModal')

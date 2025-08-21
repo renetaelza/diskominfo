@@ -4,25 +4,26 @@
 
 <!-- HERO SECTION -->
 <header class="relative bg-gray-800 text-white overflow-hidden">
-    
-    <!-- Gambar Latar Belakang -->
-    <img src="{{ asset('pictures/hero_landing.png') }}" alt="Balai Kota Bandung" class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
-    
-    <!-- Konten Hero -->
+
+    <img 
+        src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}" 
+        alt="Gedung Diskominfo Bandung" 
+        class="absolute inset-0 w-full h-full object-cover opacity-20 z-0"
+    >
+
     <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
         <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
-            
-            <!-- Grup Teks Utama (Kiri) -->
+
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
-                    DINAS KOMUNIKASI DAN INFORMASI <span class="text-orange-400">KOTA BANDUNG</span>
+                    DINAS KOMUNIKASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
                 </h1>
-                <p class="mt-6 max-w-2xl text-lg text-gray-200">
-                    Mewujudkan Bandung Smart City melalui Transformasi dan Inovasi Digital yang Inklusif.
+
+                <p class="mt-6 ml-1 max-w-2xl text-lg text-gray-200">
+                    {{ $hero->tagline ?? 'Belum ada tagline yang diatur' }}
                 </p>
             </div>
 
-            <!-- Info Jam & Cuaca (Kanan) -->
             <div class="mt-8 lg:mt-0 flex flex-col items-start lg:items-end gap-2 text-lg font-semibold text-gray-200">
                 <div id="live-clock" class="flex items-center gap-3">
                     <i class="far fa-clock text-xl"></i>
@@ -39,143 +40,253 @@
 </header>
 
 <!-- CARD SLIDER SECTION -->
-<section class="relative z-20 -mt-24 md:-mt-48 pb-12">
+<section class="relative z-20 -mt-24 md:-mt-20 pb-12">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Section Header -->
-        <div class="text-center lg:text-left mb-8 lg:ml-8">
-            <h2 class="text-3xl font-bold text-white">Layanan</h2>
-            <p class="text-lg text-gray-300">Daftar Layanan Online Diskominfo</p>
-        </div>
+        <div id="slider-container" class="w-full max-w-7xl mx-auto flex items-center justify-center gap-x-2 sm:gap-x-4">
+            <!-- Prev Button -->
+            <button id="prev-slide" class="flex-shrink-0 bg-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-blue-950 hover:bg-gray-200 transition">
+                <i class="fas fa-chevron-left"></i>
+            </button>
 
-        <!-- Slider Component -->
-        <div id="slider-container" class="relative w-full max-w-7xl mx-auto">
             <!-- Viewport -->
-            <div id="slider-viewport" class="w-full overflow-hidden py-10">
+            <div id="slider-viewport" class="w-full overflow-hidden py-4">
                 <!-- Track -->
                 <div class="flex gap-8 ml-4 transition-transform duration-500 ease-in-out" id="slider-track">
-                    <!-- Card 1 -->
-                    <div class="flex-shrink-0 w-[80vw] sm:w-72 bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center group hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                        <div class="mx-auto w-20 h-20 flex items-center justify-center bg-orange-100 rounded-full">
-                            <i class="fas fa-bullhorn text-3xl text-orange-500"></i>
+                    @forelse($aplikasi as $app)
+                    <!-- Card Dinamis -->
+                    <a href="{{ $app->link }}" target="_blank"
+                        class="flex-shrink-0 w-[80vw] sm:w-64 h-64 rounded-2xl shadow-md overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
+
+                        <!-- Gambar -->
+                        @if($app->foto && Storage::disk('public')->exists(str_replace('storage/', '', $app->foto)))
+                        <img src="{{ asset($app->foto) }}" alt="{{ $app->judul }}"
+                            class="w-full h-full object-cover block">
+                        @else
+                        <div class="w-full h-full flex items-center justify-center bg-gray-200">
+                            <i class="fas fa-image text-4xl text-gray-400"></i>
                         </div>
-                        <h3 class="mt-4 font-bold text-xl text-blue-950">Layanan Publik</h3>
-                        <p class="mt-2 text-sm text-gray-600">Akses berbagai layanan publik Kota Bandung secara online.</p>
-                    </div>
-                    <!-- Card 2 -->
-                    <div class="flex-shrink-0 w-[80vw] sm:w-72 bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center group hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                        <div class="mx-auto w-20 h-20 flex items-center justify-center bg-blue-100 rounded-full">
-                            <i class="fas fa-database text-3xl text-blue-800"></i>
+                        @endif
+
+                        <!-- Overlay Hover -->
+                        <div class="absolute inset-0 bg-gradient-to-t from-blue-900/70 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-end justify-center p-4 z-50">
+                            <h3 class="text-white font-bold text-lg text-center">{{ $app->judul }}</h3>
                         </div>
-                        <h3 class="mt-4 font-bold text-xl text-blue-950">Open Data</h3>
-                        <p class="mt-2 text-sm text-gray-600">Jelajahi dan manfaatkan data terbuka dari pemerintah kota.</p>
+                    </a>
+                    @empty
+                    <div class="w-full text-center text-gray-300 italic py-6">
+                        <p>Belum ada aplikasi tersedia.</p>
                     </div>
-                    <!-- Card 3 -->
-                    <div class="flex-shrink-0 w-[80vw] sm:w-72 bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center group hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                        <div class="mx-auto w-20 h-20 flex items-center justify-center bg-green-100 rounded-full">
-                            <i class="fas fa-comments text-3xl text-green-600"></i>
-                        </div>
-                        <h3 class="mt-4 font-bold text-xl text-blue-950">Pengaduan</h3>
-                        <p class="mt-2 text-sm text-gray-600">Sampaikan aspirasi dan pengaduan Anda dengan mudah.</p>
-                    </div>
-                    <!-- Card 4 -->
-                    <div class="flex-shrink-0 w-[80vw] sm:w-72 bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center group hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                        <div class="mx-auto w-20 h-20 flex items-center justify-center bg-purple-100 rounded-full">
-                            <i class="fas fa-chart-pie text-3xl text-purple-600"></i>
-                        </div>
-                        <h3 class="mt-4 font-bold text-xl text-blue-950">Info Grafis</h3>
-                        <p class="mt-2 text-sm text-gray-600">Dapatkan informasi penting dalam format visual yang menarik.</p>
-                    </div>
-                    <!-- Card 5 -->
-                    <div class="flex-shrink-0 w-[80vw] sm:w-72 bg-white rounded-2xl shadow-md hover:shadow-xl p-6 text-center group hover:-translate-y-2 transition-all duration-300 cursor-pointer">
-                        <div class="mx-auto w-20 h-20 flex items-center justify-center bg-red-100 rounded-full">
-                            <i class="fas fa-broadcast-tower text-3xl text-red-500"></i>
-                        </div>
-                        <h3 class="mt-4 font-bold text-xl text-blue-950">Radio Sonata</h3>
-                        <p class="mt-2 text-sm text-gray-600">Dengarkan siaran radio resmi dari Pemerintah Kota Bandung.</p>
-                    </div>
+                    @endforelse
                 </div>
             </div>
 
-            <!-- Navigation Buttons -->
-            <button id="prev-slide" class="absolute top-1/2 -translate-y-1/2 bg-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-blue-950 hover:bg-gray-200 transition left-0 -translate-x-1/2">
-                <i class="fas fa-chevron-left"></i>
-            </button>
-            <button id="next-slide" class="absolute top-1/2 -translate-y-1/2 bg-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-blue-950 hover:bg-gray-200 transition right-0 translate-x-1/2">
+            <!-- Next Button -->
+            <button id="next-slide" class="flex-shrink-0 bg-white w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-blue-950 hover:bg-gray-200 transition">
                 <i class="fas fa-chevron-right"></i>
             </button>
         </div>
     </div>
 </section>
 
-{{-- <!-- PENGUMUMAN SECTION -->
+
+<!-- PENGUMUMAN SECTION -->
 <section class="py-16 bg-slate-100 pt-32">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="relative bg-white rounded-2xl shadow-lg p-8 pt-24 md:pt-8 flex flex-col md:flex-row items-center">
-            <!-- Image Column -->
-            <div class="absolute -top-20 md:top-auto md:relative md:-left-16 w-40 h-40 md:w-1/3 md:h-auto flex-shrink-0">
-                <img src="{{ asset('pictures/pengumuman_women.png') }}" alt="Pengumuman" class="w-full h-full object-cover rounded-full md:rounded-2xl shadow-lg">
+        <div id="announcement-carousel" class="relative rounded-2xl shadow-lg bg-white mt-16 md:mt-0">
+            <!-- Image positioned absolutely -->
+            <div class="absolute bottom-0 left-6 w-1/3 h-full hidden md:block">
+                <img src="{{ asset('pictures/karakter_pengumuman1.png') }}" alt="Maskot Pengumuman" class="absolute bottom-0 h-[140%] w-auto max-w-none drop-shadow-lg">
             </div>
-            <!-- Text Column -->
-            <div class="w-full text-center md:text-left md:pl-24">
-                <span class="text-orange-500 font-semibold">Pengumuman</span>
-                <h3 class="text-2xl font-bold text-blue-950 mt-1">Peresmian Bandung Sadayana</h3>
-                <p class="mt-2 text-gray-600 max-w-2xl">Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptate blanditiis at voluptatibus magni quidem possimus, vitae tempora, itaque dolore dicta.</p>
-                <div class="mt-6 flex items-center justify-center md:justify-start gap-4 text-sm text-gray-500">
-                    <span><i class="fa-solid fa-calendar-alt mr-2"></i>14 Juli 2025</span>
-                    <a href="#" class="font-bold text-orange-500 hover:underline">Lihat Selengkapnya &rarr;</a>
+            <!-- Slides Wrapper with margin to avoid overlap -->
+            <div class="md:ml-[18%] h-64">
+                <div class="flex-1 overflow-hidden relative">
+                    <!-- Slides Container (the moving part) -->
+                    <div id="slides-container" class="flex transition-transform duration-500 ease-in-out">
+                        @forelse ($pengumuman as $pengumuman)
+                        <!-- Slide Dinamis -->
+                        <div class="w-full flex-shrink-0 p-8 mt-6">
+                            <div class="flex items-center mb-2">
+                                <span class="text-black font-semibold">Pengumuman</span>
+                                <div class="flex items-center gap-2">
+                                    <button class="announcement-toggle p-1 rounded-full hover:bg-gray-100 transition-colors">
+                                        <i class="fas fa-chevron-right transition-transform duration-300"></i>
+                                    </button>
+                                    <a href="{{route('pengumuman.index')}}" class="announcement-link text-orange-500 font-semibold text-sm hidden pointer-events-none transition-all duration-300">Lihat Selengkapnya &rarr;</a>
+                                </div>
+                            </div>
+                            <h3 class="text-lg font-bold text-blue-950 truncate">{{ $pengumuman->judul }}</h3>
+                            <p class="text-sm text-gray-600 mt-2">{{ Str::limit($pengumuman->isi_pengumuman, 100) }}</p>
+                            <div class="mt-4 text-xs text-gray-500">
+                                <span><i class="fa-solid fa-calendar-alt mr-2"></i>{{ \Carbon\Carbon::parse($pengumuman->tanggal ?? $pengumuman->created_at)->translatedFormat('d F Y') }}</span>
+                            </div>
+                        </div>
+                        @empty
+                        <!-- Fallback jika tidak ada pengumuman -->
+                        <div class="w-full flex-shrink-0 p-8">
+                            <h3 class="text-lg font-bold text-blue-950">Tidak Ada Pengumuman</h3>
+                            <p class="text-sm text-gray-600 mt-2">Saat ini belum ada pengumuman terbaru yang dipublikasikan.</p>
+                        </div>
+                        @endforelse
+                    </div>
+                    <!-- Dots Navigation -->
+                    <div id="dots-container" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2"></div>
                 </div>
             </div>
         </div>
     </div>
-</section> --}}
+</section>
 
-{{-- <!-- AGENDA KEGIATAN SECTION -->
-<section class="py-20 bg-slate-100">
-    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 class="text-3xl font-bold text-blue-950 text-center mb-12">Agenda Kegiatan</h2>
-        <div class="max-w-4xl mx-auto space-y-8">
-            <!-- Agenda Item 1 -->
-            <div class="flex items-center gap-4 md:gap-8">
-                <div class="flex-shrink-0 text-center bg-yellow-400 rounded-xl p-4 w-24">
-                    <p class="text-4xl font-bold text-blue-950">04</p>
-                    <p class="font-semibold text-blue-950">Juli</p>
-                </div>
-                <div class="flex-grow bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="font-bold text-xl text-blue-950">Peresmian Bandung Sadayana</h3>
-                    <p class="text-sm text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>Balai Kota Bandung</p>
-                </div>
-            </div>
-            <!-- Agenda Item 2 -->
-             <div class="flex items-center gap-4 md:gap-8">
-                <div class="flex-shrink-0 text-center bg-yellow-400 rounded-xl p-4 w-24">
-                    <p class="text-4xl font-bold text-blue-950">19</p>
-                    <p class="font-semibold text-blue-950">Juli</p>
-                </div>
-                <div class="flex-grow bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="font-bold text-xl text-blue-950">Workshop Literasi Digital untuk UMKM</h3>
-                     <p class="text-sm text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>Hotel Grand Preanger</p>
-                </div>
-            </div>
-            <!-- Agenda Item 3 -->
-            <div class="flex items-center gap-4 md:gap-8">
-                <div class="flex-shrink-0 text-center bg-yellow-400 rounded-xl p-4 w-24">
-                    <p class="text-4xl font-bold text-blue-950">22</p>
-                    <p class="font-semibold text-blue-950">Juli</p>
-                </div>
-                <div class="flex-grow bg-white p-6 rounded-xl shadow-md">
-                    <h3 class="font-bold text-xl text-blue-950">Peluncuran Aplikasi Lapor Warga</h3>
-                    <p class="text-sm text-gray-500 mt-1"><i class="fas fa-map-marker-alt mr-2"></i>Kantor Diskominfo</p>
-                </div>
-            </div>
+<section class="py-12 bg-slate-100 px-10">
+    <div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold">Berita Terkini</h2>
+            <a href="{{ route('berita.index') }}" class="text-sm font-medium text-black hover:underline">
+                Lihat Semua Berita
+            </a>
         </div>
-        <div class="text-center mt-12">
-            <a href="#" class="bg-blue-950 text-white font-bold py-3 px-8 rounded-full hover:bg-blue-800 transition-colors">Lihat Agenda Detail</a>
+
+        <!-- Grid Cards -->
+        <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            @foreach ($semuaBerita as $berita)
+            <a href="{{ route('berita.detail', $berita->id) }}" class="text-decoration-none block">
+                <div class="rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 card-news">
+                    <!-- Image -->
+                    <div class="h-60 bg-center bg-cover image"
+                        style="background-image: url('{{ asset($berita->foto_utama ?? 'pictures/dummy_berita.jpg') }}')">
+                    </div>
+
+                    <!-- Overlay -->
+                    <div class="bg-black/70 text-white p-4 overlay">
+                        <div class="text-sm mb-2 meta flex items-center gap-4">
+                            <span class="flex items-center gap-2">
+                                <i class="fa-regular fa-calendar"></i>
+                                {{ \Carbon\Carbon::parse($berita->tanggal)->translatedFormat('d F Y') }}
+                            </span>
+                            <span class="flex items-center gap-2">
+                                <i class="fas fa-tags"></i>
+                                {{ $berita->topik->nama ?? 'Tanpa Topik' }}
+                            </span>
+                        </div>
+
+                        <h5 class="font-semibold text-lg mb-3 fw-semibold line-clamp-2">
+                            {{ $berita->judul }}
+                        </h5>
+
+                        <div class="flex items-center justify-between">
+                            <button class="text-white text-sm hover:text-gray-300"
+                                onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')">
+                                <i class="fa-solid fa-share"></i>
+                            </button>
+                            <div class="text-sm flex items-center gap-1 eye-counter">
+                                <i class="fa-regular fa-eye"></i>
+                                {{ $berita->views ?? 0 }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            @endforeach
         </div>
     </div>
-</section> --}}
+</section>
 
-<!-- SCRIPT UNTUK JAM DAN CUACA -->
+<!-- GALERI VIDEO SECTION -->
+@if($latestVideos->isNotEmpty())
+<section x-data="videoGallery()" @mouseleave="resetOnLeave()" class="bg-white text-grey-900 antialiased">
+    <!-- Main container for the gallery -->
+    <div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+        <header class="text-center mb-10">
+            <h2 class="text-4xl md:text-5xl font-bold tracking-tight">Galeri Video</h2>
+            <p class="mt-3 text-lg text-gray-400">Lihat lebih dekat kegiatan dan informasi dari kami.</p>
+        </header>
+        
+        <!-- Alpine.js component initialization -->
+        <div class="flex gap-4 h-[480px]">
+            <!-- Loop through each video in the data -->
+            <template x-for="(video, index) in videos" :key="index">
+                <div
+                    @mouseenter="setActive(index)"
+                    class="relative flex-grow cursor-pointer overflow-hidden rounded-2xl shadow-2xl custom-transition group"
+                    :class="{
+                        'flex-grow-[5]': activeIndex === index,
+                        'flex-grow-[2]': activeIndex !== index
+                    }"
+                >
+                    <div 
+                        class="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-in-out"
+                        :style="'background-image: url(https://img.youtube.com/vi/' + video.youtubeId + '/maxresdefault.jpg)'"
+                        :class="{ 'blur-0 brightness-100': activeIndex === index, 'blur-sm brightness-50': activeIndex !== index }"
+                    ></div>
+
+                    <template x-if="playerIndex === index">
+                        <iframe
+                            class="w-full h-full object-cover absolute inset-0"
+                            :src="'https://www.youtube.com/embed/' + video.youtubeId + '?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=' + video.youtubeId"
+                            title="YouTube video player"
+                            frameborder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowfullscreen
+                        ></iframe>
+                    </template>
+                    
+                    <div 
+                        class="absolute bottom-0 left-0 right-0 p-6 text-white transition-all duration-500"
+                        style="background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);"
+                    >
+                        <div 
+                            class="transform transition-all duration-500 ease-in-out"
+                            :class="{
+                                'translate-y-0 opacity-100': activeIndex === index,
+                                'translate-y-10 opacity-0': activeIndex !== index
+                            }"
+                        >
+                            <h2 class="text-2xl font-bold" x-text="video.title"></h2>
+                            <p class="text-sm mt-2 opacity-80 max-w-md" x-text="video.description"></p>
+                        </div>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </div>
+</section>
+@endif
+
 <script>
+
+    // --- SCRIPT UNTUK GALERI VIDEO ---
+    const videoData = @json($latestVideos);
+
+    function videoGallery() {
+      return {
+        activeIndex: 0,
+        playerIndex: null,
+        videos: videoData,
+        setActive(index) {
+          // Atur status visual aktif secara langsung
+          this.activeIndex = index;
+
+          // Jika video untuk kartu ini sudah diputar, jangan lakukan apa-apa
+          if (this.playerIndex === index) return;
+
+          // Hentikan video yang sedang berjalan
+          this.playerIndex = null;
+
+          // Atur jeda untuk memulai video baru, agar animasi selesai dulu
+          setTimeout(() => {
+            // Hanya putar video jika pengguna masih berada di kartu yang sama
+            if (this.activeIndex === index) {
+              this.playerIndex = index;
+            }
+          }, 600); // Durasi ini harus sama dengan durasi transisi CSS
+        },
+        resetOnLeave() {
+            this.activeIndex = 0; // Kembalikan ke kartu pertama
+            this.playerIndex = null; // Hentikan video
+        }
+      }
+    }
+
     // Fungsi untuk mengupdate jam real-time
     function updateClock() {
         const clockElement = document.getElementById('live-clock');
@@ -238,7 +349,7 @@
         const track = document.getElementById('slider-track');
         const prevButton = document.getElementById('prev-slide');
         const nextButton = document.getElementById('next-slide');
-        
+
         if (!container || !track || !prevButton || !nextButton) return;
 
         const cards = Array.from(track.children);
@@ -273,7 +384,7 @@
         function handlePrev() {
             if (isMoving) return;
             isMoving = true;
-            
+
             if (currentIndex === 0) {
                 // 1. Matikan animasi untuk lompatan
                 track.style.transition = 'none';
@@ -295,7 +406,7 @@
                 moveSlider();
             }
         }
-        
+
         nextButton.addEventListener('click', handleNext);
         prevButton.addEventListener('click', handlePrev);
 
@@ -326,6 +437,82 @@
         startAutoSlide();
     }
 
+    // --- FUNGSI SLIDER PENGUMUMAN ---
+    function initAnnouncementSlider() {
+        const carousel = document.getElementById('announcement-carousel');
+        const slidesContainer = document.getElementById('slides-container');
+        const dotsContainer = document.getElementById('dots-container');
+        if (!carousel || !slidesContainer || !dotsContainer) return;
+
+        const slides = Array.from(slidesContainer.children);
+        const totalSlides = slides.length;
+        let currentIndex = 0;
+        let slideInterval;
+
+        function showSlide(index) {
+            slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+            const dots = dotsContainer.querySelectorAll('.dot');
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('bg-blue-950', i === index);
+                dot.classList.toggle('bg-gray-300', i !== index);
+            });
+            currentIndex = index;
+        }
+
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('dot', 'w-2.5', 'h-2.5', 'rounded-full', 'transition', 'duration-300');
+            dot.addEventListener('click', () => {
+                showSlide(i);
+                resetInterval();
+            });
+            dotsContainer.appendChild(dot);
+
+            const toggleButton = slides[i].querySelector('.announcement-toggle');
+            const link = slides[i].querySelector('.announcement-link');
+            const icon = slides[i].querySelector('.announcement-toggle i');
+            let rotation = 0;
+            let isLinkVisible = false;
+
+            if (toggleButton && link && icon) {
+                toggleButton.addEventListener('click', () => {
+                    rotation += 360;
+                    icon.style.transform = `rotate(${rotation}deg)`;
+
+                    isLinkVisible = !isLinkVisible;
+
+                    if (isLinkVisible) {
+                        link.classList.remove('hidden', 'pointer-events-none');
+                    } else {
+                        link.classList.add('hidden', 'pointer-events-none');
+                    }
+                });
+            }
+        }
+
+        function startInterval() {
+            stopInterval();
+            slideInterval = setInterval(() => {
+                const nextIndex = (currentIndex + 1) % totalSlides;
+                showSlide(nextIndex);
+            }, 4000);
+        }
+
+        function stopInterval() {
+            clearInterval(slideInterval);
+        }
+
+        function resetInterval() {
+            stopInterval();
+            startInterval();
+        }
+
+        carousel.addEventListener('mouseenter', stopInterval);
+        carousel.addEventListener('mouseleave', startInterval);
+
+        showSlide(0);
+        startInterval();
+    }
 
     // Jalankan fungsi saat halaman selesai dimuat
     document.addEventListener('DOMContentLoaded', function() {
@@ -338,7 +525,16 @@
 
         // Inisialisasi slider
         initSlider();
-    });
 
+        // Inisialisasi slider pengumuman
+        initAnnouncementSlider();
+    });
 </script>
+
+{{-- Style untuk galeri video --}}
+<style>
+    .custom-transition {
+        transition: all 600ms cubic-bezier(0.65, 0, 0.35, 1);
+    }
+</style>
 @endsection
