@@ -16,14 +16,13 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
 
     <style>
-        /* Custom styles for the page and components */
+
         .modal-header-custom {
             background-color: #0a2463;
             color: white;
             border-bottom: none;
         }
 
-        /* Make events on the calendar look clickable */
         .fc-event {
             cursor: pointer;
         }
@@ -53,7 +52,7 @@
     <x-navbar />
 
     <header class="position-relative"
-        style="height: 250px; background: url('https://images.unsplash.com/photo-1519751138087-5bf79df62d5b?q=80&w=2070&auto=format&fit=crop') center center / cover no-repeat;">
+        style="height: 250px; background: url('{{ asset('pictures/agenda.jpg') }}') top center / cover no-repeat;">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.7;"></div>
         <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
             <h1 style="font-size: 40px;" class="fw-bold">Agenda Kegiatan</h1>
@@ -61,8 +60,6 @@
     </header>
 
     <main class="container my-5">
-        {{-- The static table and event list have been removed. --}}
-        {{-- This container will now hold our dynamic calendar. --}}
         <div class="bg-white p-4 p-md-5 rounded-4 shadow">
             <div id="calendar"></div>
         </div>
@@ -106,31 +103,29 @@
 
     {{-- Custom JavaScript to initialize FullCalendar and handle modal --}}
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const calendarEl = document.getElementById('calendar');
-            // Create a Bootstrap Modal instance to control it with JS
-            const eventModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+    document.addEventListener('DOMContentLoaded', function() {
+        const calendarEl = document.getElementById('calendar');
+        const eventModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
 
-            const calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: 'id', // Set language to Indonesian
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,listWeek'
-                },
-                // Fetch events from the API endpoint you created
-                events: '/api/agenda-events',
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'id',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,listWeek'
+            },
+            
+            events: '/public-events', // Fetch events from the public API
 
-                // This function executes when a calendar event is clicked
-                eventClick: function(info) {
-                    // Prevent any default browser behavior
-                    info.jsEvent.preventDefault();
-
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+                
+                // Only open the detail modal if the event is an 'agenda'
+                if (info.event.extendedProps.type === 'agenda') {
                     const event = info.event;
-                    const props = event.extendedProps; // Custom properties from your controller
+                    const props = event.extendedProps;
 
-                    // Populate the modal with data from the clicked event
                     document.getElementById('modal-title').textContent = event.title;
                     document.getElementById('modal-date').textContent = event.start.toLocaleDateString(
                         'id-ID', {
@@ -142,15 +137,14 @@
                     document.getElementById('modal-description').textContent = props.description;
                     document.getElementById('modal-image').src = props.image;
 
-                    // Show the populated modal
                     eventModal.show();
                 }
-            });
-
-            // Render the calendar
-            calendar.render();
+            }
         });
-    </script>
+
+        calendar.render();
+    });
+</script>
 </body>
 
 </html>

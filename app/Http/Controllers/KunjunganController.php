@@ -7,6 +7,8 @@ use App\Models\Bidang;
 use App\Models\Kunjungan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use App\Rules\ValidKunjunganDate;
 
 class KunjunganController extends Controller
 {
@@ -26,8 +28,7 @@ class KunjunganController extends Controller
             'email' => 'required|email',
             'kab_kota' => 'required|string|max:255',
             'alamat_instansi' => 'required|string',
-            'tanggal_kunjungan' => 'required|date|after_or_equal:today',
-            'pukul_kunjungan' => 'required',
+            'tanggal_kunjungan' => ['required', 'date', 'after_or_equal:today', new ValidKunjunganDate()],
             'topik_diskusi' => 'required|string',
             'jumlah_rombongan' => 'required|integer|min:1',
             'no_surat' => 'required|string|max:255',
@@ -35,6 +36,18 @@ class KunjunganController extends Controller
             'surat_permohonan' => 'required|file|mimes:pdf|max:2048',
             'bidang_ids'   => 'required|array',
             'bidang_ids.*' => 'integer|exists:bidang,id',
+            
+            // 2. Add Custom Validation Rule for Time Slot Uniqueness
+            'pukul_kunjungan' => [
+                'required',
+                Rule::unique('kunjungan')->where(function ($query) use ($request) {
+                    return $query->where('tanggal_kunjungan', $request->tanggal_kunjungan)
+                                 ->where('status', 'approved');
+                }),
+            ],
+        ], [
+            // 3. Add custom error message
+            'pukul_kunjungan.unique' => 'Jadwal pada tanggal dan waktu ini sudah dipesan. Silakan pilih waktu lain.'
         ]);
 
         try {

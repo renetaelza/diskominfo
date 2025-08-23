@@ -32,10 +32,27 @@ class AdminKunjunganController extends Controller
             $query->whereIn('status', $request->status);
         }
 
-        // Order by the newest and paginate
-        $kunjungans = $query->latest()->paginate(10)->withQueryString();
+        // NEW: Date Range Filter
+        if ($request->filled('date_from')) {
+            $query->whereDate('tanggal_kunjungan', '>=', $request->input('date_from'));
+        }
+        if ($request->filled('date_to')) {
+            $query->whereDate('tanggal_kunjungan', '<=', $request->input('date_to'));
+        }
 
-        return view('admin.kunjungan.index', compact('kunjungans'));
+        // NEW: Sorting Logic
+        $sortBy = $request->input('sort_by', 'created_at'); // Default sort column
+        $sortDirection = $request->input('sort_direction', 'desc'); // Default sort direction
+
+        // Whitelist of sortable columns to prevent errors
+        $sortableColumns = ['nama', 'tanggal_kunjungan', 'status', 'created_at'];
+        if (in_array($sortBy, $sortableColumns)) {
+            $query->orderBy($sortBy, $sortDirection);
+        }
+
+        $kunjungans = $query->paginate(10)->withQueryString();
+
+        return view('admin.kunjungan.index', compact('kunjungans', 'sortBy', 'sortDirection'));
     }
 
     /**

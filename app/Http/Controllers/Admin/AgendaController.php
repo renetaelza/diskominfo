@@ -10,10 +10,29 @@ use Illuminate\Support\Facades\Storage;
 
 class AgendaController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $agendas = Agenda::with('bidang')->latest()->paginate(10);
-        return view('admin.agenda.index', compact('agendas'));
+        $query = Agenda::with('bidang');
+
+        // Search by name
+        if ($request->filled('search')) {
+            $query->where('nama_agenda', 'like', '%' . $request->search . '%');
+        }
+
+        // Filter by category
+        if ($request->filled('kategori_id')) {
+            $query->where('kategori_id', $request->kategori_id);
+        }
+
+        // Filter by date range
+        if ($request->filled('start_date') && $request->filled('end_date')) {
+            $query->whereBetween('tanggal', [$request->start_date, $request->end_date]);
+        }
+
+        $agendas = $query->latest()->paginate(10)->withQueryString();
+        $bidang = Bidang::all();
+
+        return view('admin.agenda.index', compact('agendas', 'bidang'));
     }
 
     public function create()
@@ -78,7 +97,7 @@ class AgendaController extends Controller
         if ($agenda->foto) {
             Storage::disk('public')->delete($agenda->foto);
         }
-        
+
         $agenda->delete();
         return redirect()->route('admin.agenda.index')->with('success', 'Agenda berhasil dihapus.');
     }

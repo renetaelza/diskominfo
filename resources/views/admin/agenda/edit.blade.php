@@ -8,7 +8,6 @@
         <h1 class="text-2xl font-semibold text-gray-700 dark:text-gray-200 mb-6">Edit Agenda</h1>
 
         <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg p-6">
-            {{-- ✅ This action points to 'update' and REQUIRES $agenda --}}
             <form action="{{ route('admin.agenda.update', $agenda) }}" method="POST" enctype="multipart/form-data">
                 @method('PUT')
                 @include('admin.agenda._form')
