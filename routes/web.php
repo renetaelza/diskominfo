@@ -16,8 +16,9 @@ use App\Http\Controllers\KunjunganController;
 use App\Http\Controllers\Admin\AgendaController as AdminAgendaController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\GalleryController;
-use App\Http\Controllers\AgendaController as PublicAgendaController;
+use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\HomeController;
+
 
 //USER
 
@@ -74,7 +75,8 @@ Route::get('informasi/agenda', function () {
 Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('main.galeri.video');
 
 // Public-facing API for FullCalendar
-Route::get('/api/agenda-events', [PublicAgendaController::class, 'getEventsForCalendar']);
+Route::get('/all-events', [CalendarController::class, 'index']);
+Route::get('/public-events', [CalendarController::class, 'publicEvents']);
 
 //ADMIN
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
