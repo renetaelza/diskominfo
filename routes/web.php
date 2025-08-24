@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\VisiMisiController;
 
 
 //USER
@@ -62,15 +63,13 @@ Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplik
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
-Route::get('/profile/sejarah', function () {
-    return view('profile.sejarah');
-})->name('sejarah.index');
+Route::get('/profile/sejarah', function () {return view('profile.sejarah');})->name('sejarah.index');
+Route::get('/profile/visimisi', [VisiMisiController::class, 'index'])->name('visimisi.index');
+Route::get('/profile/visi-misi', [VisiMisiController::class, 'showPublic'])->name('showPublic');
 
 //INFORMASI
 Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
-Route::get('informasi/agenda', function () {
-    return view('informasi.agenda');
-})->name('agenda.index');
+Route::get('informasi/agenda', function () {return view('informasi.agenda');})->name('agenda.index');
 Route::get('/informasi/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 
 // GALERI
@@ -159,4 +158,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('/kategori-dokumen', [KategoriDokumenController::class, 'store'])->name('kategoriDokumen.store');
     Route::put('/kategori-dokumen/{id}', [KategoriDokumenController::class, 'update'])->name('kategoriDokumen.update');
     Route::delete('/kategori-dokumen/{id}', [KategoriDokumenController::class, 'destroy'])->name('kategoriDokumen.destroy');
+
+    // Visi & Misi
+    Route::get('visi-misi', [VisiMisiController::class, 'index'])->name('visimisi.index');
+    Route::post('visi', [VisiMisiController::class, 'updateVision'])->name('vision.update');
+    Route::post('misi', [VisiMisiController::class, 'storeMission'])->name('mission.store');
+    Route::put('misi/{mission}', [VisiMisiController::class, 'updateMission'])->name('mission.update');
+    Route::delete('misi/{mission}', [VisiMisiController::class, 'destroyMission'])->name('mission.destroy');
 });
