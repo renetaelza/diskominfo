@@ -49,13 +49,19 @@
                     <!-- Nama Dokumen -->
                     <div class="mb-4">
                         <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Nama Dokumen</label>
-                        <input type="text" name="nama_dokumen" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" required>
+                        <input type="text" name="nama_dokumen"
+                            value="{{ old('nama_dokumen') }}"
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('nama_dokumen') border-red-500 @enderror" required>
+                        @error('nama_dokumen')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Kategori -->
                     <div class="mb-4">
                         <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Kategori Dokumen</label>
-                        <select name="kategoriDokumen_id" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <select name="kategoriDokumen_id"
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('kategoriDokumen_id') border-red-500 @enderror" required>
                             <option disabled {{ old('kategoriDokumen_id') ? '' : 'selected' }}>Pilih Kategori</option>
                             @foreach($kategoriDokumen as $item)
                             <option value="{{ $item->id }}" {{ old('kategoriDokumen_id') == $item->id ? 'selected' : '' }}>
@@ -63,22 +69,32 @@
                             </option>
                             @endforeach
                         </select>
+                        @error('kategoriDokumen_id')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
-
-                    <!-- Deskripsi Dokumen -->
+                    <!-- Deskripsi -->
                     <div class="mb-4">
                         <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Deskripsi Dokumen</label>
-                        <textarea name="deskripsi_dokumen" rows="6" class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500" required></textarea>
+                        <textarea name="deskripsi_dokumen" rows="6"
+                            class="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 @error('deskripsi_dokumen') border-red-500 @enderror" required>{{ old('deskripsi_dokumen') }}</textarea>
+                        @error('deskripsi_dokumen')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Lampiran -->
                     <div class="mb-6">
                         <label class="block mb-2 font-medium text-gray-700 dark:text-gray-300">Lampiran</label>
-                        <input type="file" id="lampiran-input" name="lampiran[]" accept=".pdf" multiple class="w-full p-2 border rounded" required>
+                        <input type="file" id="lampiran-input" name="lampiran[]" accept=".pdf"
+                            multiple class="w-full p-2 border rounded @error('lampiran') border-red-500 @enderror" required>
                         <p class="text-sm text-gray-500 mt-2">Bisa upload lebih dari satu file. Format: PDF maksimal 2 MB</p>
                         <div id="lampiran-preview" class="mt-4 space-y-2"></div>
                         <p id="lampiran-error" class="text-sm text-red-600 mt-2 hidden"></p>
+                        @error('lampiran')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <!-- Hidden Field for Date -->
@@ -154,8 +170,53 @@
         inputLampiran.files = dataTransfer.files;
     }
 
-    // Fungsi untuk set status dan submit form
+    function validateForm() {
+        let isValid = true;
+        document.querySelectorAll('.error-message').forEach(e => e.remove());
+        document.querySelectorAll('#form-dokumen input, #form-dokumen select, #form-dokumen textarea')
+            .forEach(el => el.classList.remove('border-red-500'));
+
+        // cek nama dokumen
+        const nama = document.querySelector('input[name="nama_dokumen"]');
+        if (!nama.value.trim()) {
+            showError(nama, 'Nama dokumen wajib diisi');
+            isValid = false;
+        }
+
+        // cek kategori
+        const kategori = document.querySelector('select[name="kategoriDokumen_id"]');
+        if (!kategori.value) {
+            showError(kategori, 'Kategori wajib dipilih');
+            isValid = false;
+        }
+
+        // cek deskripsi
+        const deskripsi = document.querySelector('textarea[name="deskripsi_dokumen"]');
+        if (!deskripsi.value.trim()) {
+            showError(deskripsi, 'Deskripsi wajib diisi');
+            isValid = false;
+        }
+
+        // cek lampiran
+        const lampiran = document.querySelector('#lampiran-input');
+        if (lampiran.files.length === 0) {
+            showError(lampiran, 'Minimal 1 lampiran harus diunggah');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function showError(element, message) {
+        element.classList.add('border-red-500');
+        const error = document.createElement('p');
+        error.className = 'error-message text-red-500 text-sm mt-1';
+        error.innerText = message;
+        element.parentNode.appendChild(error);
+    }
+
     function setStatusAndSubmit(status) {
+        if (!validateForm()) return;
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();
         document.getElementById('form-dokumen').submit();

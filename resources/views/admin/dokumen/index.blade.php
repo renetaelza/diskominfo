@@ -281,6 +281,11 @@
                 </div>
             </div>
 
+            <!-- Pagination -->
+            <div class="mt-4 mb-5 d-flex justify-content-center">
+                {{ $dokumens->links('pagination::tailwind') }}
+            </div>
+
             <!-- Popup Konfirmasi Delete -->
             <div
                 x-show="showDeleteModal"

@@ -304,6 +304,11 @@
                 </div>
             </div>
 
+            <!-- Pagination -->
+            <div class="mt-4 mb-5 d-flex justify-content-center">
+                {{ $beritas->links('pagination::tailwind') }}
+            </div>
+
             <!-- Popup Detail -->
             <div
                 x-show="showDetailModal"
@@ -339,9 +344,9 @@
                             </template>
                         </div>
 
-                        <!-- Kategori & Tanggal -->
+                        <!-- Topik & Tanggal -->
                         <div class="text-sm text-gray-600 mb-2">
-                            <span class="font-semibold">Kategori:</span> <span x-text="detailData.kategori"></span> |
+                            <span class="font-semibold">Topik:</span> <span x-text="detailData.topik"></span> |
                             <span class="font-semibold">Tanggal:</span> <span x-text="detailData.tanggal"></span>
                         </div>
 

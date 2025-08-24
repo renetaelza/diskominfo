@@ -109,6 +109,9 @@
                 </div>
                 @endif
 
+                <div class="mt-4 d-flex justify-content-center">
+                    {{ $pengumumans->links('pagination::tailwind') }}
+                </div>
             </div>
         </div>
     </main>
