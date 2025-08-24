@@ -154,20 +154,14 @@
             @endforeach
         </div>
 
-        <!-- Pagination -->
-        <div class="mt-6">
-            {{ $dokumens->links('pagination::bootstrap-5') }}
-        </div>
-
         @else
         <div class="text-center py-10 text-gray-500 bg-white rounded-lg shadow">
             Tidak ada dokumen ditemukan.
         </div>
         @endif
 
-        <!-- Pagination -->
-        <div class="mt-6">
-            {{ $dokumens->links('pagination::bootstrap-5') }}
+        <div class="mt-4 d-flex justify-content-center">
+            {{ $dokumens->links('pagination::tailwind') }}
         </div>
     </main>
 

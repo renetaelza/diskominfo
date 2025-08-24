@@ -53,6 +53,7 @@
                 </div>
             </form>
 
+            @if ($semuaBerita->currentPage() == 1)
             <div id="newsCarousel" class="carousel slide hero-carousel mb-5" data-bs-ride="carousel" data-bs-interval="4000">
                 <div class="carousel-inner">
                     @foreach ($beritaTerbaru as $index => $item)
@@ -78,6 +79,7 @@
                     @endforeach
                 </div>
             </div>
+            @endif
 
             <!-- Berita Cards -->
             <div class="row g-4">
@@ -89,14 +91,18 @@
                             <div class="overlay text-white">
                                 <div class="meta mb-1">
                                     <i class="fa-regular fa-calendar me-2"></i>{{ \Carbon\Carbon::parse($berita->tanggal)->translatedFormat('d F Y') }}
-                                    <span class="ms-3"><i class="fas fa-tags mr-2"></i>{{ $item->topik->nama ?? 'Tanpa Topik' }}</span>
+                                    <span class="ms-3"><i class="fas fa-tags mr-2"></i>{{ $berita->topik->nama ?? 'Tanpa Topik' }}</span>
                                 </div>
                                 <h5 class="fw-semibold mb-3">
                                     {{ $berita->judul }}
                                 </h5>
                                 <div class="flex items-center justify-end">
                                     <button class="text-white text-sm hover:text-gray-300"
-                                        onclick="event.preventDefault(); share('{{ route('berita.detail', $berita->id) }}', '{{ $berita->judul }}')">
+                                        onclick="event.preventDefault(); copyShare(
+                                            '{{ route('berita.detail', $berita->id) }}',
+                                            '{{ $berita->judul }}',
+                                            '{{ asset($berita->foto_utama ?? 'pictures/dummy_berita.jpg') }}'
+                                        )">
                                         <i class="fa-solid fa-share-nodes"></i>
                                     </button>
                                 </div>
@@ -106,21 +112,30 @@
                 </div>
                 @endforeach
             </div>
+
+            <div class="mt-4 d-flex justify-content-center">
+                {{ $semuaBerita->links('pagination::tailwind') }}
+            </div>
+
         </div>
     </div>
     <x-footer />
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    function share(url, title) {
+    function copyShare(url, title, image) {
         if (navigator.share) {
             navigator.share({
-                title: title,
-                url: url
-            });
+                    title: title,
+                    text: title,
+                    url: url
+                }).then(() => console.log('Berhasil share'))
+                .catch((error) => console.log('Error share:', error));
         } else {
-            navigator.clipboard.writeText(url);
-            alert('Link disalin: ' + url);
+            const textToCopy = `${title}\n${url}\n${image}`;
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => alert('📋 Tersalin:\n' + textToCopy))
+                .catch(err => console.error('Gagal copy:', err));
         }
     }
 </script>

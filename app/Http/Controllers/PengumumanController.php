@@ -14,10 +14,11 @@ class PengumumanController extends Controller
     {
         $pengumumans = Pengumuman::where('status', 'publikasi')
             ->orderByRaw('COALESCE(tanggal, created_at) DESC')
-            ->get();
+            ->paginate(10);
 
         return view('informasi.pengumuman', compact('pengumumans'));
     }
+
 
     public function indexAdmin(Request $request)
     {
@@ -31,7 +32,7 @@ class PengumumanController extends Controller
         if ($request->has('topik')) {
             $query->whereIn('topik_id', $request->topik);
         }
-        $pengumumans = $query->paginate(10)->withQueryString();
+        $pengumumans = $query->orderByDesc('tanggal')->paginate(10)->withQueryString();
         $topiks = Topik::all();
 
         return view('admin.pengumuman.index', compact('pengumumans', 'topiks'));
