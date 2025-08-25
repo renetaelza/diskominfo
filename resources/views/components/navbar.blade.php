@@ -39,7 +39,7 @@
                     <li><a href="{{route('showPublic') }}">Visi Misi</a></li>
                     <li><a href="{{route('profile.strukturOrganisasi')}}">Struktur Organisasi</a></li>
                     <li><a href="#">Tupoksi</a></li>
-                    <li><a href="#">Profil Pimpinan</a></li>
+                    <li><a href="{{route('profile.show')}}">Profil Pimpinan</a></li>
                 </ul>
             </li>
             <li><a href="{{route('berita.index')}}">Berita</a></li>

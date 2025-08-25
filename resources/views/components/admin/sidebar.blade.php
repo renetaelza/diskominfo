@@ -36,7 +36,7 @@
         ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
         ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => route('admin.agenda.index')],
         ['icon' => 'fa-bullseye', 'label' => 'Visi Misi', 'route' => route('admin.visimisi.index')],
-        ['icon' => 'fa-address-card', 'label' => 'Profil Pimpinan', 'route' => '#'],
+        ['icon' => 'fa-address-card', 'label' => 'Profil Pimpinan', 'route' => route('admin.profil.edit')],
 
         ]
         ],
