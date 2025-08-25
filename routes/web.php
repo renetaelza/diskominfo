@@ -146,6 +146,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::put('/galeri/video/update', [GalleryController::class, 'updateVideo'])->name('galeri.video.update');
     Route::delete('/galeri/video/{video}', [GalleryController::class, 'destroy'])->name('galeri.video.destroy');
 
+    // FOLDER (grup foto)
+    Route::get('galeri/folders', [GalleryController::class, 'indexFolders'])->name('galeri.folders');
+    Route::post('galeri/folders', [GalleryController::class, 'storeFolder'])->name('galeri.folders.store');
+    Route::put('galeri/folders/{folder}', [GalleryController::class, 'updateFolder'])->name('galeri.folders.update');
+    Route::delete('galeri/folders/{folder}', [GalleryController::class, 'destroyFolder'])->name('galeri.folders.destroy');
+
+    // // FOTO dalam FOLDER
+    Route::get('galeri/folders/{folder}', [GalleryController::class, 'showFolder'])->name('galeri.folders.show');
+    Route::post('galeri/folders/{folder}/upload', [GalleryController::class, 'storePhoto'])->name('galeri.photos.store');
+    Route::delete('galeri/folders/photos/{photo}', [GalleryController::class, 'destroyPhoto'])->name('galeri.photos.destroy');
+
     // dokumen informasi
     Route::get('/dokumen', [DokumenController::class, 'indexAdmin'])->name('dokumen.index');
     Route::get('/dokumen/create', [DokumenController::class, 'create'])->name('dokumen.create');

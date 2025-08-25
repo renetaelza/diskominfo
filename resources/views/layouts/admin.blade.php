@@ -6,7 +6,7 @@
     <title>@yield('title', 'Admin Panel')</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs" defer></script>
+    <script src="//unpkg.com/alpinejs" defer></script> 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
@@ -42,11 +42,10 @@
     <div class="flex h-screen overflow-hidden">
         <x-admin.sidebar />
 
-        <main class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
+        <main id="content-container" class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
             @yield('content')
         </main>
     </div>
-
     @stack('scripts')
 </body>
 </html>

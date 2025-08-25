@@ -42,7 +42,7 @@
         'label' => 'Galeri',
         'children' => [
         ['icon' => 'fa-video', 'label' => 'Galeri Video', 'route' => route('admin.galeri.video')],
-        ['icon' => 'fa-image', 'label' => 'Galeri Foto', 'route' => '#'],
+        ['icon' => 'fa-image', 'label' => 'Galeri Foto', 'route' => route('admin.galeri.folders')],
         ]
         ],
         [
