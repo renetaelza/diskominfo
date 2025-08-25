@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\ProfilPimpinanController;
 use App\Http\Controllers\VisiMisiController;
 
 
@@ -66,6 +67,7 @@ Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::cl
 Route::get('/profile/sejarah', function () {return view('profile.sejarah');})->name('sejarah.index');
 Route::get('/profile/visimisi', [VisiMisiController::class, 'index'])->name('visimisi.index');
 Route::get('/profile/visi-misi', [VisiMisiController::class, 'showPublic'])->name('showPublic');
+Route::get('/profile/profil-pimpinan', [ProfilPimpinanController::class, 'showPublic'])->name('profile.show');
 
 //INFORMASI
 Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
@@ -119,6 +121,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
 
     //AGENDA
     Route::resource('agenda', AdminAgendaController::class);
+
+    // PROFIL PIMPINAN
+    Route::get('profil-pimpinan', [ProfilPimpinanController::class, 'edit'])->name('profil.edit');
+    Route::put('profil-pimpinan', [ProfilPimpinanController::class, 'update'])->name('profil.update');
 
     // LAYANAN
     // navigasi
