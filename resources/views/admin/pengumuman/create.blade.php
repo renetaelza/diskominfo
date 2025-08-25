@@ -155,12 +155,56 @@
         inputLampiran.files = dataTransfer.files;
     }
 
+    function validateForm() {
+        let isValid = true;
+
+        // ambil elemen
+        const judul = document.querySelector('input[name="judul"]');
+        const topik = document.querySelector('select[name="topik_id"]');
+        const isi = document.querySelector('textarea[name="isi_pengumuman"]');
+
+        // reset error
+        document.querySelectorAll('.error-message').forEach(e => e.remove());
+        [judul, topik, isi].forEach(el => el.classList.remove('border-red-500'));
+
+        // cek judul
+        if (judul.value.trim() === '') {
+            showError(judul, 'Judul wajib diisi');
+            isValid = false;
+        }
+
+        // cek topik
+        if (topik.value === '' || topik.value === null) {
+            showError(topik, 'Pilih topik terlebih dahulu');
+            isValid = false;
+        }
+
+        // cek isi pengumuman
+        if (isi.value.trim() === '') {
+            showError(isi, 'Isi pengumuman tidak boleh kosong');
+            isValid = false;
+        }
+
+        return isValid;
+    }
+
+    function showError(element, message) {
+        element.classList.add('border-red-500');
+        const error = document.createElement('p');
+        error.className = 'error-message text-red-500 text-sm mt-1';
+        error.innerText = message;
+        element.parentNode.appendChild(error);
+    }
+
     function setStatusAndSubmit(status) {
+        if (!validateForm()) {
+            return; // stop kalau ada error
+        }
+
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();
         document.getElementById('form-pengumuman').submit();
     }
 </script>
-
 
 </html>

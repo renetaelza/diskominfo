@@ -282,6 +282,11 @@
                 </div>
             </div>
 
+            <!-- Pagination -->
+            <div class="mt-4 mb-5 d-flex justify-content-center">
+                {{ $pengumumans->links('pagination::tailwind') }}
+            </div>
+
             <!-- Popup Detail -->
             <div
                 x-show="showDetailModal"

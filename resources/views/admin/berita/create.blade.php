@@ -49,24 +49,27 @@
                     <!-- Judul -->
                     <div class="mb-4">
                         <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Judul</label>
-                        <input type="text" name="judul" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <input type="text" name="judul" id="judul"
+                            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <p id="error-judul" class="text-red-500 text-sm mt-1 hidden"></p>
                     </div>
 
                     <!-- Topik -->
                     <div class="mb-4">
                         <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Topik</label>
-                        <select name="topik_id" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <select name="topik_id" id="topik"
+                            class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                             <option value="" disabled selected>Pilih Topik</option>
                             @foreach($topiks as $item)
                             <option value="{{ $item->id }}">{{ $item->nama }}</option>
                             @endforeach
                         </select>
+                        <p id="error-topik" class="text-red-500 text-sm mt-1 hidden"></p>
                     </div>
 
                     <!-- Isi Berita -->
-                    <div class="mb-4">
-                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Isi Berita</label>
-                        <textarea name="isi_berita" rows="6" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required></textarea>
+                    <div class="mb-4"> <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Isi Berita</label> <textarea name="isi_berita" id="isi_berita" rows="6" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        <p id="error-isi" class="text-red-500 text-sm mt-1 hidden"></p>
                     </div>
 
                     <!-- Upload Foto -->
@@ -74,8 +77,11 @@
                         <!-- Foto Utama -->
                         <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md">
                             <label class="block mb-2 font-medium text-gray-700 dark:text-gray-300">Foto Utama (Thumbnail)</label>
-                            <input type="file" name="foto_utama" accept="image/*" onchange="previewFotoUtama(event)" class="w-full p-2 border rounded" required>
+                            <input type="file" name="foto_utama" id="foto_utama" accept="image/*"
+                                onchange="previewFotoUtama(event)"
+                                class="w-full p-2 border rounded">
                             <div id="preview-utama" class="mt-3"></div>
+                            <p id="error-foto" class="text-red-500 text-sm mt-1 hidden"></p>
                             <p class="text-sm text-gray-500 mt-2">Maksimal 1 foto, akan menimpa yang sebelumnya jika diganti.</p>
                         </div>
 
@@ -113,7 +119,6 @@
     const MAX_FILES = 5;
     let fotoTambahan = [];
 
-    // Preview untuk foto utama
     function previewFotoUtama(event) {
         const container = document.getElementById('preview-utama');
         container.innerHTML = '';
@@ -131,7 +136,6 @@
         reader.readAsDataURL(file);
     }
 
-    // Preview untuk foto lainnya (tanpa mengubah file input)
     document.getElementById('foto-lain').addEventListener('change', function(event) {
         const files = Array.from(event.target.files);
 
@@ -197,6 +201,44 @@
     }
 
     function setStatusAndSubmit(status) {
+        let valid = true;
+
+        const judul = document.getElementById('judul').value.trim();
+        const topik = document.getElementById('topik').value;
+        const isi = document.getElementById('isi_berita').value.trim();
+        const fotoUtama = document.getElementById('foto_utama').files.length;
+
+        document.getElementById('error-judul').classList.add('hidden');
+        document.getElementById('error-topik').classList.add('hidden');
+        document.getElementById('error-isi').classList.add('hidden');
+        document.getElementById('error-foto').classList.add('hidden');
+
+        if (judul === "") {
+            document.getElementById('error-judul').innerText = "Judul wajib diisi.";
+            document.getElementById('error-judul').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (topik === "") {
+            document.getElementById('error-topik').innerText = "Pilih topik berita.";
+            document.getElementById('error-topik').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (isi === "") {
+            document.getElementById('error-isi').innerText = "Isi berita tidak boleh kosong.";
+            document.getElementById('error-isi').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (fotoUtama === 0) {
+            document.getElementById('error-foto').innerText = "Foto utama wajib diunggah.";
+            document.getElementById('error-foto').classList.remove('hidden');
+            valid = false;
+        }
+
+        if (!valid) return;
+
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();
         document.getElementById('form-berita').submit();

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,21 +14,32 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite('resources/css/app.css')
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <style>
         .fc-day-sat,
         .fc-day-sun {
             background-color: #ffc10740;
         }
+
+        /* New class to visually disable a day */
+        .day-disabled {
+            background-color: #e0e0e0 !important;
+            pointer-events: none;
+            /* Makes the cell unclickable */
+        }
+
+        .day-disabled .fc-daygrid-day-number {
+            text-decoration: line-through;
+        }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 </head>
 
 <body class="min-h-screen flex flex-col">
     <x-navbar />
     <header class="position-relative"
-        style="height: 250px; background: url('/pictures/layanan/opd.jpg') bottom center / cover no-repeat;">
+        style="height: 250px; background: url('/pictures/kunjungan.jpg') center center / cover no-repeat;">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.75;"></div>
         <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
             <h1 style="font-size: 40px;" class="fw-bold">Pengajuan Kunjungan</h1>
@@ -38,22 +50,7 @@
         <div class="card shadow-lg">
             <div class="card-body p-4 p-md-5">
 
-                {{-- Calendar Section (Unchanged) --}}
-                {{-- <section class="mb-5">
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-lg-8">
-                            <div id="calendar"></div>
-                            <div class="mt-3">
-                                <span class="d-inline-block bg-warning border"
-                                    style="width: 25px; height: 25px; vertical-align: middle;"></span>
-                                <span class="ms-2">= Tidak Tersedia</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <hr class="my-5"> --}}
-
-                {{-- UPDATED FORM --}}
+                {{-- Form --}}
                 <form method="POST" action="{{ route('kunjungan.store') }}" enctype="multipart/form-data">
                     @csrf
                     {{-- Data Pemohon --}}
@@ -124,7 +121,9 @@
                                 <input type="date"
                                     class="form-control @error('tanggal_kunjungan') is-invalid @enderror"
                                     id="tanggalKunjungan" name="tanggal_kunjungan"
-                                    value="{{ old('tanggal_kunjungan') }}">
+                                    value="{{ old('tanggal_kunjungan') }}"
+                                    min="{{ now()->format('Y-m-d') }}">
+                                    <div class="form-text">Catatan: Hari Sabtu, Minggu, dan tanggal yang sudah memiliki agenda tidak dapat dipilih.</div>
                                 @error('tanggal_kunjungan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -143,12 +142,6 @@
                                     <option value="10:30" @if (old('pukul_kunjungan') == '10:30') selected @endif>10:30
                                     </option>
                                     <option value="11:00" @if (old('pukul_kunjungan') == '11:00') selected @endif>11:00
-                                    </option>
-                                    <option value="11:30" @if (old('pukul_kunjungan') == '11:30') selected @endif>11:30
-                                    </option>
-                                    <option value="12:00" @if (old('pukul_kunjungan') == '12:00') selected @endif>12:00
-                                    </option>
-                                    <option value="12:30" @if (old('pukul_kunjungan') == '12:30') selected @endif>12:30
                                     </option>
                                     <option value="13:00" @if (old('pukul_kunjungan') == '13:00') selected @endif>13:00
                                     </option>
@@ -269,35 +262,82 @@
             });
         @endif
 
-        // FullCalendar Initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var visitDateField = document.getElementById('tanggalKunjungan');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next'
-                },
-                selectable: true,
-                selectAllow: function(selectInfo) {
-                    const day = selectInfo.start.getDay();
-                    return day !== 0 && day !== 6;
-                },
-                dateClick: function(info) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (info.dayEl.classList.contains('fc-day-sat') || info.dayEl.classList.contains(
-                            'fc-day-sun') || info.date < today) {
-                        return;
+        // FullCalendar Initialization and Dynamic Logic
+        document.addEventListener('DOMContentLoaded', async function() {
+        const visitDateField = document.getElementById('tanggalKunjungan');
+        const visitTimeField = document.getElementById('pukulKunjungan');
+        const allTimeOptions = Array.from(visitTimeField.options);
+
+        // This object will store booked times
+        const bookedSlots = {};
+        // This array will store fully booked dates
+        let fullyBookedDates = [];
+
+        // 1. Fetch event data to know which dates are blocked
+        try {
+            const response = await fetch('/all-events');
+            const events = await response.json();
+
+            events.forEach(event => {
+                const dateStr = event.start.substring(0, 10);
+                if (event.extendedProps.type === 'agenda') {
+                    fullyBookedDates.push(dateStr);
+                } else if (event.extendedProps.type === 'kunjungan') {
+                    if (!bookedSlots[dateStr]) {
+                        bookedSlots[dateStr] = [];
                     }
-                    visitDateField.value = info.dateStr;
+                    const timeStr = event.start.substring(11, 16);
+                    bookedSlots[dateStr].push(timeStr);
                 }
             });
-            calendar.render();
+        } catch (error) {
+            console.error("Error fetching event data:", error);
+        }
+
+        // 2. Add an event listener to the date input
+        visitDateField.addEventListener('change', function() {
+            const selectedDate = new Date(this.value);
+            const dayOfWeek = selectedDate.getUTCDay(); // Sunday = 0, Saturday = 6
+            const selectedDateStr = this.value;
+
+            // 3. Check if the selected date is a weekend or has an agenda
+            let isInvalid = false;
+            if ([0, 6].includes(dayOfWeek)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tanggal Tidak Valid',
+                    text: 'Kunjungan tidak dapat dilakukan pada hari Sabtu atau Minggu.'
+                });
+                isInvalid = true;
+            } else if (fullyBookedDates.includes(selectedDateStr)) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Tanggal Tidak Tersedia',
+                    text: 'Tanggal ini sudah penuh dengan agenda lain.'
+                });
+                isInvalid = true;
+            }
+
+            if (isInvalid) {
+                this.value = ''; // Clear the invalid date
+                visitTimeField.value = '';
+                allTimeOptions.forEach(option => option.disabled = true);
+                return;
+            }
+            
+            // 4. If the date is valid, update the time dropdown
+            const slotsForDay = bookedSlots[selectedDateStr] || [];
+            visitTimeField.value = '';
+            allTimeOptions.forEach(option => {
+                if (option.value) { // Skip "Pilih Waktu"
+                    option.disabled = slotsForDay.includes(option.value);
+                } else {
+                    option.disabled = false;
+                }
+            });
         });
-    </script>
+    });
+</script>
 </body>
 
 </html>

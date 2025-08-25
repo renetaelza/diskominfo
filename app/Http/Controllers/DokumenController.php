@@ -28,7 +28,7 @@ class DokumenController extends Controller
             $query->whereYear('tanggal', $request->tahun);
         }
 
-        $dokumens = $query->paginate(9)->withQueryString();
+        $dokumens = $query->orderByDesc('tanggal')->paginate(10)->withQueryString();
 
         $kategoriDokumens = \App\Models\KategoriDokumen::whereHas('dokumens')->get();
 
@@ -60,7 +60,7 @@ class DokumenController extends Controller
             $query->whereIn('kategoriDokumen_id', $request->kategori);
         }
 
-        $dokumens = $query->latest()->get();
+        $dokumens = $query->orderByDesc('tanggal')->paginate(10)->withQueryString();
 
         $kategoriDokumen = KategoriDokumen::all();
 

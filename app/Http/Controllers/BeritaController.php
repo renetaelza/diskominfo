@@ -23,9 +23,12 @@ class BeritaController extends Controller
             $query->where('topik_id', $request->topik_id);
         }
 
-        $semuaBerita = $query->orderByDesc('tanggal')->get();
+        $semuaBerita = $query->orderByDesc('tanggal')->paginate(9)->withQueryString();
 
-        $beritaTerbaru = $query->orderByDesc('tanggal')->take(3)->get();
+        $beritaTerbaru = Berita::where('status', 'publikasi')
+            ->orderByDesc('tanggal')
+            ->take(3)
+            ->get();
 
         $topikTerpakai = Berita::select('topik_id')
             ->where('status', 'publikasi')
@@ -37,6 +40,7 @@ class BeritaController extends Controller
 
         return view('berita.index', compact('semuaBerita', 'beritaTerbaru', 'topikTerpakai'));
     }
+
 
     public function show($id)
     {
@@ -52,22 +56,20 @@ class BeritaController extends Controller
     {
         $query = Berita::with('topik')->latest();
 
-        // Search judul
         if ($request->filled('q')) {
             $query->where('judul', 'like', '%' . $request->q . '%');
         }
 
-        // Filter status
         if ($request->has('status')) {
             $query->whereIn('status', $request->status);
         }
 
-        // Filter topik
         if ($request->has('topik')) {
             $query->whereIn('topik_id', $request->topik);
         }
 
-        $beritas = $query->get();
+        $beritas = $query->orderByDesc('tanggal')->paginate(10)->withQueryString();
+
         $topiks = Topik::all();
 
         return view('admin.berita.index', compact('beritas', 'topiks'));
