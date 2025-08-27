@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\PPIDController;
 use App\Http\Controllers\ProfilPimpinanController;
 use App\Http\Controllers\VisiMisiController;
 
@@ -58,20 +59,22 @@ Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.deta
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
 Route::get('/aplikasi/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
-
 Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
-
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
-Route::get('/profile/sejarah', function () {return view('profile.sejarah');})->name('sejarah.index');
+Route::get('/profile/sejarah', function () {
+    return view('profile.sejarah');
+})->name('sejarah.index');
 Route::get('/profile/visimisi', [VisiMisiController::class, 'index'])->name('visimisi.index');
 Route::get('/profile/visi-misi', [VisiMisiController::class, 'showPublic'])->name('showPublic');
 Route::get('/profile/profil-pimpinan', [ProfilPimpinanController::class, 'showPublic'])->name('profile.show');
 
 //INFORMASI
 Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
-Route::get('informasi/agenda', function () {return view('informasi.agenda');})->name('agenda.index');
+Route::get('informasi/agenda', function () {
+    return view('informasi.agenda');
+})->name('agenda.index');
 Route::get('/informasi/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 
 // GALERI
@@ -81,6 +84,9 @@ Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('ma
 // Public-facing API for FullCalendar
 Route::get('/all-events', [CalendarController::class, 'index']);
 Route::get('/public-events', [CalendarController::class, 'publicEvents']);
+
+//PPID
+Route::get('/ppid/{slug}', [PPIDController::class, 'show'])->name('ppid.show');
 
 //ADMIN
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -182,4 +188,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('misi', [VisiMisiController::class, 'storeMission'])->name('mission.store');
     Route::put('misi/{mission}', [VisiMisiController::class, 'updateMission'])->name('mission.update');
     Route::delete('misi/{mission}', [VisiMisiController::class, 'destroyMission'])->name('mission.destroy');
+
+    //PPID
+    Route::get('/ppid/informasi-setiap-saat', [PPIDController::class, 'indexInformasiSetiapSaat'])->name('ppid.informasiSetiapSaat');
+    Route::get('/ppid/informasi-berkala', [PPIDController::class, 'indexInformasiBerkala'])->name('ppid.informasiBerkala');
+    Route::get('/ppid/informasi-serta-merta', [PPIDController::class, 'indexInformasiSertaMerta'])->name('ppid.informasiSertaMerta');
+    Route::get('/ppid/informasi-dikecualikan', [PPIDController::class, 'indexInformasiDikecualikan'])->name('ppid.informasiDikecualikan');
+    Route::post('/ppid/save', [PPIDController::class, 'storeOrUpdate'])->name('ppid.save');
+    Route::get('/ppid/navigasi/{judul}', [PPIDController::class, 'getNavigasiData']);
 });
