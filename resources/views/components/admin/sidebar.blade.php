@@ -29,14 +29,21 @@
 
         $groups = [
         [
+        'icon' => 'fa-user-tie',
+        'label' => 'Profile',
+        'children' => [
+        ['icon' => 'fa-bullseye', 'label' => 'Visi Misi', 'route' => route('admin.visimisi.index')],
+        ['icon' => 'fa-address-card', 'label' => 'Profil Pimpinan', 'route' => route('admin.profil.edit')],
+        ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
+        ]
+        ],
+        [
         'icon' => 'fa-info-circle',
         'label' => 'Informasi',
         'children' => [
         ['icon' => 'fa-file', 'label' => 'Dokumen Informasi', 'route' => route('admin.dokumen.index')],
         ['icon' => 'fa-bullhorn', 'label' => 'Pengumuman', 'route' => route('admin.pengumuman.index')],
         ['icon' => 'fa-calendar-alt', 'label' => 'Agenda', 'route' => route('admin.agenda.index')],
-        ['icon' => 'fa-bullseye', 'label' => 'Visi Misi', 'route' => route('admin.visimisi.index')],
-        ['icon' => 'fa-address-card', 'label' => 'Profil Pimpinan', 'route' => route('admin.profil.edit')],
 
         ]
         ],
@@ -55,11 +62,21 @@
         ['icon' => 'fa-compass', 'label' => 'Navigasi', 'route' => route('admin.aplikasi.indexNavigasi')],
         ['icon' => 'fa-plane', 'label' => 'Landing Page', 'route' => route('admin.aplikasi.indexLanding')],
         ]
+        ],
+        [
+        'icon' => 'fa-landmark',
+        'label' => 'PPID',
+        'children' => [
+        ['icon' => 'fa-circle-info', 'label' => 'Tentang PPID', 'route' => '#'],
+        ['icon' => 'fa-clock-rotate-left', 'label' => 'Informasi Setiap Saat', 'route' => route('admin.ppid.informasiSetiapSaat')],
+        ['icon' => 'fa-repeat', 'label' => 'Informasi Berkala', 'route' => route('admin.ppid.informasiBerkala')],
+        ['icon' => 'fa-bolt', 'label' => 'Informasi Serta Merta', 'route' => route('admin.ppid.informasiSertaMerta')],
+        ['icon' => 'fa-lock', 'label' => 'Informasi Dikecualikan', 'route' => route('admin.ppid.informasiDikecualikan')],
+        ]
         ]
         ];
 
         $others = [
-        ['icon' => 'fa-users', 'label' => 'Struktur Organisasi', 'route' => route('admin.strukturOrganisasi.index')],
         ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => route('admin.kunjungan.index')],
         ];
         @endphp
