@@ -326,26 +326,12 @@ class GalleryController extends Controller
 
         if ($request->hasfile('photos')) {
             foreach ($request->file('photos') as $file) {
-                // =========================================================
-                // 1. BUAT NAMA FILE CUSTOM
-                // Format: folder_{id folder}_{kode unik}.{ekstensi asli}
-                // Contoh: folder_42_65a4c3e1b2d3f.jpg
-                // =========================================================
+                
                 $extension = $file->getClientOriginalExtension();
                 $filename = 'folder_' . $folder->id . '_' . uniqid() . '.' . $extension;
 
-                // =========================================================
-                // 2. SIMPAN FILE DENGAN NAMA BARU
-                // Menggunakan storeAs() untuk menentukan nama file secara manual.
-                // File akan disimpan di: storage/app/public/photos/
-                // =========================================================
                 $path = $file->storeAs('photos', $filename, 'public');
 
-                // =========================================================
-                // 3. BUAT RECORD DI DATABASE
-                // Menggunakan model FolderPhoto dan kolom image_path.
-                // Saya asumsikan relasi di model Folder Anda bernama 'photos'.
-                // =========================================================
                 $folder->photos()->create([
                     'image_path' => $path
                 ]);

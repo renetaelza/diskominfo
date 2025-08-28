@@ -38,7 +38,7 @@
                     <li><a href="{{route('sejarah.index')}}">Sejarah</a></li>
                     <li><a href="{{route('showPublic') }}">Visi Misi</a></li>
                     <li><a href="{{route('profile.strukturOrganisasi')}}">Struktur Organisasi</a></li>
-                    <li><a href="#">Tupoksi</a></li>
+                    <li><a href="{{route('tupoksi') }}">Tupoksi</a></li>
                     <li><a href="{{route('profile.show')}}">Profil Pimpinan</a></li>
                 </ul>
             </li>
@@ -46,7 +46,7 @@
             <li class="dropdown">
                 <a href="#">Galeri <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Gambar</a></li>
+                    <li><a href="{{route('main.galeri.foto')}}">Foto</a></li>
                     <li><a href="{{route('main.galeri.video')}}">Video</a></li>
                 </ul>
             </li>

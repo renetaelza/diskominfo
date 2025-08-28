@@ -25,7 +25,7 @@
         <div class="bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-lg">
             <!-- Pencarian -->
             <div class="p-4">
-                <form action="{{ route('admin.galeri.video') }}" method="GET">
+                <form action="{{ route('main.galeri.video') }}" method="GET">
                     <div class="relative">
                         <input 
                             type="text" 

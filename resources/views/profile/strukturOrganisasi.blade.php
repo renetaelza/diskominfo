@@ -19,15 +19,15 @@
             margin: 0; 
             font-family: 'Poppins', sans-serif; 
         }
-        .body-modal-open {
+        /* .body-modal-open {
             overflow-y: hidden;
-        }
+        } */
         #tree-wrapper {
             width: 100%;
             height: 700px;
             overflow: auto;
         }
-        .modal-header-bg {
+        /* .modal-header-bg {
             background-image: url('https://plus.unsplash.com/premium_photo-1691850197766-a47d9cddfee1?q=80&w=779&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?q=80&w=2070&auto=format&fit=crop');
             background-size: cover;
             background-position: center center;
@@ -51,7 +51,7 @@
             padding: 4px;
             border-radius: 9999px;
             border: 4px solid #fff;
-        }
+        } */
     </style>
 </head>
 <body class="bg-gray-100">
@@ -66,13 +66,17 @@
 
     <main class="container mx-auto py-10 px-4">
         <div class="bg-white rounded-lg shadow-lg p-4">
-            <div id="tree-wrapper">
-                <div id="tree"></div>
-            </div>
+            <iframe 
+                id="orgchart-frame"
+                src="{{ route('orgchart.page') }}" 
+                width="100%" 
+                height="700" 
+                style="border: none; overflow: hidden;">
+            </iframe>
         </div>
     </main>
 
-    <div 
+    {{-- <div 
         x-data="{ 
             showDetail: false, 
             detailPegawai: {},
@@ -174,76 +178,7 @@
                 </div>
             </div>
         </div>
-    </div>
-    
-    <script src="https://balkan.app/js/OrgChart.js"></script>
-    <script>
-        // Variabel ini dibuat untuk menyelesaikan konflik antara sintaks Blade dan JS.
-        const defaultUserImageUrl = '{{ asset('pictures/default-user.png') }}';
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const pegawaiData = @json($pegawai);
-
-            const nodes = pegawaiData.map(p => {
-                const tags = p.is_assistant == 1 ? ["assistant"] : [];
-                const fotoUrl = p.foto 
-                    ? `/storage/foto_pegawai/${p.foto}` 
-                    : defaultUserImageUrl; // Menggunakan variabel JS
-                
-                return {
-                    id: p.id,
-                    pid: p.atasan_id,
-                    name: p.nama,
-                    title: p.jabatan,
-                    img: fotoUrl,
-                    tupoksi: p.tupoksi,
-                    tags: tags,
-                    nip: p.nip,
-                    bidang: p.bidang ? p.bidang.nama : 'Tidak Ada',
-                    atasan: p.atasan ? p.atasan.nama : 'Tidak Ada',
-                    is_assistant: p.is_assistant,
-                    alamat: p.alamat,
-                    foto_url: fotoUrl,
-                    bawahan: p.bawahan
-                };
-            });
-
-            const chart = new OrgChart(document.getElementById("tree"), {
-                template: "rony",
-                nodeMenu: null,
-                enableSearch: false,
-                nodeMouseClick: OrgChart.action.none,
-                mouseScroll: OrgChart.action.zoom,
-                
-                nodeBinding: {
-                    field_0: "name",
-                    field_1: "title",
-                    img_0: "img"
-                },
-                tags: {
-                    "assistant": {
-                        template: "rony"
-                    }
-                },
-                nodes: nodes
-            });
-
-            // CATATAN: Logika setTimeout tidak diubah sesuai permintaan.
-            // Namun, sangat disarankan untuk mencari event 'ready' atau 'rendered'
-            // dari dokumentasi OrgChart.js agar lebih andal.
-            setTimeout(function() {
-                chart.fit();
-
-                chart.onNodeClick(function(args) {
-                    const data = chart.get(args.node.id);
-                    window.dispatchEvent(new CustomEvent('pegawai-detail', {
-                        detail: data
-                    }));
-                    return false;
-                });
-            }, 100);
-        });
-    </script>
+    </div> --}}
     <x-footer />
 </body>
 </html>

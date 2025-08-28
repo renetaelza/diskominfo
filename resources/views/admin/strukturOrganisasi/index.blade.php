@@ -1,3 +1,7 @@
+@php
+    $disablePoppins = true;
+@endphp
+
 @extends('layouts.admin')
 
 @section('title', 'Struktur Organisasi')
@@ -585,7 +589,7 @@
 
         // Inisialisasi OrgChart dengan konfigurasi yang diperbarui
         const chart = new OrgChart(document.getElementById("tree"), {
-            template: "rony",
+            template: "ana",
             enableSearch: false,
             nodes: nodes,
             nodeMenu: null,
@@ -597,7 +601,7 @@
             },
             tags: {
                 "assistant": {
-                    template: "rony" 
+                    template: "ana" 
                 }
             }
         });

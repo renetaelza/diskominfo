@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\PengumumanController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\PPIDController;
 use App\Http\Controllers\ProfilPimpinanController;
+use App\Http\Controllers\TupoksiController;
 use App\Http\Controllers\VisiMisiController;
 
 
@@ -63,11 +65,33 @@ Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplik
 
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
+Route::get('/orgchart/page', function () {
+    $pegawai = App\Models\Pegawai::with(['atasan', 'bidang', 'bawahan'])->get();
+
+    $pegawai = $pegawai->map(function ($p) {
+        if ($p->foto && Storage::disk('public')->exists('foto_pegawai/' . $p->foto)) {
+            $path = Storage::disk('public')->path('foto_pegawai/' . $p->foto);
+            $mime = mime_content_type($path);
+            $base64 = base64_encode(file_get_contents($path));
+            $p->foto_base64 = "data:$mime;base64,$base64";
+        } else {
+            $defaultPath = public_path('pictures/default-user.png');
+            $mime = mime_content_type($defaultPath);
+            $base64 = base64_encode(file_get_contents($defaultPath));
+            $p->foto_base64 = "data:$mime;base64,$base64";
+        }
+        return $p;
+    });
+
+    return view('profile.orgchart-iframe', compact('pegawai'));
+})->name('orgchart.page');
+
 Route::get('/profile/sejarah', function () {
     return view('profile.sejarah');
 })->name('sejarah.index');
 Route::get('/profile/visimisi', [VisiMisiController::class, 'index'])->name('visimisi.index');
 Route::get('/profile/visi-misi', [VisiMisiController::class, 'showPublic'])->name('showPublic');
+Route::get('/profile/tupoksi', [TupoksiController::class, 'tupoksi'])->name('tupoksi');
 Route::get('/profile/profil-pimpinan', [ProfilPimpinanController::class, 'showPublic'])->name('profile.show');
 
 //INFORMASI
@@ -80,6 +104,9 @@ Route::get('/informasi/dokumen', [DokumenController::class, 'index'])->name('dok
 // GALERI
 // galeri-video
 Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('main.galeri.video');
+
+Route::get('/galeri/foto', [HomeController::class, 'indexFotoMain'])->name('main.galeri.foto');
+Route::get('galeri/foto/{folder}', [HomeController::class, 'showFolder'])->name('main.galeri.folder.show');
 
 // Public-facing API for FullCalendar
 Route::get('/all-events', [CalendarController::class, 'index']);

@@ -61,16 +61,26 @@
                     <table class="min-w-full text-sm">
                         <thead class="bg-gray-100 dark:bg-gray-700 text-xs uppercase">
                             <tr>
-                                <th class="px-4 py-3">Nama Folder</th>
-                                <th class="px-4 py-3">Deskripsi</th>
+                                <th class="px-4 py-3 text-left">Nama Folder</th>
+                                <th class="px-4 py-3 text-left">Deskripsi</th>
+                                <th class="px-4 py-3 text-center">Jumlah Foto</th>
                                 <th class="px-4 py-3 text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
                             @forelse($folders as $folder)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-600">
-                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white"><a href="{{ route('admin.galeri.folders.show', $folder->id) }}" class="hover:underline">{{ $folder->title }}</a></td>
-                                    <td class="px-4 py-3"><p class="truncate max-w-sm" title="{{ $folder->description }}">{{ $folder->description }}</p></td>
+                                    <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">
+                                        <a href="{{ route('admin.galeri.folders.show', $folder->id) }}" class="hover:underline">{{ $folder->title }}</a>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <p class="truncate max-w-sm" title="{{ $folder->description }}">{{ $folder->description }}</p>
+                                    </td>
+                                    <td class="px-4 py-3 text-center">
+                                        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                                            {{ $folder->photos_count ?? 0 }}
+                                        </span>
+                                    </td>
                                     <td class="px-4 py-3 text-center space-x-4">
                                         <button @click="editFolder({{ $folder }})" title="Edit" class="text-yellow-500 hover:text-yellow-700"><i class="fas fa-pen"></i></button>
                                         <button @click="confirmDelete('{{ route('admin.galeri.folders.destroy', $folder->id) }}')" title="Hapus" class="text-red-500 hover:text-red-700"><i class="fas fa-trash-alt"></i></button>
@@ -78,7 +88,8 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="3" class="text-center py-10">
+                                    {{-- Sesuaikan colspan menjadi 4 --}}
+                                    <td colspan="4" class="text-center py-10">
                                         <p class="text-sm text-gray-500">
                                             @if(request('q'))
                                                 Folder dengan kata kunci "{{ request('q') }}" tidak ditemukan.
@@ -157,8 +168,27 @@
 
             // FUNGSI GANTI VIEW
             setView(newView) {
+                const url = new URL(window.location.href);
+                const currentPage = url.searchParams.get('page') || 1;
+
+                // Simpan page terakhir kalau kita lagi di table
+                if (this.view === 'table') {
+                    localStorage.setItem('galleryTablePage', currentPage);
+                }
+
                 this.view = newView;
                 localStorage.setItem('galleryView', newView);
+
+                if (newView === 'grid') {
+                    // Hapus page param untuk grid (selalu mulai awal)
+                    url.searchParams.delete('page');
+                    window.location.href = url.toString();
+                } else if (newView === 'table') {
+                    // Baca page terakhir dari localStorage (kalau ada)
+                    const savedPage = localStorage.getItem('galleryTablePage') || 1;
+                    url.searchParams.set('page', savedPage);
+                    window.location.href = url.toString();
+                }
             },
 
             // FUNGSI CEK OTOMATIS
