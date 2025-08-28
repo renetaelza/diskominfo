@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\Rule;
 use App\Rules\ValidKunjunganDate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\KunjunganReceivedMail;
 
 class KunjunganController extends Controller
 {
@@ -28,7 +30,7 @@ class KunjunganController extends Controller
             'email' => 'required|email',
             'kab_kota' => 'required|string|max:255',
             'alamat_instansi' => 'required|string',
-            'tanggal_kunjungan' => ['required', 'date', 'after_or_equal:today', new ValidKunjunganDate()],
+            'tanggal_kunjungan' => ['required', 'date', 'after_or_equal:today'],
             'topik_diskusi' => 'required|string',
             'jumlah_rombongan' => 'required|integer|min:1',
             'no_surat' => 'required|string|max:255',
@@ -51,7 +53,9 @@ class KunjunganController extends Controller
         ]);
 
         try {
-            DB::transaction(function () use ($request, $validatedData) {
+            $kunjungan = null;
+
+            DB::transaction(function () use ($request, $validatedData, &$kunjungan) {
                 // Prepare data for the Kunjungan model by excluding the relationship data.
                 $kunjunganData = collect($validatedData)->except('bidang_ids')->toArray();
 
@@ -67,6 +71,16 @@ class KunjunganController extends Controller
                 // 2. Sync the relationship using the validated IDs.
                 $kunjungan->bidangs()->sync($validatedData['bidang_ids']);
             });
+
+            // Kirim email konfirmasi setelah data berhasil disimpan
+            if ($kunjungan) {
+                try {
+                    Mail::to($kunjungan->email)->send(new KunjunganReceivedMail($kunjungan));
+                } catch (\Exception $e) {
+                    Log::error('Gagal mengirim email konfirmasi awal: ' . $e->getMessage());
+                    // Tetap lanjutkan meskipun email gagal, karena data sudah masuk
+                }
+            }
 
             return redirect()->back()->with('success', 'Pengajuan kunjungan Anda telah berhasil dikirim.');
         } catch (\Exception $e) {
