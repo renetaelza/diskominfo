@@ -25,7 +25,10 @@
                     <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ $folder->title }}</h2>
                     <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $folder->description }}</p>
                 </div>
-                <a href="{{ route('admin.galeri.folders') }}" class="text-sm text-blue-500 hover:underline">&larr; Kembali ke Semua Folder</a>
+                <a href="{{ route('admin.galeri.folders') }}" class="mt-6 inline-flex items-center gap-2 px-4 py-2 bg-green-600 text-gray-800 rounded-lg shadow-md hover:bg-green-800 transition-colors">
+                    <i class="fas fa-arrow-left"></i>
+                    Kembali ke Semua Folder
+                </a>
             </div>
             
             <form action="{{ route('admin.galeri.photos.store', $folder) }}" method="POST" enctype="multipart/form-data"
@@ -175,7 +178,6 @@
 @endsection
 
 @push('scripts')
-{{-- Script Anda TIDAK PERLU DIUBAH SAMA SEKALI --}}
 <script>
 function photoGallery() {
     return {
