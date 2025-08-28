@@ -16,10 +16,10 @@ class CalendarController extends Controller
         $agendas = Agenda::all()->map(function ($agenda) {
             return [
                 'title' => 'Fully Booked',
-                'start' => $agenda->tanggal->format('Y-m-d'),
-                'color' => '#f44336', // <-- Red for fully booked days
-                'display' => 'background', // <-- Renders as a background highlight
-                'allDay' => true, // <-- Mark as an all-day event
+                'start' => Carbon::parse($agenda->tanggal)->toDateString(),
+                'color' => '#f44336', // Merah untuk fully booked
+                'display' => 'background',
+                'allDay' => true,
                 'extendedProps' => [
                     'type' => 'agenda',
                 ]
@@ -28,11 +28,14 @@ class CalendarController extends Controller
 
         // 2. Fetch all APPROVED Kunjungan requests
         $kunjungans = Kunjungan::where('status', 'approved')->get()->map(function ($kunjungan) {
+            $date = Carbon::parse($kunjungan->tanggal_kunjungan)->format('Y-m-d');
+            $time = $kunjungan->pukul_kunjungan;
+
             return [
-                'title' => 'Waktu Telah Dipesan', // Generic title for privacy
-                'start' => $kunjungan->tanggal_kunjungan . ' ' . $kunjungan->pukul_kunjungan,
-                'color' => '#ff9800', // Orange for booked visits
-                'display' => 'background', // Renders as a background highlight
+                'title' => 'Waktu Telah Dipesan',
+                'start' => Carbon::parse($date . ' ' . $time)->toIso8601String(),
+                'color' => '#ff9800', // Oranye untuk kunjungan
+                'display' => 'background',
                 'extendedProps' => [
                     'type' => 'kunjungan'
                 ]
@@ -47,12 +50,12 @@ class CalendarController extends Controller
 
     public function publicEvents()
     {
-        // 1. Fetch all Agenda events with full details
+        // 1. Fetch all Agenda events dengan detail lengkap
         $agendas = Agenda::all()->map(function ($agenda) {
             return [
-                'title' => $agenda->nama_agenda, // The real title
-                'start' => $agenda->tanggal->format('Y-m-d'),
-                'color' => '#2196f3', // Blue for agendas
+                'title' => $agenda->nama_agenda,
+                'start' => Carbon::parse($agenda->tanggal)->toDateString(),
+                'color' => '#18417F', // Biru untuk agenda publik
                 'extendedProps' => [
                     'type' => 'agenda',
                     'location' => $agenda->lokasi,
@@ -62,20 +65,33 @@ class CalendarController extends Controller
             ];
         });
 
-        // 2. Fetch all APPROVED Kunjungan requests as background events
+        // 2. Fetch all APPROVED Kunjungan requests sebagai background
         $kunjungans = Kunjungan::where('status', 'approved')->get()->map(function ($kunjungan) {
+            $date = Carbon::parse($kunjungan->tanggal_kunjungan)->format('Y-m-d');
+            $time = $kunjungan->pukul_kunjungan;
+
             return [
                 'title' => 'Waktu Telah Dipesan',
-                'start' => $kunjungan->tanggal_kunjungan . ' ' . $kunjungan->pukul_kunjungan,
+                'start' => Carbon::parse($date . ' ' . $time)->toIso8601String(),
                 'color' => '#ff9800',
-                'display' => 'background', // Display as background on public page
+                'display' => 'background',
                 'extendedProps' => ['type' => 'kunjungan']
             ];
         });
-        
+
         // 3. Merge both collections
         $events = $agendas->concat($kunjungans);
 
         return response()->json($events);
+    }
+
+    public function nearestAgendas()
+    {
+        $agendas = Agenda::whereDate('tanggal', '>=', now()) // hanya yang akan datang
+            ->orderBy('tanggal', 'asc')
+            ->take(3)
+            ->get();
+
+        return response()->json($agendas);
     }
 }

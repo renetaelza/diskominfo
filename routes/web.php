@@ -22,6 +22,7 @@ use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\ProfilPimpinanController;
 use App\Http\Controllers\VisiMisiController;
+use App\Http\Controllers\Api\AvailabilityController;
 
 
 //USER
@@ -58,6 +59,7 @@ Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.deta
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
 Route::get('/aplikasi/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+Route::get('/api/unavailable-times', [AvailabilityController::class, 'check']);
 
 Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
 
@@ -81,6 +83,8 @@ Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('ma
 // Public-facing API for FullCalendar
 Route::get('/all-events', [CalendarController::class, 'index']);
 Route::get('/public-events', [CalendarController::class, 'publicEvents']);
+Route::get('/api/public-events', [CalendarController::class, 'publicEvents']);
+Route::get('/api/nearest-agendas', [CalendarController::class, 'nearestAgendas']);
 
 //ADMIN
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -142,6 +146,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::get('kunjungan', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'index'])->name('kunjungan.index');
     Route::get('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'show'])->name('kunjungan.show');
     Route::post('kunjungan/{kunjungan}/update-status', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'updateStatus'])->name('kunjungan.updateStatus');
+    Route::get('kunjungan/{kunjungan}/edit', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'edit'])->name('kunjungan.edit');
+    Route::put('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'update'])->name('kunjungan.update');
+    Route::delete('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'destroy'])->name('kunjungan.destroy');
 
     //banner
     Route::get('/banner-utama', [BannerController::class, 'index'])->name('banner.index');
