@@ -16,6 +16,9 @@ class Kunjungan extends Model
         'no_surat', 'tanggal_surat', 'surat_permohonan', 'status',
     ];
 
+    protected $casts = [
+        'tanggal_kunjungan' => 'date',
+    ];
 
     /**
      * The bidang(s) that belong to the Kunjungan.
