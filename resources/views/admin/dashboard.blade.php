@@ -74,6 +74,59 @@
                 </div>
                 @endforeach
             </div>
+
+            <div class="px-6 pb-6">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+                {{-- Header Tabel --}}
+                <div class="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="font-semibold text-gray-800 dark:text-white">Pengajuan Kunjungan Terbaru (Pending)</h3>
+                    <a href="{{ route('admin.kunjungan.index') }}" class="text-sm text-blue-600 hover:underline">
+                        Lihat Semua &rarr;
+                    </a>
+                </div>
+                
+                {{-- Isi Tabel --}}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left text-gray-700 dark:text-gray-300">
+                        <thead class="bg-gray-50 dark:bg-gray-700 text-xs uppercase text-gray-600 dark:text-gray-400">
+                            <tr>
+                                <th class="px-4 py-3">Nama Pemohon</th>
+                                <th class="px-4 py-3">Instansi</th>
+                                <th class="px-4 py-3">Tanggal Kunjungan</th>
+                                <th class="px-4 py-3">Status</th> {{-- Diubah dari Aksi --}}
+                                <th class="px-4 py-3 text-center">Aksi</th> {{-- Kolom Aksi baru --}}
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+                            @forelse($recentKunjungans as $kunjungan)
+                            <tr>
+                                <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $kunjungan->nama }}</td>
+                                <td class="px-4 py-3">{{ $kunjungan->nama_instansi }}</td>
+                                <td class="px-4 py-3">{{ \Carbon\Carbon::parse($kunjungan->tanggal_kunjungan)->format('d M Y') }}</td>
+                                <td class="px-4 py-3">
+                                    {{-- Kolom Status Baru --}}
+                                    <span class="px-2 py-1 font-semibold leading-tight text-yellow-700 bg-yellow-100 rounded-full dark:bg-yellow-700 dark:text-yellow-100">
+                                        Pending
+                                    </span>
+                                </td>
+                                <td class="px-4 py-3 text-center">
+                                    <a href="{{ route('admin.kunjungan.show', $kunjungan->id) }}" title="Lihat Detail" class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            @empty
+                            <tr>
+                                <td colspan="5" class="text-center py-10 text-gray-500 dark:text-gray-400">
+                                    Tidak ada pengajuan kunjungan yang menunggu persetujuan.
+                                </td>
+                            </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
         </main>
     </div>
 </body>
