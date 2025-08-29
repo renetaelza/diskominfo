@@ -16,10 +16,20 @@ class DashboardController extends Controller
     {
         $totalAgenda = Agenda::count();
         $totalKunjungan = Kunjungan::count();
+        $totalBerita = Berita::count();
+        $totalPengumuman = Pengumuman::count();
 
-        return view('admin.dashboard', compact(
-            'totalAgenda',
-            'totalKunjungan'
-        ));
+        $recentKunjungans = Kunjungan::where('status', 'pending')
+                                     ->latest()
+                                     ->take(5)
+                                     ->get();
+
+        return view('admin.dashboard', [
+            'totalBerita' => $totalBerita,
+            'totalPengumuman' => $totalPengumuman,
+            'totalAgenda' => $totalAgenda,
+            'totalKunjungan' => $totalKunjungan,
+            'recentKunjungans' => $recentKunjungans,
+        ]);
     }
 }
