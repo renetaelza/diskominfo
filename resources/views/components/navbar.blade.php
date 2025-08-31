@@ -38,15 +38,15 @@
                     <li><a href="{{route('sejarah.index')}}">Sejarah</a></li>
                     <li><a href="{{route('showPublic') }}">Visi Misi</a></li>
                     <li><a href="{{route('profile.strukturOrganisasi')}}">Struktur Organisasi</a></li>
-                    <li><a href="#">Tupoksi</a></li>
-                    <li><a href="#">Profil Pimpinan</a></li>
+                    <li><a href="{{route('tupoksi') }}">Tupoksi</a></li>
+                    <li><a href="{{route('profile.show')}}">Profil Pimpinan</a></li>
                 </ul>
             </li>
             <li><a href="{{route('berita.index')}}">Berita</a></li>
             <li class="dropdown">
                 <a href="#">Galeri <i class="fa fa-caret-down"></i></a>
                 <ul class="dropdown-menu">
-                    <li><a href="#">Gambar</a></li>
+                    <li><a href="{{route('main.galeri.foto')}}">Foto</a></li>
                     <li><a href="{{route('main.galeri.video')}}">Video</a></li>
                 </ul>
             </li>
@@ -66,95 +66,96 @@
                     <li class="submenu-parent">
                         <a href="#">Tentang PPID <i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/profil-ppid-dpmptsp-kota-bandung.html">Profil PPID DPMPTSP</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/agenda-ppid.html">Agenda PPID</a></li>
+                            <li><a href="{{ route('ppid.show.text', 'profile-ppid-diskominfo') }}">Profil PPID DISKOMINFO</a></li>
+                            <li><a href="{{ route('ppid.show.text', 'agenda-ppid') }}">Agenda PPID</a></li>
                         </ul>
                     </li>
                     <li class="submenu-parent">
-                        <a href="#">Informasi Berkala <i class="fa fa-caret-right"></i></a>
+                        <a href="#">Informasi Setiap Saat<i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="https://dpmptsp.bandung.go.id/profil.html">Informasi Profile DPMPTSP</a></li>
+                            <li><a href="{{ route('ppid.show', 'informasi-mengenai-daftar-informasi-publik') }}">Informasi Mengenai Daftar Informasi Publik</a></li>
+                            <li><a href="{{ route('ppid.show', 'informasi-mengenai-surat-perjanjian-dengan-pihak-ketiga') }}">Informasi Mengenai Surat Perjanjian dengan Pihak Ketiga</a></li>
+                            <li><a href="{{route('profile.strukturOrganisasi')}}">Informasi tentang Organisasi, Administrasi, Kepegawaian dan Keuangan</a></li>
+                            <li><a href="{{ route('ppid.show', 'pedoman-pelayanan-publik') }}">Pedoman Pelayanan Publik</a></li>
+                            <li><a href="{{ route('ppid.show', 'jumlah-jenis-gambaran-umum-pengaduan') }}">Jumlah, Jenis, Gambaran Umum Pengaduan</a></li>
+                            <li><a href="{{ route('ppid.show', 'laporan-pelayanan-informasi') }}">Laporan Pelayanan Informasi</a></li>
+                            <li><a href="{{ route('ppid.show', 'laporan-data-aset') }}">Laporan Data Aset</a></li>
+                            <li><a href="{{ route('ppid.show', 'standar-pelayanan') }}">Standar Pelayanan</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu-parent">
+                        <a href="#">Informasi Berkala<i class="fa fa-caret-right"></i></a>
+                        <ul class="dropdown-submenu">
+                            <li><a href="#">Informasi DISKOMINFO</a></li>
                             <li class="submenu-parent">
                                 <a href="#">Kegiatan dan Kinerja<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/laporan-akuntabilitas-kerja.html">Laporan Akuntabilitas Kerja</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/program-dan-kegiatan.html">Nama Program dan/atau Kegiatan</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/daftar-penanggung-jawab-pelaksana-program-dan-kegiatan.html">Daftar Penanggung Jawab, Pelaksana Program dan Kegiatan</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/target-danatau-capaian-program-dan-kegiatan.html">Target dan/atau Capaian Program dan Kegiatan</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/realisasi-kegiatan-dpmptsp.html">Anggaran Program dan Kegiatan</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/realisasi-kegiatan-dpmptsp.html">Realisasi Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-akuntabilitas-kerja') }}">Laporan Akuntabilitas Kerja</a></li>
+                                    <li><a href="{{ route('ppid.show', 'program-dan-kegiatan') }}">Program dan Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'daftar-penanggung-jawab-pelaksanaan-program') }}">Daftar Penanggung Jawab Pelaksanaan Program</a></li>
+                                    <li><a href="{{ route('ppid.show', 'target-dan-atau-capaian-program-dan-kegiatan') }}">Target dan/atau Capaian Program dan Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'anggaran-program-dan-kegiatan') }}">Anggaran Program dan Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'realisasi-kegiatan') }}">Realisasi Kegiatan</a></li>
                                 </ul>
                             </li>
                             <li class="submenu-parent">
-                                <a href="#">Keuangan DPMPTSP<i class="fa fa-caret-right"></i></a>
+                                <a href="#">Keuangan DISKOMINFO<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/realisasi-kegiatan-dpmptsp.html">Laporan Keuangan berupa Rencana dan Laporan Realisasi Anggaran</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/laporan-keuangan-berupa-rencana-dan-laporan-realisasi-anggaran.html">Laporan Keuangan berupa Laporan Arus Kas dan Catatan atas Laporan Keuangan</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/laporan-keuangan-berupa-laporan-arus-kas-dan-catatan-atas-laporan-keuangan.html">Daftar Penanggung Jawab, Pelaksana Program dan Kegiatan</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/index.html#">Laporan Keuangan berupa Daftar Aset dan Investasi</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/rencana-kerja-renja-dpmptsp-kota-bandung.html">Informasi Rencana Kerja Rencana Kerja dan Anggaran</a></li>
-                                </ul>
-                            </li>
-                            <li class="submenu-parent">
-                                <a href="#">Laporan Akses Informasi Publik<i class="fa fa-caret-right"></i></a>
-                                <ul class="dropdown-submenu">
-                                    <li><a href="https://dpmptsp.bandung.go.id/index.html#">Register Keberatan Informasi</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/index.html#">Register Permohonan Informasi</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/index.html#">Jumlah Permohonan Informasi</a></li>
-                                </ul>
-                            </li>
-                            <li class="submenu-parent">
-                                <a href="#">Tata Cara Permohonan Informasi Publik<i class="fa fa-caret-right"></i></a>
-                                <ul class="dropdown-submenu">
-                                    <li><a href="https://dpmptsp.bandung.go.id/index.html#">Standar Operasional Prosedur Pelayanan Informasi Publik</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/permintaan-informasi-publik">Permohonan Informasi Publik</a></li>
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/formulir-keberatan-informasi.html">Formulir Keberatan Informasi Publik</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-keuangan-berupa-rencana-dan-laporan-realisasi-anggaran') }}">Laporan Keuangan berupa Rencana dan Laporan Realisasi Anggaran</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-keuangan-berupa-laporan-arus-kas-dan-catatan-atas-laporan-keuangan') }}">Laporan Keuangan berupa Laporan Arus Kas dan Catatan atas Laporan Keuangan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-keuangan-berupa-daftar-aset-dan-informasi') }}">Laporan Keuangan berupa Daftar Aset dan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'informasi-rencana-kerja-dan-anggaran') }}">Informasi Rencana Kerja dan Anggaran</a></li>
                                 </ul>
                             </li>
                             <li class="submenu-parent">
                                 <a href="#">Investasi<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="https://dpmptsp.bandung.go.id/detail-pages/realisasi-investasi.html">Realisasi Investasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'realisasi-investasi') }}">Realisasi Investasi</a></li>
                                 </ul>
                             </li>
-
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/informasi-mengenai-tata-cara-permohonan-informasi-dan-pengaduan.html">Informasi Mengenai Tata Cara Permohonan Informasi dan Pengaduan</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/rencana-strategis-dan-rencana-kerja.html">Rencana Strategis dan Rencana Kerja</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-dokumen-informasi/regulasi.html">Regulasi DPMPTSP</a></li>
-                        </ul>
-                    </li>
-
-                    <li class="submenu-parent">
-                        <a href="#">Informasi Setiap Saat<i class="fa fa-caret-right"></i></a>
-                        <ul class="dropdown-submenu">
-                            <li><a href="https://dpmptsp.bandung.go.id/index.html">Informasi Mengenai Daftar Informasi Publik</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/informasi-mengenai-surat-perjanjian-dengan-pihak-ketiga.html">Informasi Mengenai Surat Perjanjian dengan Pihak Ketiga</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/struktur-organisasi.html">Informasi Tentang Organisasi, Administrasi, Kepegaawaian dan Keuangan</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/pedoman-pelayanan-publik.html">Pedoman Pelayanan Publik</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/index.html">Jumlah, Jenis dan Gambaran Umum Pengaduan</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/laporan-pelayanan-informasi.html">Laporan Pelayanan Informasi</a></li>
+                            <li class="submenu-parent">
+                                <a href="#">Laporan Akses Informasi Publik<i class="fa fa-caret-right"></i></a>
+                                <ul class="dropdown-submenu">
+                                    <li><a href="{{ route('ppid.show', 'register-keberatan-informasi') }}">Register Keberatan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'register-permohonan-informasi') }}">Register Permohonan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'jumlah-permohonan-informasi') }}">Jumlah Permohonan Informasi</a></li>
+                                </ul>
+                            </li>
+                            <li class="submenu-parent">
+                                <a href="#">Tata Cara Permohonan Informasi Publik<i class="fa fa-caret-right"></i></a>
+                                <ul class="dropdown-submenu">
+                                    <li><a href="{{ route('ppid.show', 'sop-pelayanan-informasi-publik') }}">SOP Pelayanan Informasi Publik</a></li>
+                                    <li><a href="{{ route('ppid.show', 'permohonan-informasi-publik') }}">Permohonan Informasi Publik</a></li>
+                                    <li><a href="{{ route('ppid.show', 'formulir-keberatan-informasi-publik') }}">Formulir Keberatan Informasi Publik</a></li>
+                                </ul>
+                            </li>
+                            <li><a href="{{ route('ppid.show', 'informasi-tata-cara-permohonan-dan-pengaduan') }}">Informasi Tata Cara Permohonan dan Pengaduan</a></li>
+                            <li><a href="{{ route('ppid.show', 'rencana-strategis-dan-rencana-kerja') }}">Rencana Strategis dan Rencana Kerja</a></li>
+                            <li><a href="{{ route('ppid.show', 'regulasi-diskominfo') }}">Regulasi DISKOMINFO</a></li>
+                            <li><a href="{{ route('ppid.show', 'daftar-informasi-publik') }}">Daftar Informasi Publik</a></li>
+                            <li><a href="{{ route('ppid.show', 'daftar-pejabat-ppid') }}">Daftar Pejabat PPID</a></li>
                         </ul>
                     </li>
                     <li class="submenu-parent">
                         <a href="#">Informasi Serta Merta <i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="https://dpmptsp.bandung.go.id/index.html">Laporan Realisasi Penerimaan Restribusi</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/index.html">Pengadaan Barang dan Jasa</a></li>
-                            <li><a href="https://dpmptsp.bandung.go.id/detail-pages/pengumuman.html">Pengumuman</a></li>
+                            <li><a href="">Laporan Realisasi Penerimaan Informasi</a></li>
+                            <li><a href="">Pengadaan Barang dan Jasa</a></li>
+                            <li><a href="">Pengumuman</a></li>
                         </ul>
                     </li>
                     <li class="submenu-parent">
                         <a href="#">Informasi Dikecualikan <i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="https://ppid.bandung.go.id/storage/ppid_utama/nwZpmz3UyP8VRB0c2sEdKcAjAnuBUYiNoFOuuPb9.pdf">Kepwal Daftar Informasi Dikecualikan</a></li>
-                            <li><a href="https://ppid.bandung.go.id/storage/ppid_utama/rOJxMBTh9exy7lJg67AoXeuBKUsVtbJmNqbqZm1G.pdf">Daftar Informasi Dikecualikan</a></li>
+                            <li><a href="{{ route('ppid.show', 'daftar-informasi-dikecualikan') }}">Daftar Informasi Dikecualikan</a></li>
+                            <li><a href="{{ route('ppid.show', 'ikepwal-daftar-informasi-dikecualikan') }}">Kepwal Daftar Informasi Dikecualikan</a></li>
                         </ul>
                     </li>
-                    <li><a href="http://ppid-simonik.bandung.go.id/pilih-permohonan">Permohonan Informasi Online</a></li>
-                    <li><a href="http://ppid-simonik.bandung.go.id/input-keberatan">Pengajuan Keberatan Online</a></li>
+                    <li><a href="https://ppid-simonik.bandung.go.id/pilih-permohonan">Permohonan Informasi Online</a></li>
                     <li><a href="https://ppid.bandung.go.id/">PPID Utama</a></li>
-                    <li><a href="https://bandung.go.id/">PORTAL Kota Bandung</a></li>
-                    <li><a href="https://dpmptsp.bandung.go.id/web-external-asset/file/file-manager/2023-08-24_5jUf_SOP_Kebakaran_dan_Gempa_Bumi.pdf">SOP Peringatan Dini dan Evakuasi Darurat</a></li>
+                    <li><a href="http://ppid-simonik.bandung.go.id/input-keberatan">Pengajuan Keberatan Online</a></li>
+                    <li><a href="bandung.go.id">Portal Kota Bandung</a></li>
+                    <li><a href="">SOP Peringatan Dini</a></li>
                 </ul>
             </li>
             <li class="dropdown">

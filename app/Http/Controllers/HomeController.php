@@ -8,6 +8,7 @@ use App\Models\Aplikasi;
 use App\Models\Berita;
 use App\Models\HeroBanner;
 use App\Models\Videos;
+use App\Models\Folder;
 use Illuminate\Support\Str;
 
 class HomeController extends Controller
@@ -67,5 +68,38 @@ class HomeController extends Controller
 
         // Kirim kedua variabel ke view
         return view('gallery.indexVideo', compact('featuredVideo', 'videos'));
+    }
+
+    public function indexFotoMain(Request $request)
+    {
+        // Ambil input pencarian dari request
+        $q = $request->input('searchFolder');
+
+        // Bangun query dasar ke database
+        $foldersQuery = Folder::query()
+            ->when($q, function ($query, $q) {
+                $query->where('title', 'like', "%{$q}%")
+                    ->orWhere('description', 'like', "%{$q}%");
+            })
+            ->withCount('photos') // jumlah foto
+            ->with(['photos' => function($query) {
+                $query->latest()->take(3); // ambil 3 foto terbaru
+            }])
+            ->latest();
+
+        // Eksekusi query dengan paginasi
+        $folders = $foldersQuery->paginate(9)->withQueryString();
+
+        // Tampilkan view
+        return view('gallery.indexFolder', compact('folders', 'q'));
+    }
+
+
+    public function showFolder(Folder $folder)
+    {
+        // Tampilkan grid foto dalam folder
+        $photos = $folder->photos()->latest()->paginate(20);
+
+        return view('gallery.indexGambar', compact('folder', 'photos'));
     }
 }

@@ -3,27 +3,31 @@
 @section('content')
 
 <!-- HERO SECTION -->
-<header class="relative bg-gray-800 text-white overflow-hidden">
+<header class="relative bg-gray-800 text-white overflow-hidden min-h-[90vh]">
 
     <img
         src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}"
         alt="Gedung Diskominfo Bandung"
         class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
 
-    <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
+    <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16 flex flex-col justify-center pt-52 lg:pt-72 h-full space-y-10">
 
+        <!-- BARIS PERTAMA: H1 + tagline (kiri) & clock/weather (kanan) -->
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full gap-6">
+
+            <!-- H1 + tagline -->
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
                     DINAS KOMUNIKASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
                 </h1>
 
-                <p class="mt-6 ml-1 max-w-2xl text-lg text-gray-200">
+                <p class="mt-4 text-lg text-gray-200 max-w-2xl">
                     {{ $hero->tagline ?? 'Belum ada tagline yang diatur' }}
                 </p>
             </div>
 
-            <div class="mt-8 lg:mt-0 flex flex-col items-start lg:items-end gap-2 text-lg font-semibold text-gray-200">
+            <!-- Clock & Weather -->
+            <div class="mt-6 lg:mt-0 flex flex-col items-start lg:items-end gap-3 text-lg font-semibold text-gray-200">
                 <div id="live-clock" class="flex items-center gap-3">
                     <i class="far fa-clock text-xl"></i>
                     <span class="w-32">Memuat...</span>
@@ -33,8 +37,18 @@
                     <span class="w-48 text-left">Memuat...</span>
                 </div>
             </div>
-
         </div>
+
+        <!-- BARIS KEDUA: Button di tengah -->
+        <div class="flex justify-center lg:pt-20">
+            <a href="https://play.google.com/store/apps/details?id=gov.bdg.smartcitybdg"
+               target="_blank"
+               class="inline-flex items-center px-6 py-3 bg-blue-950 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md transform transition duration-200 hover:scale-105 active:scale-95">
+                <i class="fab fa-google-play mr-2 text-lg"></i>
+                Layanan Digital
+            </a>
+        </div>
+
     </div>
 </header>
 
@@ -89,7 +103,7 @@
 
 
 <!-- PENGUMUMAN SECTION -->
-<section class="py-16 bg-slate-100 pt-32">
+<section class="py-16 pt-32">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div id="announcement-carousel" class="relative rounded-2xl shadow-lg bg-white mt-16 md:mt-0">
             <!-- Image positioned absolutely -->
@@ -187,6 +201,35 @@
     </div>
 </section>
 
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- Header --}}
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800">Agenda Kegiatan</h2>
+            <a href="{{ route('agenda.index') }}" class="text-sm font-medium text-black hover:underline">
+                Lihat Kalender Penuh
+            </a>
+        </div>
+
+        {{-- Kalender + Agenda --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Kalender --}}
+            <div class="md:col-span-2 bg-white p-4 md:p-5 rounded-2xl shadow-lg border">
+                <div id="calendar-beranda"></div>
+            </div>
+
+            {{-- 3 Agenda Terdekat --}}
+            <div class="space-y-4 ">
+                <h3 class="text-lg font-semibold text-gray-800">Agenda Terdekat</h3>
+                <div id="nearest-agendas" class="space-y-3">
+                    {{-- Will be filled dynamically --}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <!-- GALERI VIDEO SECTION -->
 @if($latestVideos->isNotEmpty())
 <section x-data="videoGallery()" @mouseleave="resetOnLeave()" class="bg-white text-grey-900 antialiased">
@@ -243,6 +286,59 @@
 </section>
 @endif
 
+<div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 overflow-hidden shadow-lg">
+            <div class="modal-header" style="background-color: #0a2463; color: white;">
+                <h5 class="modal-title w-100 text-center" id="eventDetailModalLabel">Detail Kegiatan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <h2 class="fw-bold text-center mb-4" id="modal-title"></h2>
+                <img id="modal-image" src="" class="img-fluid rounded-3 w-100 mb-4" style="max-height: 300px; object-fit: cover;" alt="Event Image">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-calendar-event fs-4 me-3 text-dark"></i>
+                    <span id="modal-date"></span>
+                </div>
+                <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-geo-alt fs-4 me-3 text-dark"></i>
+                    <span id="modal-location"></span>
+                </div>
+                <p id="modal-description"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+{{-- Style khusus untuk halaman ini --}}
+<style>
+    .fc-event { cursor: pointer; }
+    #calendar-beranda { font-size: 0.85rem; max-width: 900px; margin: 0 auto; }
+    .custom-transition { transition: all 600ms cubic-bezier(0.65, 0, 0.35, 1); }
+
+    #agenda-list .agenda-date {
+        background-color: #facc15;
+        color: black;
+        font-weight: bold;
+        border-radius: 0.75rem;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+    #agenda-list .agenda-date span {
+        font-size: 0.75rem;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+@endpush
 <script>
     // --- SCRIPT UNTUK GALERI VIDEO ---
     const videoData = @json($latestVideos);
@@ -504,6 +600,84 @@
         startInterval();
     }
 
+     // Fungsi Calendar Beranda
+    function initBerandaCalendar() {
+        const calendarEl = document.getElementById('calendar-beranda');
+        if (!calendarEl) return;
+
+        const eventModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'id',
+            headerToolbar: {
+                left: 'prev',
+                center: 'title',
+                right: 'next'
+            },
+            events: '/api/public-events', // Menggunakan API publik yang sudah ada
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+                
+                if (info.event.extendedProps.type === 'agenda') {
+                    const event = info.event;
+                    const props = event.extendedProps;
+
+                    document.getElementById('modal-title').textContent = event.title;
+                    document.getElementById('modal-date').textContent = new Date(event.start).toLocaleDateString('id-ID', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+                    document.getElementById('modal-location').textContent = props.location;
+                    document.getElementById('modal-description').textContent = props.description;
+                    document.getElementById('modal-image').src = props.image;
+
+                    eventModal.show();
+                }
+            }
+        });
+        calendar.render();
+    }
+
+    // Fungsi untuk memuat 3 agenda terdekat
+    function loadNearestAgendas() {
+    fetch("/api/nearest-agendas")
+        .then(res => res.json())
+        .then(agendas => {
+            const container = document.getElementById("nearest-agendas");
+            container.className = "space-y-4";
+            container.innerHTML = "";
+
+            if (agendas.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 text-sm">Tidak ada agenda terdekat</p>`;
+                return;
+            }
+
+            agendas.forEach(agenda => {
+                const tanggal = new Date(agenda.tanggal);
+                const options = { day: "2-digit", month: "long", year: "numeric" };
+                const formattedDate = tanggal.toLocaleDateString("id-ID", options);
+
+                const item = `
+                    <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 text-center font-bold text-black-800 bg-blue-600/10 rounded-xl p-3 shadow-sm w-20 h-20 flex flex-col justify-center">
+                                <div class="text-2xl">${tanggal.getDate()}</div>
+                                <div class="text-sm">${tanggal.toLocaleDateString("id-ID", { month: "short" })}</div>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800 dark:text-black-100">${agenda.nama_agenda}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${formattedDate}</p>
+                            </div>
+                        </div>
+                `;
+                container.innerHTML += item;
+            });
+        })
+        .catch(err => {
+            console.error("Gagal memuat agenda:", err);
+        });
+    }
+
+
     // Jalankan fungsi saat halaman selesai dimuat
     document.addEventListener('DOMContentLoaded', function() {
         // Mulai jam
@@ -518,6 +692,12 @@
 
         // Inisialisasi slider pengumuman
         initAnnouncementSlider();
+
+        // Inisialisasi kalender beranda
+        initBerandaCalendar();
+
+        // Muat agenda terdekat
+        loadNearestAgendas();
     });
 </script>
 

@@ -131,7 +131,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="pukulKunjungan" class="form-label">Pukul Kunjungan</label>
                                 <select class="form-select @error('pukul_kunjungan') is-invalid @enderror"
-                                    id="pukulKunjungan" name="pukul_kunjungan">
+                                    id="pukulKunjungan" name="pukul_kunjungan" disabled>
                                     <option value="">Pilih Waktu</option>
                                     <option value="09:00" @if (old('pukul_kunjungan') == '09:00') selected @endif>09:00
                                     </option>
@@ -149,6 +149,7 @@
                                 @error('pukul_kunjungan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                               <div id="time-slot-message" class="text-danger mt-1" style="font-size: 0.875em;"></div> 
                             </div>
                         </div>
 
@@ -228,116 +229,80 @@
     </main>
     <x-footer />
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    {{-- FIX: Correct script loading order and logic --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        // Select2 Initialization
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+     <script>
         $(document).ready(function() {
+            // Inisialisasi Select2
             $('#bidang_ids').select2({
                 theme: "bootstrap-5",
                 placeholder: 'Pilih satu atau lebih...',
-                tokenSeparators: [',', ' ']
             });
-        });
 
-        // SweetAlert Pop-ups
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: @json(session('success')), // Safely passes the string to JS
-                timer: 3000,
-                showConfirmButton: false
-            });
-        @endif
-        @if (session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: @json(session('error')), // Safely passes the string to JS
-            });
-        @endif
+            // Logika SweetAlert
+            @if (session('success'))
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: @json(session('success')), timer: 3000, showConfirmButton: false });
+            @endif
+            @if (session('error'))
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: @json(session('error')) });
+            @endif
 
-        // FullCalendar Initialization and Dynamic Logic
-        document.addEventListener('DOMContentLoaded', async function() {
-        const visitDateField = document.getElementById('tanggalKunjungan');
-        const visitTimeField = document.getElementById('pukulKunjungan');
-        const allTimeOptions = Array.from(visitTimeField.options);
+            const dateInput = $('#tanggalKunjungan');
+            const timeSelect = $('#pukulKunjungan');
+            const timeSlotMessage = $('#time-slot-message');
 
-        // This object will store booked times
-        const bookedSlots = {};
-        // This array will store fully booked dates
-        let fullyBookedDates = [];
+            dateInput.on('change', function() {
+                const selectedDateStr = $(this).val();
+                timeSlotMessage.text('');
+                
+                // Jika tidak ada tanggal yang dipilih, nonaktifkan
+                if (!selectedDateStr) {
+                    timeSelect.prop('disabled', true).val('').find('option:first').text('Pilih Tanggal Terlebih Dahulu');
+                    return;
+                }
 
-        // 1. Fetch event data to know which dates are blocked
-        try {
-            const response = await fetch('/all-events');
-            const events = await response.json();
+                const selectedDate = new Date(selectedDateStr + 'T00:00:00');
+                const dayOfWeek = selectedDate.getDay();
 
-            events.forEach(event => {
-                const dateStr = event.start.substring(0, 10);
-                if (event.extendedProps.type === 'agenda') {
-                    fullyBookedDates.push(dateStr);
-                } else if (event.extendedProps.type === 'kunjungan') {
-                    if (!bookedSlots[dateStr]) {
-                        bookedSlots[dateStr] = [];
+                // Periksa apakah akhir pekan
+                if ([0, 6].includes(dayOfWeek)) {
+                    Swal.fire('Tanggal Tidak Valid', 'Kunjungan tidak dapat dilakukan pada hari Sabtu atau Minggu.', 'error');
+                    $(this).val(''); // Kosongkan tanggal yang tidak valid
+                    timeSelect.prop('disabled', true).val('').find('option:first').text('Pilih Tanggal Terlebih Dahulu');
+                    return; // Hentikan eksekusi
+                }
+
+                // --- PERBAIKAN DI SINI ---
+                // 1. Langsung aktifkan dropdown dan reset semua pilihan untuk hari yang valid.
+                timeSelect.prop('disabled', false);
+                timeSelect.find('option:first').text('Pilih Waktu');
+                timeSelect.find('option').prop('disabled', false); // Aktifkan semua pilihan terlebih dahulu
+                timeSelect.val('');
+
+                // 2. Sekarang, panggil API untuk menonaktifkan jam-jam tertentu.
+                $.get(`/api/unavailable-times?date=${selectedDateStr}`, function(data) {
+                    if (data.is_unavailable) {
+                        // Jika seluruh hari sibuk karena ada agenda
+                        timeSelect.prop('disabled', true);
+                        timeSelect.find('option:first').text('Tanggal Tidak Tersedia');
+                        timeSlotMessage.text('Seluruh waktu pada tanggal ini tidak tersedia karena ada agenda lain.');
+                    } else {
+                        // Jika hanya beberapa jam yang sibuk
+                        data.unavailable_times.forEach(function(time) {
+                            timeSelect.find(`option[value="${time}"]`).prop('disabled', true);
+                        });
                     }
-                    const timeStr = event.start.substring(11, 16);
-                    bookedSlots[dateStr].push(timeStr);
-                }
-            });
-        } catch (error) {
-            console.error("Error fetching event data:", error);
-        }
-
-        // 2. Add an event listener to the date input
-        visitDateField.addEventListener('change', function() {
-            const selectedDate = new Date(this.value);
-            const dayOfWeek = selectedDate.getUTCDay(); // Sunday = 0, Saturday = 6
-            const selectedDateStr = this.value;
-
-            // 3. Check if the selected date is a weekend or has an agenda
-            let isInvalid = false;
-            if ([0, 6].includes(dayOfWeek)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tanggal Tidak Valid',
-                    text: 'Kunjungan tidak dapat dilakukan pada hari Sabtu atau Minggu.'
+                }).fail(function() {
+                    // Jika API gagal, dropdown tetap aktif (pengguna masih bisa memilih)
+                    timeSlotMessage.text('Gagal memeriksa ketersediaan jadwal. Coba lagi.');
                 });
-                isInvalid = true;
-            } else if (fullyBookedDates.includes(selectedDateStr)) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Tanggal Tidak Tersedia',
-                    text: 'Tanggal ini sudah penuh dengan agenda lain.'
-                });
-                isInvalid = true;
-            }
-
-            if (isInvalid) {
-                this.value = ''; // Clear the invalid date
-                visitTimeField.value = '';
-                allTimeOptions.forEach(option => option.disabled = true);
-                return;
-            }
-            
-            // 4. If the date is valid, update the time dropdown
-            const slotsForDay = bookedSlots[selectedDateStr] || [];
-            visitTimeField.value = '';
-            allTimeOptions.forEach(option => {
-                if (option.value) { // Skip "Pilih Waktu"
-                    option.disabled = slotsForDay.includes(option.value);
-                } else {
-                    option.disabled = false;
-                }
             });
         });
-    });
-</script>
+    </script>
 </body>
 
 </html>

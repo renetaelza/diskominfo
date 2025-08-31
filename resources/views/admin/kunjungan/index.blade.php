@@ -3,7 +3,7 @@
 @section('title', 'Manajemen Kunjungan')
 
 @section('content')
-    <div x-data="{}">
+    <div x-data="{ showDeleteModal: false, deleteUrl: '' }">
 
         {{-- Header Bar --}}
         <div class="bg-white dark:bg-gray-800 shadow-md px-10 py-3 mb-6 flex justify-between items-center">
@@ -39,7 +39,9 @@
                             @endif
                         </button>
 
-                        <div x-show="openFilter" @click.outside="if (!$event.target.closest('.flatpickr-calendar')) openFilter = false" x-transition
+                        <div x-show="openFilter"
+                            @click.outside="if (!$event.target.closest('.flatpickr-calendar')) openFilter = false"
+                            x-transition
                             class="absolute z-40 mt-2 w-72 bg-white border border-gray-200 rounded shadow-lg p-4 space-y-4"
                             style="display: none;">
 
@@ -60,7 +62,8 @@
 
                             {{-- Date Range Filter --}}
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Tanggal Kunjungan</label>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-200">Tanggal
+                                    Kunjungan</label>
                                 <div class="flex items-center gap-2">
                                     <input x-data x-init="flatpickr($el, { dateFormat: 'Y-m-d' })" type="text" name="date_from"
                                         value="{{ request('date_from') }}" placeholder="Dari tanggal"
@@ -139,11 +142,16 @@
                                             class="px-2 py-1 font-semibold leading-tight text-red-700 bg-red-100 rounded-full dark:bg-red-700 dark:text-red-100">Rejected</span>
                                     @endif
                                 </td>
-                                <td class="px-4 py-3 text-center">
+                                <td class="px-4 py-3 text-center space-x-2">
                                     <a href="{{ route('admin.kunjungan.show', $kunjungan->id) }}" title="Lihat Detail"
-                                        class="text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-600">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
+                                        class="text-blue-600 hover:text-blue-800"><i class="fas fa-eye"></i></a>
+                                    <a href="{{ route('admin.kunjungan.edit', $kunjungan->id) }}" title="Edit"
+                                        class="text-yellow-600 hover:text-yellow-800"><i class="fas fa-pen"></i></a>
+                                    <button type="button" title="Hapus"
+                                        @click="showDeleteModal = true; deleteUrl = '{{ route('admin.kunjungan.destroy', $kunjungan->id) }}'"
+                                        class="text-red-600 hover:text-red-800">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </button>
                                 </td>
                             </tr>
                         @empty
@@ -159,6 +167,25 @@
 
             <div class="mt-4">
                 {{ $kunjungans->links() }}
+            </div>
+        </div>
+
+        <div x-show="showDeleteModal" x-transition
+            class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none">
+            <div class="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-sm shadow-lg text-center">
+                <h2 class="text-lg font-semibold mb-4">Yakin ingin menghapus pengajuan ini?</h2>
+                <p class="text-sm text-gray-600 mb-6">Tindakan ini tidak dapat dibatalkan.</p>
+                <div class="flex justify-center gap-4">
+                    <button @click="showDeleteModal = false"
+                        class="px-4 py-2 rounded bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-medium">Batal</button>
+                    <form :action="deleteUrl" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="px-4 py-2 rounded bg-red-600 hover:bg-red-700 text-white text-sm font-medium">Ya,
+                            Hapus</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>

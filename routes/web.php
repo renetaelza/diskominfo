@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TopikController;
 use App\Http\Controllers\PengumumanController;
@@ -20,7 +21,11 @@ use App\Http\Controllers\Api\CalendarController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\KategoriDokumenController;
 use App\Http\Controllers\DokumenController;
+use App\Http\Controllers\PPIDController;
+use App\Http\Controllers\ProfilPimpinanController;
+use App\Http\Controllers\TupoksiController;
 use App\Http\Controllers\VisiMisiController;
+use App\Http\Controllers\Api\AvailabilityController;
 
 
 //USER
@@ -57,28 +62,64 @@ Route::get('/berita/{id}', [BeritaController::class, 'show'])->name('berita.deta
 // Kunjungan
 Route::post('/kunjungan', [KunjunganController::class, 'store'])->name('kunjungan.store');
 Route::get('/aplikasi/kunjungan', [KunjunganController::class, 'index'])->name('kunjungan.index');
+Route::get('/api/unavailable-times', [AvailabilityController::class, 'check']);
 
 Route::get('/aplikasi/{slug}', [AplikasiController::class, 'show'])->name('aplikasi.show');
 
-
 //PROFILE
 Route::get('/profile/struktur-organisasi', [StrukturOrganisasiUserController::class, 'view'])->name('profile.strukturOrganisasi');
-Route::get('/profile/sejarah', function () {return view('profile.sejarah');})->name('sejarah.index');
+Route::get('/orgchart/page', function () {
+    $pegawai = App\Models\Pegawai::with(['atasan', 'bidang', 'bawahan'])->get();
+
+    $pegawai = $pegawai->map(function ($p) {
+        if ($p->foto && Storage::disk('public')->exists('foto_pegawai/' . $p->foto)) {
+            $path = Storage::disk('public')->path('foto_pegawai/' . $p->foto);
+            $mime = mime_content_type($path);
+            $base64 = base64_encode(file_get_contents($path));
+            $p->foto_base64 = "data:$mime;base64,$base64";
+        } else {
+            $defaultPath = public_path('pictures/default-user.png');
+            $mime = mime_content_type($defaultPath);
+            $base64 = base64_encode(file_get_contents($defaultPath));
+            $p->foto_base64 = "data:$mime;base64,$base64";
+        }
+        return $p;
+    });
+
+    return view('profile.orgchart-iframe', compact('pegawai'));
+})->name('orgchart.page');
+
+Route::get('/profile/sejarah', function () {
+    return view('profile.sejarah');
+})->name('sejarah.index');
 Route::get('/profile/visimisi', [VisiMisiController::class, 'index'])->name('visimisi.index');
 Route::get('/profile/visi-misi', [VisiMisiController::class, 'showPublic'])->name('showPublic');
+Route::get('/profile/tupoksi', [TupoksiController::class, 'tupoksi'])->name('tupoksi');
+Route::get('/profile/profil-pimpinan', [ProfilPimpinanController::class, 'showPublic'])->name('profile.show');
 
 //INFORMASI
 Route::get('/informasi/pengumuman', [PengumumanController::class, 'index'])->name('pengumuman.index');
-Route::get('informasi/agenda', function () {return view('informasi.agenda');})->name('agenda.index');
+Route::get('informasi/agenda', function () {
+    return view('informasi.agenda');
+})->name('agenda.index');
 Route::get('/informasi/dokumen', [DokumenController::class, 'index'])->name('dokumen.index');
 
 // GALERI
 // galeri-video
 Route::get('/galeri/video', [HomeController::class, 'indexVideoMain'])->name('main.galeri.video');
 
+Route::get('/galeri/foto', [HomeController::class, 'indexFotoMain'])->name('main.galeri.foto');
+Route::get('galeri/foto/{folder}', [HomeController::class, 'showFolder'])->name('main.galeri.folder.show');
+
 // Public-facing API for FullCalendar
 Route::get('/all-events', [CalendarController::class, 'index']);
 Route::get('/public-events', [CalendarController::class, 'publicEvents']);
+Route::get('/api/public-events', [CalendarController::class, 'publicEvents']);
+Route::get('/api/nearest-agendas', [CalendarController::class, 'nearestAgendas']);
+
+//PPID
+Route::get('/ppid/{slug}', [PPIDController::class, 'show'])->name('ppid.show');
+Route::get('/ppid/tentang/{slug}', [PPIDController::class, 'showText'])->name('ppid.show.text'); 
 
 //ADMIN
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -120,6 +161,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     //AGENDA
     Route::resource('agenda', AdminAgendaController::class);
 
+    // PROFIL PIMPINAN
+    Route::get('profil-pimpinan', [ProfilPimpinanController::class, 'edit'])->name('profil.edit');
+    Route::put('profil-pimpinan', [ProfilPimpinanController::class, 'update'])->name('profil.update');
+
     // LAYANAN
     // navigasi
     Route::get('/aplikasi/navigasi', [AplikasiController::class, 'indexAdmin'])->name('aplikasi.indexNavigasi');
@@ -136,6 +181,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::get('kunjungan', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'index'])->name('kunjungan.index');
     Route::get('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'show'])->name('kunjungan.show');
     Route::post('kunjungan/{kunjungan}/update-status', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'updateStatus'])->name('kunjungan.updateStatus');
+    Route::get('kunjungan/{kunjungan}/edit', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'edit'])->name('kunjungan.edit');
+    Route::put('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'update'])->name('kunjungan.update');
+    Route::delete('kunjungan/{kunjungan}', [App\Http\Controllers\Admin\AdminKunjunganController::class, 'destroy'])->name('kunjungan.destroy');
 
     //banner
     Route::get('/banner-utama', [BannerController::class, 'index'])->name('banner.index');
@@ -176,4 +224,17 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::post('misi', [VisiMisiController::class, 'storeMission'])->name('mission.store');
     Route::put('misi/{mission}', [VisiMisiController::class, 'updateMission'])->name('mission.update');
     Route::delete('misi/{mission}', [VisiMisiController::class, 'destroyMission'])->name('mission.destroy');
+
+    //PPID
+    Route::get('/ppid/tentang-ppid', [PPIDController::class, 'indexTentang'])->name('ppid.tentangPpid');
+    Route::post('/ppid/tentang-ppid', [PPIDController::class, 'updatePage'])->name('ppid.tentangUpdate');
+    Route::get('/ppid/tentang-ppid/{slug}', [PPIDController::class, 'getPage']);
+    Route::post('/ppid/tentang-ppid/upload-image', [PPIDController::class, 'uploadImage'])->name('ppid.uploadImage');
+    
+    Route::get('/ppid/informasi-setiap-saat', [PPIDController::class, 'indexInformasiSetiapSaat'])->name('ppid.informasiSetiapSaat');
+    Route::get('/ppid/informasi-berkala', [PPIDController::class, 'indexInformasiBerkala'])->name('ppid.informasiBerkala');
+    Route::get('/ppid/informasi-serta-merta', [PPIDController::class, 'indexInformasiSertaMerta'])->name('ppid.informasiSertaMerta');
+    Route::get('/ppid/informasi-dikecualikan', [PPIDController::class, 'indexInformasiDikecualikan'])->name('ppid.informasiDikecualikan');
+    Route::post('/ppid/save', [PPIDController::class, 'storeOrUpdate'])->name('ppid.save');
+    Route::get('/ppid/navigasi/{judul}', [PPIDController::class, 'getNavigasiData']);
 });
