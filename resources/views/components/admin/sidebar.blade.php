@@ -67,7 +67,7 @@
         'icon' => 'fa-landmark',
         'label' => 'PPID',
         'children' => [
-        ['icon' => 'fa-circle-info', 'label' => 'Tentang PPID', 'route' => '#'],
+        ['icon' => 'fa-circle-info', 'label' => 'Tentang PPID', 'route' => route('admin.ppid.tentangPpid')],
         ['icon' => 'fa-clock-rotate-left', 'label' => 'Informasi Setiap Saat', 'route' => route('admin.ppid.informasiSetiapSaat')],
         ['icon' => 'fa-repeat', 'label' => 'Informasi Berkala', 'route' => route('admin.ppid.informasiBerkala')],
         ['icon' => 'fa-bolt', 'label' => 'Informasi Serta Merta', 'route' => route('admin.ppid.informasiSertaMerta')],

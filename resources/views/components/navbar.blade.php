@@ -66,21 +66,21 @@
                     <li class="submenu-parent">
                         <a href="#">Tentang PPID <i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="#">Profil PPID DISKOMINFO</a></li>
-                            <li><a href="#">Agenda PPID</a></li>
+                            <li><a href="{{ route('ppid.show.text', 'profile-ppid-diskominfo') }}">Profil PPID DISKOMINFO</a></li>
+                            <li><a href="{{ route('ppid.show.text', 'agenda-ppid') }}">Agenda PPID</a></li>
                         </ul>
                     </li>
                     <li class="submenu-parent">
                         <a href="#">Informasi Setiap Saat<i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="#">Informasi Mengenai Daftar Informasi Publik</a></li>
-                            <li><a href="#">Informasi Mengenai Surat Perjanjian dengan Pihak Ketiga</a></li>
+                            <li><a href="{{ route('ppid.show', 'informasi-mengenai-daftar-informasi-publik') }}">Informasi Mengenai Daftar Informasi Publik</a></li>
+                            <li><a href="{{ route('ppid.show', 'informasi-mengenai-surat-perjanjian-dengan-pihak-ketiga') }}">Informasi Mengenai Surat Perjanjian dengan Pihak Ketiga</a></li>
                             <li><a href="{{route('profile.strukturOrganisasi')}}">Informasi tentang Organisasi, Administrasi, Kepegawaian dan Keuangan</a></li>
-                            <li><a href="#">Pedoman Pelayanan Publik</a></li>
-                            <li><a href="#">Jumlah, Jenis, Gambaran Umum Pengaduan</a></li>
-                            <li><a href="#">Laporan Pelayanan Informasi</a></li>
-                            <li><a href="#">Laporan Data Aset</a></li>
-                            <li><a href="#">Standar Pelayanan</a></li>
+                            <li><a href="{{ route('ppid.show', 'pedoman-pelayanan-publik') }}">Pedoman Pelayanan Publik</a></li>
+                            <li><a href="{{ route('ppid.show', 'jumlah-jenis-gambaran-umum-pengaduan') }}">Jumlah, Jenis, Gambaran Umum Pengaduan</a></li>
+                            <li><a href="{{ route('ppid.show', 'laporan-pelayanan-informasi') }}">Laporan Pelayanan Informasi</a></li>
+                            <li><a href="{{ route('ppid.show', 'laporan-data-aset') }}">Laporan Data Aset</a></li>
+                            <li><a href="{{ route('ppid.show', 'standar-pelayanan') }}">Standar Pelayanan</a></li>
                         </ul>
                     </li>
                     <li class="submenu-parent">
@@ -90,50 +90,50 @@
                             <li class="submenu-parent">
                                 <a href="#">Kegiatan dan Kinerja<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="">Laporan Akuntabilitas Kerja</a></li>
-                                    <li><a href="">Program dan Kegiatan</a></li>
-                                    <li><a href="">Daftar Penanggung Jawab Pelaksanaan Program</a></li>
-                                    <li><a href="">Target dan/atau Capaian Program dan Kegiatan</a></li>
-                                    <li><a href="">Anggaran Program dan Kegiatan</a></li>
-                                    <li><a href="">Realisasi Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-akuntabilitas-kerja') }}">Laporan Akuntabilitas Kerja</a></li>
+                                    <li><a href="{{ route('ppid.show', 'program-dan-kegiatan') }}">Program dan Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'daftar-penanggung-jawab-pelaksanaan-program') }}">Daftar Penanggung Jawab Pelaksanaan Program</a></li>
+                                    <li><a href="{{ route('ppid.show', 'target-dan-atau-capaian-program-dan-kegiatan') }}">Target dan/atau Capaian Program dan Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'anggaran-program-dan-kegiatan') }}">Anggaran Program dan Kegiatan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'realisasi-kegiatan') }}">Realisasi Kegiatan</a></li>
                                 </ul>
                             </li>
                             <li class="submenu-parent">
                                 <a href="#">Keuangan DISKOMINFO<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="">Laporan Keuangan berupa Rencana dan Laporan Realisasi Anggaran</a></li>
-                                    <li><a href="">Laporan Keuangan berupa Laporan Arus Kas dan Catatan atas Laporan Keuangan</a></li>
-                                    <li><a href="">Laporan Keuangan berupa Daftar Aset dan Informasi</a></li>
-                                    <li><a href="">Informasi Rencana Kerja dan Anggaran</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-keuangan-berupa-rencana-dan-laporan-realisasi-anggaran') }}">Laporan Keuangan berupa Rencana dan Laporan Realisasi Anggaran</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-keuangan-berupa-laporan-arus-kas-dan-catatan-atas-laporan-keuangan') }}">Laporan Keuangan berupa Laporan Arus Kas dan Catatan atas Laporan Keuangan</a></li>
+                                    <li><a href="{{ route('ppid.show', 'laporan-keuangan-berupa-daftar-aset-dan-informasi') }}">Laporan Keuangan berupa Daftar Aset dan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'informasi-rencana-kerja-dan-anggaran') }}">Informasi Rencana Kerja dan Anggaran</a></li>
                                 </ul>
                             </li>
                             <li class="submenu-parent">
                                 <a href="#">Investasi<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="">Realisasi Investasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'realisasi-investasi') }}">Realisasi Investasi</a></li>
                                 </ul>
                             </li>
                             <li class="submenu-parent">
                                 <a href="#">Laporan Akses Informasi Publik<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="">Register Keberatan Informasi</a></li>
-                                    <li><a href="">Register Permohonan Informasi</a></li>
-                                    <li><a href="">Jumlah Permohonan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'register-keberatan-informasi') }}">Register Keberatan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'register-permohonan-informasi') }}">Register Permohonan Informasi</a></li>
+                                    <li><a href="{{ route('ppid.show', 'jumlah-permohonan-informasi') }}">Jumlah Permohonan Informasi</a></li>
                                 </ul>
                             </li>
                             <li class="submenu-parent">
                                 <a href="#">Tata Cara Permohonan Informasi Publik<i class="fa fa-caret-right"></i></a>
                                 <ul class="dropdown-submenu">
-                                    <li><a href="">SOP Pelayanan Informasi Publik</a></li>
-                                    <li><a href="">Permohonan Informasi Publik</a></li>
-                                    <li><a href="">Formulir Keberatan Informasi Publik</a></li>
+                                    <li><a href="{{ route('ppid.show', 'sop-pelayanan-informasi-publik') }}">SOP Pelayanan Informasi Publik</a></li>
+                                    <li><a href="{{ route('ppid.show', 'permohonan-informasi-publik') }}">Permohonan Informasi Publik</a></li>
+                                    <li><a href="{{ route('ppid.show', 'formulir-keberatan-informasi-publik') }}">Formulir Keberatan Informasi Publik</a></li>
                                 </ul>
                             </li>
-                            <li><a href="">Informasi Tata Cara Permohonan dan Pengaduan</a></li>
-                            <li><a href="">Rencana Strategis dan Rencana Kerja</a></li>
-                            <li><a href="">Regulasi DISKOMINFO</a></li>
-                            <li><a href="">Daftar Informasi Publik</a></li>
-                            <li><a href="">Daftar Pejabat PPID</a></li>
+                            <li><a href="{{ route('ppid.show', 'informasi-tata-cara-permohonan-dan-pengaduan') }}">Informasi Tata Cara Permohonan dan Pengaduan</a></li>
+                            <li><a href="{{ route('ppid.show', 'rencana-strategis-dan-rencana-kerja') }}">Rencana Strategis dan Rencana Kerja</a></li>
+                            <li><a href="{{ route('ppid.show', 'regulasi-diskominfo') }}">Regulasi DISKOMINFO</a></li>
+                            <li><a href="{{ route('ppid.show', 'daftar-informasi-publik') }}">Daftar Informasi Publik</a></li>
+                            <li><a href="{{ route('ppid.show', 'daftar-pejabat-ppid') }}">Daftar Pejabat PPID</a></li>
                         </ul>
                     </li>
                     <li class="submenu-parent">
@@ -147,11 +147,11 @@
                     <li class="submenu-parent">
                         <a href="#">Informasi Dikecualikan <i class="fa fa-caret-right"></i></a>
                         <ul class="dropdown-submenu">
-                            <li><a href="">Daftar Informasi Dikecualikan</a></li>
-                            <li><a href="">Kepwal Daftar Informasi Dikecualikan</a></li>
+                            <li><a href="{{ route('ppid.show', 'daftar-informasi-dikecualikan') }}">Daftar Informasi Dikecualikan</a></li>
+                            <li><a href="{{ route('ppid.show', 'ikepwal-daftar-informasi-dikecualikan') }}">Kepwal Daftar Informasi Dikecualikan</a></li>
                         </ul>
                     </li>
-                    <li><a href="http://ppid-simonik.bandung.go.id/pilih-permoonan">Permohonan Informasi Online</a></li>
+                    <li><a href="https://ppid-simonik.bandung.go.id/pilih-permohonan">Permohonan Informasi Online</a></li>
                     <li><a href="https://ppid.bandung.go.id/">PPID Utama</a></li>
                     <li><a href="http://ppid-simonik.bandung.go.id/input-keberatan">Pengajuan Keberatan Online</a></li>
                     <li><a href="bandung.go.id">Portal Kota Bandung</a></li>

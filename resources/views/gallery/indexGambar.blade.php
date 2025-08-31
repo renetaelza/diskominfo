@@ -61,7 +61,7 @@
     
     <!-- Header Halaman Detail -->
     <header class="relative h-[350px] bg-cover bg-center" style="background-image: url('{{ $photos->first() ? asset('storage/' . $photos->first()->image_path) : 'https://placehold.co/1920x400/333/FFF?text=Galeri' }}');">
-        <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+        <div class="absolute inset-0 bg-black/80"></div>
         <div class="relative z-10 h-full flex flex-col items-center justify-center text-white text-center p-4">
             <h1 class="text-4xl md:text-5xl font-bold">{{ $folder->title }}</h1>
             @if($folder->description)
