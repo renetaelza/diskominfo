@@ -119,6 +119,7 @@ Route::get('/api/nearest-agendas', [CalendarController::class, 'nearestAgendas']
 
 //PPID
 Route::get('/ppid/{slug}', [PPIDController::class, 'show'])->name('ppid.show');
+Route::get('/ppid/tentang/{slug}', [PPIDController::class, 'showText'])->name('ppid.show.text'); 
 
 //ADMIN
 Route::get('/admin/login', [AuthController::class, 'showLoginForm'])->name('admin.login');
@@ -225,6 +226,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::delete('misi/{mission}', [VisiMisiController::class, 'destroyMission'])->name('mission.destroy');
 
     //PPID
+    Route::get('/ppid/tentang-ppid', [PPIDController::class, 'indexTentang'])->name('ppid.tentangPpid');
+    Route::post('/ppid/tentang-ppid', [PPIDController::class, 'updatePage'])->name('ppid.tentangUpdate');
+    Route::get('/ppid/tentang-ppid/{slug}', [PPIDController::class, 'getPage']);
+    Route::post('/ppid/tentang-ppid/upload-image', [PPIDController::class, 'uploadImage'])->name('ppid.uploadImage');
+    
     Route::get('/ppid/informasi-setiap-saat', [PPIDController::class, 'indexInformasiSetiapSaat'])->name('ppid.informasiSetiapSaat');
     Route::get('/ppid/informasi-berkala', [PPIDController::class, 'indexInformasiBerkala'])->name('ppid.informasiBerkala');
     Route::get('/ppid/informasi-serta-merta', [PPIDController::class, 'indexInformasiSertaMerta'])->name('ppid.informasiSertaMerta');

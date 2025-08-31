@@ -6,7 +6,7 @@
 
 {{-- Header Halaman --}}
 <header class="relative h-[300px] bg-cover bg-center" style="background-image: url('/pictures/tupoksi.png');">
-    <div class="absolute inset-0 bg-black bg-opacity-60"></div>
+    <div class="absolute inset-0 bg-black/80"></div>
     <div class="relative z-10 h-full flex flex-col items-center justify-center text-white text-center p-4">
         <h1 class="text-4xl md:text-5xl font-bold">Tugas Pokok & Fungsi</h1>
         <p class="mt-3 text-lg text-gray-300 max-w-2xl">Dinas Komunikasi dan Informatika Kota Bandung</p>

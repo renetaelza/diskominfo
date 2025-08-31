@@ -60,7 +60,7 @@
                                 <option value="Laporan Akuntabilitas Kerja">Laporan Akuntabilitas Kerja</option>
                                 <option value="Program dan Kegiatan">Program dan Kegiatan</option>
                                 <option value="Daftar Penanggung Jawab Pelaksanaan Program">Daftar Penanggung Jawab Pelaksanaan Program</option>
-                                <option value="Target dan/atau Capaian Program dan Kegiatan">Target dan/atau Capaian Program dan Kegiatan</option>
+                                <option value="Target dan atau Capaian Program dan Kegiatan">Target dan/atau Capaian Program dan Kegiatan</option>
                                 <option value="Anggaran Program dan Kegiatan">Anggaran Program dan Kegiatan</option>
                                 <option value="Realisasi Kegiatan">Realisasi Kegiatan</option>
                             </optgroup>
@@ -207,14 +207,6 @@
         fetch(`/admin/ppid/navigasi/${encodeURIComponent(judul)}`)
             .then(res => res.json())
             .then(data => {
-                const form = document.getElementById('formUpdate');
-
-                if (data.id) {
-                    form.action = `/admin/ppid/update/${data.id}`;
-                } else {
-                    form.action = `/admin/ppid/save`;
-                }
-
                 document.getElementById('judulHidden').value = data.judul ?? judul;
                 document.getElementById('judulText').value = data.judul ?? judul;
 
@@ -223,7 +215,6 @@
             })
             .catch(err => console.error(err));
     }
-
 
     const inputLampiran = document.getElementById('lampiran-input');
     const errorMsg = document.getElementById('lampiran-error');

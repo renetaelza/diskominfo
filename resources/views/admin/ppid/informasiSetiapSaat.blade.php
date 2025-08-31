@@ -166,14 +166,6 @@
         fetch(`/admin/ppid/navigasi/${encodeURIComponent(judul)}`)
             .then(res => res.json())
             .then(data => {
-                const form = document.getElementById('formUpdate');
-
-                if (data.id) {
-                    form.action = `/admin/ppid/update/${data.id}`;
-                } else {
-                    form.action = `/admin/ppid/save`;
-                }
-
                 document.getElementById('judulHidden').value = data.judul ?? judul;
                 document.getElementById('judulText').value = data.judul ?? judul;
 

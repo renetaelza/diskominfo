@@ -12,8 +12,69 @@ class PPIDController extends Controller
     public function show($slug)
     {
         $dokumen = PPID::where('slug', $slug)->firstOrFail();
-        return view("ppid.$slug", compact('dokumen'));
+        return view("ppid.ppid-dokumen", compact('dokumen'));
     }
+
+    // Tentang PPID
+
+    public function showText($slug)
+    {
+        $text = PPID::where('slug', $slug)->firstOrFail();
+        return view("ppid.ppid-text", compact('text'));
+    }
+
+    public function indexTentang()
+    {
+        return view('admin.ppid.tentangPpid');
+    }
+
+    public function getPage($slug)
+    {
+        $dokumen = PPID::where('slug', $slug)->first();
+        return response()->json([
+            'judul' => $dokumen->judul ?? '',
+            'konten' => $dokumen->konten ?? ''
+        ]);
+    }
+
+    public function updatePage(Request $request)
+    {
+        $request->validate([
+            'judul' => 'required|string',
+            'slug' => 'required|string',
+            'content' => 'nullable|string',
+        ]);
+
+        PPID::updateOrCreate(
+            ['slug' => $request->slug],
+            [
+                'judul'  => $request->judul,
+                'konten' => $request->konten,
+                'lampiran' => "[]",
+                'tanggal'=> now()
+            ]
+        );
+
+        return redirect()->back()->with('success', 'Halaman berhasil disimpan.');
+    }
+
+    public function uploadImage(Request $request)
+    {
+        // Validasi file image
+        $request->validate([
+            'upload' => 'required|image|max:2048' // max 2MB
+        ]);
+
+        // Simpan ke storage/public/ppid
+        $path = $request->file('upload')->store('ppid', 'public');
+
+        // Return response JSON sesuai CKEditor format
+        return response()->json([
+            'url' => asset('storage/' . $path)
+        ]);
+    }
+
+    // END Tentang PPID
 
     public function indexInformasiSetiapSaat()
     {
