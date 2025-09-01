@@ -4,13 +4,12 @@ namespace App\Mail;
 
 use App\Models\Kunjungan;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class KunjunganRescheduledMail extends Mailable implements ShouldQueue
+class KunjunganRescheduledMail extends Mailable
 {
     use Queueable, SerializesModels;
 
