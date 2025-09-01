@@ -58,8 +58,9 @@
         const chart = new OrgChart(document.getElementById("tree"), {
             template: "anaSmall",  // 🔹 ganti pakai template baru
             enableSearch: false,
+            scaleInitial: 0.5,
             nodeMouseClick: OrgChart.action.none,
-            mouseScrool: OrgChart.action.none,
+            mouseScrool: OrgChart.action.zoom,
             nodeBinding: {
                 field_0: "name",
                 field_1: "title",
