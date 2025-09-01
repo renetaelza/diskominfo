@@ -37,7 +37,14 @@
             text-align: justify;
         }
 
-        .ck-content ul, .ck-content ol {
+        .ck-content ol {
+            list-style-type: decimal;
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .ck-content ul {
+            list-style-type: disc;
             padding-left: 1.5rem;
             margin-bottom: 1rem;
         }
