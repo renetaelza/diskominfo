@@ -1,10 +1,11 @@
 <header>
     <div class="topbar">
         <div class="social-icons">
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-x-twitter"></i></a>
-            <a href="#"><i class="fab fa-facebook-f"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.instagram.com/diskominfobdg/?hl=en" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+            <a href="https://x.com/diskominfobdg" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i></a>
+            <a href="https://www.facebook.com/DiskominfoBandung/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://www.youtube.com/@diskominfokotabandung" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
+            <a href="https://www.tiktok.com/@humasbdg" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
         </div>
         <div class="office-hours">Jam Beroperasi Senin - Jumat: 8.00 am - 6.00 pm</div>
         <div class="search-box">
