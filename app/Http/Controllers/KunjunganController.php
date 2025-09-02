@@ -82,7 +82,7 @@ class KunjunganController extends Controller
                 }
             }
 
-            return redirect()->back()->with('success', 'Pengajuan kunjungan Anda telah berhasil dikirim.');
+            return redirect()->back()->with('success', 'Pengajuan kunjungan Anda telah berhasil dikirim. Check email untuk konfirmasi lebih lanjut.');
         } catch (\Exception $e) {
             Log::error('Kunjungan submission error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();

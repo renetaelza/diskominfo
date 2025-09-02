@@ -55,10 +55,11 @@
 
   <!-- Sosial Media -->
   <div class="relative z-10 mt-10 flex justify-center space-x-6 text-xl">
-    <a href="#" class="hover:text-orange-400 transition duration-300"><i class="fab fa-instagram"></i></a>
-    <a href="#" class="hover:text-orange-400 transition duration-300"><i class="fab fa-x-twitter"></i></a>
-    <a href="#" class="hover:text-orange-400 transition duration-300"><i class="fab fa-facebook-f"></i></a>
-    <a href="#" class="hover:text-orange-400 transition duration-300"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.instagram.com/diskominfobdg/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300"><i class="fab fa-instagram"></i></a>
+    <a href="https://x.com/diskominfobdg" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300"><i class="fab fa-x-twitter"></i></a>
+    <a href="https://www.facebook.com/DiskominfoBandung/" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300"><i class="fab fa-facebook-f"></i></a>
+    <a href="https://www.youtube.com/@diskominfokotabandung" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300"><i class="fab fa-youtube"></i></a>
+    <a href="https://www.tiktok.com/@humasbdg" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300"><i class="fab fa-tiktok"></i></a>
   </div>
 
   <!-- Garis & Copyright -->

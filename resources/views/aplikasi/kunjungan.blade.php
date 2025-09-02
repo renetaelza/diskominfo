@@ -229,7 +229,6 @@
     </main>
     <x-footer />
 
-    {{-- FIX: Correct script loading order and logic --}}
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
@@ -276,14 +275,13 @@
                     return; // Hentikan eksekusi
                 }
 
-                // --- PERBAIKAN DI SINI ---
                 // 1. Langsung aktifkan dropdown dan reset semua pilihan untuk hari yang valid.
                 timeSelect.prop('disabled', false);
                 timeSelect.find('option:first').text('Pilih Waktu');
                 timeSelect.find('option').prop('disabled', false); // Aktifkan semua pilihan terlebih dahulu
                 timeSelect.val('');
 
-                // 2. Sekarang, panggil API untuk menonaktifkan jam-jam tertentu.
+                // 2. panggil API untuk menonaktifkan jam-jam tertentu.
                 $.get(`/api/unavailable-times?date=${selectedDateStr}`, function(data) {
                     if (data.is_unavailable) {
                         // Jika seluruh hari sibuk karena ada agenda
