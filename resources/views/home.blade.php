@@ -2,23 +2,20 @@
 
 @section('content')
 
-<!-- HERO SECTION -->
-<header class="relative bg-gray-800 text-white overflow-hidden min-h-[90vh]">
+<header class="relative bg-gray-800 text-white overflow-hidden min-h-[90vh] flex items-center justify-center">
 
     <img
         src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}"
         alt="Gedung Diskominfo Bandung"
         class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
 
-    <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16 flex flex-col justify-center pt-52 lg:pt-72 h-full space-y-10">
+    <div class="relative z-10 container mx-auto pt-10 sm:pt-16 lg:pt-18 px-6 sm:px-8 lg:px-16 flex flex-col space-y-12">
 
-        <!-- BARIS PERTAMA: H1 + tagline (kiri) & clock/weather (kanan) -->
         <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full gap-6">
 
-            <!-- H1 + tagline -->
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
-                    DINAS KOMUNIKASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
+                    DINAS KOMUNISASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
                 </h1>
 
                 <p class="mt-4 text-lg text-gray-200 max-w-2xl">
@@ -26,7 +23,6 @@
                 </p>
             </div>
 
-            <!-- Clock & Weather -->
             <div class="mt-6 lg:mt-0 flex flex-col items-start lg:items-end gap-3 text-lg font-semibold text-gray-200">
                 <div id="live-clock" class="flex items-center gap-3">
                     <i class="far fa-clock text-xl"></i>
@@ -39,18 +35,41 @@
             </div>
         </div>
 
-        <!-- BARIS KEDUA: Button di tengah -->
-        <div class="flex justify-center lg:pt-20">
-            <a href="https://play.google.com/store/apps/details?id=gov.bdg.smartcitybdg"
-               target="_blank"
-               class="inline-flex items-center px-6 py-3 bg-blue-950 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md transform transition duration-200 hover:scale-105 active:scale-95">
+        <div class="flex justify-center">
+            <button id="open-iklan-modal" type="button" class="inline-flex items-center px-6 py-3 bg-blue-950 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md transform transition duration-200 hover:scale-105 active:scale-95">
                 <i class="fab fa-google-play mr-2 text-lg"></i>
                 Layanan Digital
-            </a>
+            </button>
         </div>
-
     </div>
 </header>
+
+<div id="iklan-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 hidden transition-opacity duration-300">
+
+    <div class="relative w-full max-w-2xl transform transition-all duration-300 scale-95">
+        
+        <button id="close-iklan-modal" class="absolute -top-3 -right-3 bg-white text-blue-950 w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-lg hover:bg-gray-200 transition z-20">
+            &times;
+        </button>
+
+        <img src="{{ asset('pictures/Bandung Sadayana.png') }}" alt="Iklan Layanan Digital" class="w-full h-auto rounded-2xl shadow-2xl block">
+
+        <div class="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 bg-gradient-to-t from-gray-900/80 to-transparent rounded-2xl">
+            
+            <div class="w-full flex flex-col sm:flex-row justify-center items-center gap-4">
+
+                <a href="https://play.google.com/store/apps/details?id=gov.bdg.smartcitybdg" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center px-3 py-1 bg-gray-100/90 text-black hover:bg-white font-semibold rounded-lg transition duration-200 backdrop-blur-sm">
+                    <i class="fab fa-google-play mr-2 text-2xl"></i>
+                    <div>
+                        <p class="text-xs -mb-1 text-left">GET IT ON</p>
+                        <p class="text-lg font-bold">Google Play</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- CARD SLIDER SECTION -->
 <section class="relative z-20 -mt-24 md:-mt-20 pb-12">
@@ -64,11 +83,11 @@
             <!-- Viewport -->
             <div id="slider-viewport" class="w-full overflow-hidden py-4">
                 <!-- Track -->
-                <div class="flex gap-8 ml-4 transition-transform duration-500 ease-in-out" id="slider-track">
+                <div class="flex gap-8 lg:pl-4 transition-transform duration-500 ease-in-out" id="slider-track">
                     @forelse($aplikasi as $app)
                     <!-- Card Dinamis -->
                     <a href="{{ $app->link }}" target="_blank"
-                        class="flex-shrink-0 w-[80vw] sm:w-64 h-64 rounded-2xl shadow-md overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
+                        class="flex-shrink-0 w-[59vw] sm:w-64 h-64 rounded-2xl shadow-md overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
 
                         <!-- Gambar -->
                         @if($app->foto && Storage::disk('public')->exists(str_replace('storage/', '', $app->foto)))
@@ -698,6 +717,56 @@
 
         // Muat agenda terdekat
         loadNearestAgendas();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ambil semua elemen yang dibutuhkan
+        const openModalBtn = document.getElementById('open-iklan-modal');
+        const closeModalBtn = document.getElementById('close-iklan-modal');
+        const modal = document.getElementById('iklan-modal');
+        const modalContent = modal.querySelector('.transform');
+
+        // Fungsi untuk membuka modal dengan animasi
+        function openModal() {
+            modal.classList.remove('hidden');
+            // Sedikit jeda agar transisi CSS bisa berjalan
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+            }, 50);
+        }
+
+        // Fungsi untuk menutup modal dengan animasi
+        function closeModal() {
+            modal.classList.remove('opacity-100');
+            modalContent.classList.add('scale-95');
+            // Tunggu animasi selesai sebelum menyembunyikan modal
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // durasi harus cocok dengan `duration-300`
+        }
+
+        // Tambahkan event listener
+        if (openModalBtn && modal && closeModalBtn) {
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+
+            // Menutup modal saat mengklik di luar area konten
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Menutup modal saat menekan tombol "Escape"
+            window.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
     });
 </script>
 
