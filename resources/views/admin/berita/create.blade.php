@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="id"
-    x-data="{ sidebarOpen: true}">
+<html lang="id" x-data="{ sidebarOpen: true}">
 
 <head>
     <meta charset="UTF-8" />
@@ -13,6 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('ckeditor5/ckeditor5.css') }}">
+    <link rel="stylesheet" href="{{ asset('ckeditor5/ckeditor5-content.css') }}">
+    <link rel="stylesheet" href="{{ asset('ckeditor5/ckeditor5-editor.css') }}">
 
     <script>
         tailwind.config = {
@@ -20,7 +22,7 @@
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
+                        sans: ['Poppins', 'sans-serif']
                     },
                     colors: {
                         primary: '#2196f3',
@@ -30,6 +32,124 @@
             }
         }
     </script>
+
+    <style>
+        .ck-content h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .ck-content h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .ck-content h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .ck-content p {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .ck-content ul,
+        .ck-content ol {
+            list-style-position: outside;
+            padding-left: 2rem;
+            margin: 0.5em 0;
+        }
+
+        .ck-content li {
+            margin: 0.25em 0;
+            line-height: 1.6;
+        }
+
+        .ck-content li::marker {
+            font-size: 1rem;
+        }
+
+        .ck-content li>h1 {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .ck-content li:has(> h1)::marker {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .ck-content li>h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .ck-content li:has(> h2)::marker {
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .ck-content li>h3 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .ck-content li:has(> h3)::marker {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        .ck-content li>p[style*="text-align:center"],
+        .ck-content li>h1[style*="text-align:center"],
+        .ck-content li>h2[style*="text-align:center"],
+        .ck-content li>h3[style*="text-align:center"] {
+            text-align: center;
+        }
+
+        .ck-content li>p[style*="text-align:right"],
+        .ck-content li>h1[style*="text-align:right"],
+        .ck-content li>h2[style*="text-align:right"],
+        .ck-content li>h3[style*="text-align:right"] {
+            text-align: right;
+        }
+
+        .ck-content li:has(> p[style*="text-align:center"]),
+        .ck-content li:has(> h1[style*="text-align:center"]),
+        .ck-content li:has(> h2[style*="text-align:center"]),
+        .ck-content li:has(> h3[style*="text-align:center"]) {
+            text-align: center;
+        }
+
+        .ck-content li:has(> p[style*="text-align:right"]),
+        .ck-content li:has(> h1[style*="text-align:right"]),
+        .ck-content li:has(> h2[style*="text-align:right"]),
+        .ck-content li:has(> h3[style*="text-align:right"]) {
+            text-align: right;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            20%,
+            60% {
+                transform: translateX(-5px);
+            }
+
+            40%,
+            80% {
+                transform: translateX(5px);
+            }
+        }
+
+        .shake {
+            animation: shake 0.3s ease;
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100 dark:bg-gray-900 dark:text-white text-gray-900 font-sans">
@@ -68,7 +188,9 @@
                     </div>
 
                     <!-- Isi Berita -->
-                    <div class="mb-4"> <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Isi Berita</label> <textarea name="isi_berita" id="isi_berita" rows="6" class="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    <div class="mb-4">
+                        <label class="block mb-1 font-medium text-gray-700 dark:text-gray-300">Isi Berita</label>
+                        <textarea id="editor" name="isi_berita" class="w-full border rounded-lg"></textarea>
                         <p id="error-isi" class="text-red-500 text-sm mt-1 hidden"></p>
                     </div>
 
@@ -100,12 +222,9 @@
 
                     <!-- Tombol Aksi -->
                     <div class="flex gap-4 mt-8">
-                        <!-- Publikasi -->
                         <div class="relative w-1/2">
                             <button type="button" onclick="setStatusAndSubmit('publikasi')" class="w-full py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold transition">Publikasi</button>
                         </div>
-
-                        <!-- Simpan Draft -->
                         <div class="w-1/2">
                             <button type="button" onclick="setStatusAndSubmit('draft')" class="w-full py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 font-semibold transition">Simpan Draft</button>
                         </div>
@@ -115,6 +234,88 @@
         </main>
     </div>
 </body>
+
+<script type="importmap">
+    {
+    "imports": {
+        "ckeditor5": "{{ asset('ckeditor5/ckeditor5.js') }}",
+        "ckeditor5/": "{{ asset('ckeditor5/') }}/"
+    }
+}
+</script>
+
+<script type="module">
+    import {
+        ClassicEditor,
+        Alignment,
+        Autoformat,
+        Autosave,
+        BalloonToolbar,
+        BlockQuote,
+        Bold,
+        Essentials,
+        FontBackgroundColor,
+        FontColor,
+        FontFamily,
+        FontSize,
+        GeneralHtmlSupport,
+        Heading,
+        Indent,
+        IndentBlock,
+        Italic,
+        Link,
+        List,
+        ListProperties,
+        MediaEmbed,
+        Paragraph,
+        PasteFromOffice,
+        Strikethrough,
+        Subscript,
+        Superscript,
+        Table,
+        TableToolbar,
+        TextTransformation,
+        TodoList,
+        Underline
+    } from 'ckeditor5';
+
+    let editorInstance;
+    let isEditorReady = false;
+
+    ClassicEditor.create(document.querySelector('#editor'), {
+            licenseKey: 'GPL',
+            plugins: [Alignment, Autoformat, Autosave, BalloonToolbar,
+                BlockQuote, Bold, Essentials,
+                FontBackgroundColor, FontColor, FontFamily, FontSize,
+                GeneralHtmlSupport, Heading,
+                Indent, IndentBlock, Italic,
+                Link, List, ListProperties, MediaEmbed,
+                Paragraph, PasteFromOffice,
+                Strikethrough, Subscript, Superscript,
+                Table, TableToolbar, TextTransformation,
+                TodoList, Underline
+            ],
+            toolbar: {
+                items: [
+                    'undo', 'redo', '|', 'heading', '|',
+                    'fontSize', 'fontFamily', 'fontColor', 'fontBackgroundColor', '|',
+                    'bold', 'italic', 'underline', 'strikethrough', '|',
+                    'link', 'blockQuote', 'insertTable', 'mediaEmbed', '|',
+                    'alignment', '|', 'bulletedList', 'numberedList', 'todoList', 'outdent', 'indent'
+                ],
+                shouldNotGroupWhenFull: false
+            }
+        })
+        .then(editor => {
+            editorInstance = editor;
+            isEditorReady = true;
+
+            window.editorInstance = editorInstance;
+            window.isEditorReady = isEditorReady;
+        })
+        .catch(error => console.error('CKEditor gagal dimuat:', error));
+</script>
+
 <script>
     const MAX_FILES = 5;
     let fotoTambahan = [];
@@ -122,10 +323,8 @@
     function previewFotoUtama(event) {
         const container = document.getElementById('preview-utama');
         container.innerHTML = '';
-
         const file = event.target.files[0];
         if (!file) return;
-
         const reader = new FileReader();
         reader.onload = (e) => {
             const img = document.createElement('img');
@@ -138,16 +337,13 @@
 
     document.getElementById('foto-lain').addEventListener('change', function(event) {
         const files = Array.from(event.target.files);
-
         if (fotoTambahan.length + files.length > MAX_FILES) {
             alert(`Maksimal ${MAX_FILES} foto tambahan.`);
             return;
         }
-
         files.forEach(file => {
             fotoTambahan.push(file);
         });
-
         updatePreview();
         event.target.value = '';
     });
@@ -157,17 +353,14 @@
         const hiddenContainer = document.getElementById('hidden-files');
         container.innerHTML = '';
         hiddenContainer.innerHTML = '';
-
         fotoTambahan.forEach((file, index) => {
             const reader = new FileReader();
             reader.onload = function(e) {
                 const wrapper = document.createElement('div');
                 wrapper.classList.add('relative');
-
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.classList.add('h-24', 'rounded', 'border');
-
                 const deleteBtn = document.createElement('button');
                 deleteBtn.type = 'button';
                 deleteBtn.innerHTML = '&times;';
@@ -176,15 +369,13 @@
                     fotoTambahan.splice(index, 1);
                     updatePreview();
                 };
-
                 wrapper.appendChild(img);
                 wrapper.appendChild(deleteBtn);
                 container.appendChild(wrapper);
             };
             reader.readAsDataURL(file);
         });
-
-        fotoTambahan.forEach((file, i) => {
+        fotoTambahan.forEach((file) => {
             const input = document.createElement('input');
             input.type = 'file';
             input.name = `foto_lain[]`;
@@ -201,44 +392,56 @@
     }
 
     function setStatusAndSubmit(status) {
+        console.log("Tombol diklik dengan status:", status); // cek apakah masuk sini
         let valid = true;
-
         const judul = document.getElementById('judul').value.trim();
         const topik = document.getElementById('topik').value;
-        const isi = document.getElementById('isi_berita').value.trim();
+
+        let isi = "";
+        if (window.isEditorReady && window.editorInstance) {
+            isi = window.editorInstance.getData().trim();
+            document.getElementById('editor').value = isi;
+        } else {
+            isi = document.getElementById('editor').value.trim();
+        }
+
+
         const fotoUtama = document.getElementById('foto_utama').files.length;
 
+        // Reset error
         document.getElementById('error-judul').classList.add('hidden');
         document.getElementById('error-topik').classList.add('hidden');
         document.getElementById('error-isi').classList.add('hidden');
         document.getElementById('error-foto').classList.add('hidden');
 
+        // Validasi
         if (judul === "") {
             document.getElementById('error-judul').innerText = "Judul wajib diisi.";
             document.getElementById('error-judul').classList.remove('hidden');
             valid = false;
         }
-
         if (topik === "") {
             document.getElementById('error-topik').innerText = "Pilih topik berita.";
             document.getElementById('error-topik').classList.remove('hidden');
             valid = false;
         }
-
         if (isi === "") {
             document.getElementById('error-isi').innerText = "Isi berita tidak boleh kosong.";
             document.getElementById('error-isi').classList.remove('hidden');
             valid = false;
         }
-
         if (fotoUtama === 0) {
             document.getElementById('error-foto').innerText = "Foto utama wajib diunggah.";
             document.getElementById('error-foto').classList.remove('hidden');
             valid = false;
         }
 
-        if (!valid) return;
+        if (!valid) {
+            console.log("Form tidak valid, batal submit.");
+            return;
+        }
 
+        console.log("Form valid, submit...");
         document.getElementById('status-input').value = status;
         document.getElementById('tanggal-input').value = new Date().toISOString();
         document.getElementById('form-berita').submit();
