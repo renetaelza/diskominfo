@@ -3,16 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Videos; // Pastikan nama model Anda adalah Videos
+use App\Models\Videos;
+use App\Models\Folder;
+use App\Models\FolderPhoto; 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http; // Untuk memanggil API YouTube
-use Illuminate\Support\Facades\Log; // Untuk logging error
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class GalleryController extends Controller
 {
-    /**
-     * Menampilkan halaman daftar video.
-     */
+    //CONTROLLER VIDEO
     public function indexVideo(Request $request)
     {
         // Logika untuk menampilkan semua video dengan pencarian dan paginasi
@@ -137,7 +138,7 @@ class GalleryController extends Controller
 
                 $snippet = $videoData['items'][0]['snippet'];
 
-                // LOGIKA DIPERBAIKI: Bandingkan dengan data lama di DB
+                // Bandingkan dengan data lama di DB
                 // Jika judul dari form SAMA DENGAN judul lama di DB, berarti admin tidak mengubahnya. Gunakan dari API.
                 // Jika berbeda, berarti admin sengaja mengubahnya. Gunakan input manual admin.
                 $updateData['title'] = ($request->title === $video->title) ? $snippet['title'] : $request->title;
@@ -182,16 +183,177 @@ class GalleryController extends Controller
         }
     }
 
+    
     /**
      * Fungsi helper untuk mengekstrak ID dari berbagai format URL YouTube.
-     *
-     * @param string $url
-     * @return string|null
-     */
+    *
+    * @param string $url
+    * @return string|null
+    */
     private function getYouTubeId($url)
     {
         $pattern = '/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/';
         preg_match($pattern, $url, $matches);
         return $matches[1] ?? null;
     }
+    //END CONTROLLER VIDEO
+
+
+    //CONTROLLER FOLDER & FOTO
+
+    public function indexFolders(Request $request)
+    {
+        // 1. Ambil input pencarian dari request
+        $q = $request->input('q');
+
+        // 2. Bangun query dasar ke database
+        $foldersQuery = Folder::query()
+            ->when($q, function ($query, $q) {
+                // Tambahkan kondisi pencarian hanya jika '$q' ada isinya
+                $query->where('title', 'like', "%{$q}%")
+                      ->orWhere('description', 'like', "%{$q}%");
+            })
+            ->withCount('photos') // Contoh relasi, bisa disesuaikan
+            ->latest(); // Urutkan dari yang terbaru
+
+        // 3. Eksekusi query dengan paginasi
+        //    ->paginate() membatasi data per halaman (efisien)
+        //    ->withQueryString() memastikan link paginasi (untuk tabel) tetap membawa parameter pencarian
+        $folders = $foldersQuery->paginate(15)->withQueryString();
+
+        // 4. Cek jenis permintaan (AJAX atau biasa)
+        if ($request->ajax()) {
+            return response()->json([
+                'items' => view('admin.gallery.partials._folder_grid_items', compact('folders'))->render(),
+                'next_page_url' => $folders->nextPageUrl()
+            ]);
+        }
+
+        // 5. Jika ini permintaan biasa dari browser,
+        //    tampilkan view Blade lengkap seperti biasa.
+        return view('admin.gallery.indexFolder', compact('folders', 'q'));
+    }
+
+    public function storeFolder(Request $request)
+    {
+        $data = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'folder_date' => 'nullable|date',
+        ]);
+        
+        Folder::create($data);
+
+        return back()->with('success', 'Folder berhasil dibuat.');
+    }
+
+    public function updateFolder(Request $request, Folder $folder)
+    {
+        // 1. Validasi data yang masuk dari form
+        $validatedData = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'folder_date' => 'nullable|date',
+        ]);
+
+        try {
+            // 2. Perbarui record folder dengan data yang sudah divalidasi
+            $folder->update($validatedData);
+
+            // 3. Arahkan kembali ke halaman daftar folder dengan pesan sukses
+            return redirect()->route('admin.galeri.folders')
+                             ->with('success', "Folder '{$folder->title}' berhasil diperbarui.");
+
+        } catch (\Exception $e) {
+            // Jika terjadi error, catat di log
+            Log::error('Gagal memperbarui folder: ' . $e->getMessage());
+
+            // Arahkan kembali dengan pesan error
+            return back()->with('error', 'Terjadi kesalahan saat memperbarui folder.');
+        }
+    }
+
+    public function destroyFolder(Folder $folder)
+    {
+        try {
+            $folderTitle = $folder->title;
+
+            // 1. Loop semua foto yang ada di dalam folder
+            foreach ($folder->photos as $photo) {
+                // 2. Hapus setiap file fisik dari storage
+                Storage::disk('public')->delete($photo->image_path);
+            }
+            
+            // 3. Hapus record folder (ini akan otomatis menghapus record foto terkait karena relasi database)
+            $folder->delete();
+
+            return redirect()->route('admin.galeri.folders')
+                             ->with('success', "Folder '{$folderTitle}' dan semua isinya berhasil dihapus.");
+
+        } catch (\Exception $e) {
+            Log::error('Gagal menghapus folder: ' . $e->getMessage());
+            return back()->with('error', 'Terjadi kesalahan saat menghapus folder.');
+        }
+    }
+
+    public function showFolder(Folder $folder)
+    {
+        // Tampilkan grid foto dalam folder
+        $photos = $folder->photos()->latest()->get();
+
+        return view('admin.gallery.indexPhoto', compact('folder', 'photos'));
+    }
+
+    public function storePhoto(Request $request, Folder $folder)
+    {
+
+        // 1. Definisikan aturan validasi
+        $rules = [
+            'photos' => 'required|array',
+            // Aturan ini berlaku untuk SETIAP file di dalam array 'photos'
+            'photos.*' => 'image|mimes:jpeg,png,jpg,gif,webp|max:20480' //20mb
+        ];
+
+        // 2. Definisikan pesan error kustom
+        $messages = [
+            'photos.*.image' => 'File yang diupload harus berupa gambar.',
+            'photos.*.mimes' => 'Format gambar harus jpeg, png, jpg, gif, atau webp.',
+            'photos.*.max' => 'Ukuran setiap gambar tidak boleh lebih dari 20MB.',
+        ];
+
+        // Validasi file yang diupload
+        $request->validate($rules, $messages);
+
+        if ($request->hasfile('photos')) {
+            foreach ($request->file('photos') as $file) {
+                
+                $extension = $file->getClientOriginalExtension();
+                $filename = 'folder_' . $folder->id . '_' . uniqid() . '.' . $extension;
+
+                $path = $file->storeAs('photos', $filename, 'public');
+
+                $folder->photos()->create([
+                    'image_path' => $path
+                ]);
+            }
+        }
+
+        return back()->with('success', 'Gambar berhasil diupload!');
+    }
+
+    public function destroyPhoto(FolderPhoto $photo)
+    {
+        try {
+            // 1. Hapus file fisik dari storage
+            Storage::disk('public')->delete($photo->image_path);
+
+            // 2. Hapus record dari database
+            $photo->delete();
+
+            return back()->with('success', 'Foto berhasil dihapus.');
+        } catch (\Exception $e) {
+            return back()->with('error', 'Gagal menghapus foto.');
+        }
+    }
+    //END CONTROLLER FOLDER & FOTO
 }

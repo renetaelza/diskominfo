@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,21 +14,32 @@
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite('resources/css/app.css')
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
     <style>
         .fc-day-sat,
         .fc-day-sun {
             background-color: #ffc10740;
         }
+
+        /* New class to visually disable a day */
+        .day-disabled {
+            background-color: #e0e0e0 !important;
+            pointer-events: none;
+            /* Makes the cell unclickable */
+        }
+
+        .day-disabled .fc-daygrid-day-number {
+            text-decoration: line-through;
+        }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 </head>
 
 <body class="min-h-screen flex flex-col">
     <x-navbar />
     <header class="position-relative"
-        style="height: 250px; background: url('/pictures/layanan/opd.jpg') bottom center / cover no-repeat;">
+        style="height: 250px; background: url('/pictures/kunjungan.jpg') center center / cover no-repeat;">
         <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark" style="opacity: 0.75;"></div>
         <div class="position-absolute top-50 start-50 translate-middle text-white text-center">
             <h1 style="font-size: 40px;" class="fw-bold">Pengajuan Kunjungan</h1>
@@ -38,22 +50,7 @@
         <div class="card shadow-lg">
             <div class="card-body p-4 p-md-5">
 
-                {{-- Calendar Section (Unchanged) --}}
-                {{-- <section class="mb-5">
-                    <div class="row justify-content-center">
-                        <div class="col-12 col-lg-8">
-                            <div id="calendar"></div>
-                            <div class="mt-3">
-                                <span class="d-inline-block bg-warning border"
-                                    style="width: 25px; height: 25px; vertical-align: middle;"></span>
-                                <span class="ms-2">= Tidak Tersedia</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-                <hr class="my-5"> --}}
-
-                {{-- UPDATED FORM --}}
+                {{-- Form --}}
                 <form method="POST" action="{{ route('kunjungan.store') }}" enctype="multipart/form-data">
                     @csrf
                     {{-- Data Pemohon --}}
@@ -124,7 +121,9 @@
                                 <input type="date"
                                     class="form-control @error('tanggal_kunjungan') is-invalid @enderror"
                                     id="tanggalKunjungan" name="tanggal_kunjungan"
-                                    value="{{ old('tanggal_kunjungan') }}">
+                                    value="{{ old('tanggal_kunjungan') }}"
+                                    min="{{ now()->format('Y-m-d') }}">
+                                    <div class="form-text">Catatan: Hari Sabtu, Minggu, dan tanggal yang sudah memiliki agenda tidak dapat dipilih.</div>
                                 @error('tanggal_kunjungan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -132,7 +131,7 @@
                             <div class="col-md-6 mb-3">
                                 <label for="pukulKunjungan" class="form-label">Pukul Kunjungan</label>
                                 <select class="form-select @error('pukul_kunjungan') is-invalid @enderror"
-                                    id="pukulKunjungan" name="pukul_kunjungan">
+                                    id="pukulKunjungan" name="pukul_kunjungan" disabled>
                                     <option value="">Pilih Waktu</option>
                                     <option value="09:00" @if (old('pukul_kunjungan') == '09:00') selected @endif>09:00
                                     </option>
@@ -144,18 +143,13 @@
                                     </option>
                                     <option value="11:00" @if (old('pukul_kunjungan') == '11:00') selected @endif>11:00
                                     </option>
-                                    <option value="11:30" @if (old('pukul_kunjungan') == '11:30') selected @endif>11:30
-                                    </option>
-                                    <option value="12:00" @if (old('pukul_kunjungan') == '12:00') selected @endif>12:00
-                                    </option>
-                                    <option value="12:30" @if (old('pukul_kunjungan') == '12:30') selected @endif>12:30
-                                    </option>
                                     <option value="13:00" @if (old('pukul_kunjungan') == '13:00') selected @endif>13:00
                                     </option>
                                 </select>
                                 @error('pukul_kunjungan')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                               <div id="time-slot-message" class="text-danger mt-1" style="font-size: 0.875em;"></div> 
                             </div>
                         </div>
 
@@ -235,67 +229,76 @@
     </main>
     <x-footer />
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script>
-        // Select2 Initialization
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+     <script>
         $(document).ready(function() {
+            // Inisialisasi Select2
             $('#bidang_ids').select2({
                 theme: "bootstrap-5",
                 placeholder: 'Pilih satu atau lebih...',
-                tokenSeparators: [',', ' ']
             });
-        });
 
-        // SweetAlert Pop-ups
-        @if (session('success'))
-            Swal.fire({
-                icon: 'success',
-                title: 'Berhasil!',
-                text: @json(session('success')), // Safely passes the string to JS
-                timer: 3000,
-                showConfirmButton: false
-            });
-        @endif
-        @if (session('error'))
-            Swal.fire({
-                icon: 'error',
-                title: 'Gagal!',
-                text: @json(session('error')), // Safely passes the string to JS
-            });
-        @endif
+            // Logika SweetAlert
+            @if (session('success'))
+                Swal.fire({ icon: 'success', title: 'Berhasil!', text: @json(session('success')), timer: 3000, showConfirmButton: false });
+            @endif
+            @if (session('error'))
+                Swal.fire({ icon: 'error', title: 'Gagal!', text: @json(session('error')) });
+            @endif
 
-        // FullCalendar Initialization
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var visitDateField = document.getElementById('tanggalKunjungan');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev',
-                    center: 'title',
-                    right: 'next'
-                },
-                selectable: true,
-                selectAllow: function(selectInfo) {
-                    const day = selectInfo.start.getDay();
-                    return day !== 0 && day !== 6;
-                },
-                dateClick: function(info) {
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-                    if (info.dayEl.classList.contains('fc-day-sat') || info.dayEl.classList.contains(
-                            'fc-day-sun') || info.date < today) {
-                        return;
-                    }
-                    visitDateField.value = info.dateStr;
+            const dateInput = $('#tanggalKunjungan');
+            const timeSelect = $('#pukulKunjungan');
+            const timeSlotMessage = $('#time-slot-message');
+
+            dateInput.on('change', function() {
+                const selectedDateStr = $(this).val();
+                timeSlotMessage.text('');
+                
+                // Jika tidak ada tanggal yang dipilih, nonaktifkan
+                if (!selectedDateStr) {
+                    timeSelect.prop('disabled', true).val('').find('option:first').text('Pilih Tanggal Terlebih Dahulu');
+                    return;
                 }
+
+                const selectedDate = new Date(selectedDateStr + 'T00:00:00');
+                const dayOfWeek = selectedDate.getDay();
+
+                // Periksa apakah akhir pekan
+                if ([0, 6].includes(dayOfWeek)) {
+                    Swal.fire('Tanggal Tidak Valid', 'Kunjungan tidak dapat dilakukan pada hari Sabtu atau Minggu.', 'error');
+                    $(this).val(''); // Kosongkan tanggal yang tidak valid
+                    timeSelect.prop('disabled', true).val('').find('option:first').text('Pilih Tanggal Terlebih Dahulu');
+                    return; // Hentikan eksekusi
+                }
+
+                // 1. Langsung aktifkan dropdown dan reset semua pilihan untuk hari yang valid.
+                timeSelect.prop('disabled', false);
+                timeSelect.find('option:first').text('Pilih Waktu');
+                timeSelect.find('option').prop('disabled', false); // Aktifkan semua pilihan terlebih dahulu
+                timeSelect.val('');
+
+                // 2. panggil API untuk menonaktifkan jam-jam tertentu.
+                $.get(`/api/unavailable-times?date=${selectedDateStr}`, function(data) {
+                    if (data.is_unavailable) {
+                        // Jika seluruh hari sibuk karena ada agenda
+                        timeSelect.prop('disabled', true);
+                        timeSelect.find('option:first').text('Tanggal Tidak Tersedia');
+                        timeSlotMessage.text('Seluruh waktu pada tanggal ini tidak tersedia karena ada agenda lain.');
+                    } else {
+                        // Jika hanya beberapa jam yang sibuk
+                        data.unavailable_times.forEach(function(time) {
+                            timeSelect.find(`option[value="${time}"]`).prop('disabled', true);
+                        });
+                    }
+                }).fail(function() {
+                    // Jika API gagal, dropdown tetap aktif (pengguna masih bisa memilih)
+                    timeSlotMessage.text('Gagal memeriksa ketersediaan jadwal. Coba lagi.');
+                });
             });
-            calendar.render();
         });
     </script>
 </body>

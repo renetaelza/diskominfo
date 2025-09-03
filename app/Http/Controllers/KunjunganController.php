@@ -7,6 +7,10 @@ use App\Models\Bidang;
 use App\Models\Kunjungan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
+use App\Rules\ValidKunjunganDate;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\KunjunganReceivedMail;
 
 class KunjunganController extends Controller
 {
@@ -26,8 +30,7 @@ class KunjunganController extends Controller
             'email' => 'required|email',
             'kab_kota' => 'required|string|max:255',
             'alamat_instansi' => 'required|string',
-            'tanggal_kunjungan' => 'required|date|after_or_equal:today',
-            'pukul_kunjungan' => 'required',
+            'tanggal_kunjungan' => ['required', 'date', 'after_or_equal:today'],
             'topik_diskusi' => 'required|string',
             'jumlah_rombongan' => 'required|integer|min:1',
             'no_surat' => 'required|string|max:255',
@@ -35,10 +38,24 @@ class KunjunganController extends Controller
             'surat_permohonan' => 'required|file|mimes:pdf|max:2048',
             'bidang_ids'   => 'required|array',
             'bidang_ids.*' => 'integer|exists:bidang,id',
+            
+            // 2. Add Custom Validation Rule for Time Slot Uniqueness
+            'pukul_kunjungan' => [
+                'required',
+                Rule::unique('kunjungan')->where(function ($query) use ($request) {
+                    return $query->where('tanggal_kunjungan', $request->tanggal_kunjungan)
+                                 ->where('status', 'approved');
+                }),
+            ],
+        ], [
+            // 3. Add custom error message
+            'pukul_kunjungan.unique' => 'Jadwal pada tanggal dan waktu ini sudah dipesan. Silakan pilih waktu lain.'
         ]);
 
         try {
-            DB::transaction(function () use ($request, $validatedData) {
+            $kunjungan = null;
+
+            DB::transaction(function () use ($request, $validatedData, &$kunjungan) {
                 // Prepare data for the Kunjungan model by excluding the relationship data.
                 $kunjunganData = collect($validatedData)->except('bidang_ids')->toArray();
 
@@ -55,7 +72,17 @@ class KunjunganController extends Controller
                 $kunjungan->bidangs()->sync($validatedData['bidang_ids']);
             });
 
-            return redirect()->back()->with('success', 'Pengajuan kunjungan Anda telah berhasil dikirim.');
+            // Kirim email konfirmasi setelah data berhasil disimpan
+            if ($kunjungan) {
+                try {
+                    Mail::to($kunjungan->email)->send(new KunjunganReceivedMail($kunjungan));
+                } catch (\Exception $e) {
+                    Log::error('Gagal mengirim email konfirmasi awal: ' . $e->getMessage());
+                    // Tetap lanjutkan meskipun email gagal, karena data sudah masuk
+                }
+            }
+
+            return redirect()->back()->with('success', 'Pengajuan kunjungan Anda telah berhasil dikirim. Check email untuk konfirmasi lebih lanjut.');
         } catch (\Exception $e) {
             Log::error('Kunjungan submission error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.')->withInput();

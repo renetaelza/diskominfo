@@ -2,28 +2,28 @@
 
 @section('content')
 
-<!-- HERO SECTION -->
-<header class="relative bg-gray-800 text-white overflow-hidden">
+<header class="relative bg-gray-800 text-white overflow-hidden min-h-[90vh] flex items-center justify-center">
 
     <img
         src="{{ ($hero && $hero->img_banner) ? asset('storage/' . $hero->img_banner) : asset('pictures/hero_landing.png') }}"
         alt="Gedung Diskominfo Bandung"
         class="absolute inset-0 w-full h-full object-cover opacity-20 z-0">
 
-    <div class="relative z-10 container mx-auto px-6 sm:px-8 lg:px-16">
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between min-h-[90vh] py-28">
+    <div class="relative z-10 container mx-auto pt-10 sm:pt-16 lg:pt-18 px-6 sm:px-8 lg:px-16 flex flex-col space-y-12">
+
+        <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center w-full gap-6">
 
             <div class="lg:w-2/3 text-left">
                 <h1 class="text-4xl lg:text-6xl font-extrabold tracking-tight">
-                    DINAS KOMUNIKASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
+                    DINAS KOMUNISASI DAN INFORMATIKA <span class="text-orange-400">KOTA BANDUNG</span>
                 </h1>
 
-                <p class="mt-6 ml-1 max-w-2xl text-lg text-gray-200">
+                <p class="mt-4 text-lg text-gray-200 max-w-2xl">
                     {{ $hero->tagline ?? 'Belum ada tagline yang diatur' }}
                 </p>
             </div>
 
-            <div class="mt-8 lg:mt-0 flex flex-col items-start lg:items-end gap-2 text-lg font-semibold text-gray-200">
+            <div class="mt-6 lg:mt-0 flex flex-col items-start lg:items-end gap-3 text-lg font-semibold text-gray-200">
                 <div id="live-clock" class="flex items-center gap-3">
                     <i class="far fa-clock text-xl"></i>
                     <span class="w-32">Memuat...</span>
@@ -33,10 +33,43 @@
                     <span class="w-48 text-left">Memuat...</span>
                 </div>
             </div>
+        </div>
 
+        <div class="flex justify-center">
+            <button id="open-iklan-modal" type="button" class="inline-flex items-center px-6 py-3 bg-blue-950 hover:bg-orange-600 text-white font-semibold rounded-lg shadow-md transform transition duration-200 hover:scale-105 active:scale-95">
+                <i class="fab fa-google-play mr-2 text-lg"></i>
+                Layanan Digital
+            </button>
         </div>
     </div>
 </header>
+
+<div id="iklan-modal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 hidden transition-opacity duration-300">
+
+    <div class="relative w-full max-w-2xl transform transition-all duration-300 scale-95">
+        
+        <button id="close-iklan-modal" class="absolute -top-3 -right-3 bg-white text-blue-950 w-8 h-8 rounded-full shadow-lg flex items-center justify-center text-lg hover:bg-gray-200 transition z-20">
+            &times;
+        </button>
+
+        <img src="{{ asset('pictures/Bandung Sadayana.png') }}" alt="Iklan Layanan Digital" class="w-full h-auto rounded-2xl shadow-2xl block">
+
+        <div class="absolute inset-0 flex flex-col justify-end p-6 sm:p-8 bg-gradient-to-t from-gray-900/80 to-transparent rounded-2xl">
+            
+            <div class="w-full flex flex-col sm:flex-row justify-center items-center gap-4">
+
+                <a href="https://play.google.com/store/apps/details?id=gov.bdg.smartcitybdg" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center px-3 py-1 bg-gray-100/90 text-black hover:bg-white font-semibold rounded-lg transition duration-200 backdrop-blur-sm">
+                    <i class="fab fa-google-play mr-2 text-2xl"></i>
+                    <div>
+                        <p class="text-xs -mb-1 text-left">GET IT ON</p>
+                        <p class="text-lg font-bold">Google Play</p>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- CARD SLIDER SECTION -->
 <section class="relative z-20 -mt-24 md:-mt-20 pb-12">
@@ -50,11 +83,11 @@
             <!-- Viewport -->
             <div id="slider-viewport" class="w-full overflow-hidden py-4">
                 <!-- Track -->
-                <div class="flex gap-8 ml-4 transition-transform duration-500 ease-in-out" id="slider-track">
+                <div class="flex gap-8 lg:pl-4 transition-transform duration-500 ease-in-out" id="slider-track">
                     @forelse($aplikasi as $app)
                     <!-- Card Dinamis -->
                     <a href="{{ $app->link }}" target="_blank"
-                        class="flex-shrink-0 w-[80vw] sm:w-64 h-64 rounded-2xl shadow-md overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
+                        class="flex-shrink-0 w-[59vw] sm:w-64 h-64 rounded-2xl shadow-md overflow-hidden relative group cursor-pointer transition-transform duration-300 hover:-translate-y-2">
 
                         <!-- Gambar -->
                         @if($app->foto && Storage::disk('public')->exists(str_replace('storage/', '', $app->foto)))
@@ -89,7 +122,7 @@
 
 
 <!-- PENGUMUMAN SECTION -->
-<section class="py-16 bg-slate-100 pt-32">
+<section class="py-16 pt-32">
     <div class="container mx-auto px-4 sm:px-6 lg:px-8">
         <div id="announcement-carousel" class="relative rounded-2xl shadow-lg bg-white mt-16 md:mt-0">
             <!-- Image positioned absolutely -->
@@ -187,6 +220,35 @@
     </div>
 </section>
 
+<section class="py-16 bg-white">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        {{-- Header --}}
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold text-gray-800">Agenda Kegiatan</h2>
+            <a href="{{ route('agenda.index') }}" class="text-sm font-medium text-black hover:underline">
+                Lihat Kalender Penuh
+            </a>
+        </div>
+
+        {{-- Kalender + Agenda --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {{-- Kalender --}}
+            <div class="md:col-span-2 bg-white p-4 md:p-5 rounded-2xl shadow-lg border">
+                <div id="calendar-beranda"></div>
+            </div>
+
+            {{-- 3 Agenda Terdekat --}}
+            <div class="space-y-4 ">
+                <h3 class="text-lg font-semibold text-gray-800">Agenda Terdekat</h3>
+                <div id="nearest-agendas" class="space-y-3">
+                    {{-- Will be filled dynamically --}}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
 <!-- GALERI VIDEO SECTION -->
 @if($latestVideos->isNotEmpty())
 <section x-data="videoGallery()" @mouseleave="resetOnLeave()" class="bg-white text-grey-900 antialiased">
@@ -243,6 +305,59 @@
 </section>
 @endif
 
+<div class="modal fade" id="eventDetailModal" tabindex="-1" aria-labelledby="eventDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-4 overflow-hidden shadow-lg">
+            <div class="modal-header" style="background-color: #0a2463; color: white;">
+                <h5 class="modal-title w-100 text-center" id="eventDetailModalLabel">Detail Kegiatan</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <h2 class="fw-bold text-center mb-4" id="modal-title"></h2>
+                <img id="modal-image" src="" class="img-fluid rounded-3 w-100 mb-4" style="max-height: 300px; object-fit: cover;" alt="Event Image">
+                <div class="d-flex align-items-center mb-2">
+                    <i class="bi bi-calendar-event fs-4 me-3 text-dark"></i>
+                    <span id="modal-date"></span>
+                </div>
+                <div class="d-flex align-items-center mb-4">
+                    <i class="bi bi-geo-alt fs-4 me-3 text-dark"></i>
+                    <span id="modal-location"></span>
+                </div>
+                <p id="modal-description"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@push('styles')
+{{-- Style khusus untuk halaman ini --}}
+<style>
+    .fc-event { cursor: pointer; }
+    #calendar-beranda { font-size: 0.85rem; max-width: 900px; margin: 0 auto; }
+    .custom-transition { transition: all 600ms cubic-bezier(0.65, 0, 0.35, 1); }
+
+    #agenda-list .agenda-date {
+        background-color: #facc15;
+        color: black;
+        font-weight: bold;
+        border-radius: 0.75rem;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-right: 1rem;
+    }
+    #agenda-list .agenda-date span {
+        font-size: 0.75rem;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.14/index.global.min.js'></script>
+@endpush
 <script>
     // --- SCRIPT UNTUK GALERI VIDEO ---
     const videoData = @json($latestVideos);
@@ -504,6 +619,84 @@
         startInterval();
     }
 
+     // Fungsi Calendar Beranda
+    function initBerandaCalendar() {
+        const calendarEl = document.getElementById('calendar-beranda');
+        if (!calendarEl) return;
+
+        const eventModal = new bootstrap.Modal(document.getElementById('eventDetailModal'));
+
+        const calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            locale: 'id',
+            headerToolbar: {
+                left: 'prev',
+                center: 'title',
+                right: 'next'
+            },
+            events: '/api/public-events', // Menggunakan API publik yang sudah ada
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+                
+                if (info.event.extendedProps.type === 'agenda') {
+                    const event = info.event;
+                    const props = event.extendedProps;
+
+                    document.getElementById('modal-title').textContent = event.title;
+                    document.getElementById('modal-date').textContent = new Date(event.start).toLocaleDateString('id-ID', {
+                        day: 'numeric', month: 'long', year: 'numeric'
+                    });
+                    document.getElementById('modal-location').textContent = props.location;
+                    document.getElementById('modal-description').textContent = props.description;
+                    document.getElementById('modal-image').src = props.image;
+
+                    eventModal.show();
+                }
+            }
+        });
+        calendar.render();
+    }
+
+    // Fungsi untuk memuat 3 agenda terdekat
+    function loadNearestAgendas() {
+    fetch("/api/nearest-agendas")
+        .then(res => res.json())
+        .then(agendas => {
+            const container = document.getElementById("nearest-agendas");
+            container.className = "space-y-4";
+            container.innerHTML = "";
+
+            if (agendas.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 text-sm">Tidak ada agenda terdekat</p>`;
+                return;
+            }
+
+            agendas.forEach(agenda => {
+                const tanggal = new Date(agenda.tanggal);
+                const options = { day: "2-digit", month: "long", year: "numeric" };
+                const formattedDate = tanggal.toLocaleDateString("id-ID", options);
+
+                const item = `
+                    <div class="flex items-center gap-4">
+                            <div class="flex-shrink-0 text-center font-bold text-black-800 bg-blue-600/10 rounded-xl p-3 shadow-sm w-20 h-20 flex flex-col justify-center">
+                                <div class="text-2xl">${tanggal.getDate()}</div>
+                                <div class="text-sm">${tanggal.toLocaleDateString("id-ID", { month: "short" })}</div>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800 dark:text-black-100">${agenda.nama_agenda}</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">${formattedDate}</p>
+                            </div>
+                        </div>
+                `;
+                container.innerHTML += item;
+            });
+        })
+        .catch(err => {
+            console.error("Gagal memuat agenda:", err);
+        });
+    }
+
+
     // Jalankan fungsi saat halaman selesai dimuat
     document.addEventListener('DOMContentLoaded', function() {
         // Mulai jam
@@ -518,6 +711,62 @@
 
         // Inisialisasi slider pengumuman
         initAnnouncementSlider();
+
+        // Inisialisasi kalender beranda
+        initBerandaCalendar();
+
+        // Muat agenda terdekat
+        loadNearestAgendas();
+    });
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Ambil semua elemen yang dibutuhkan
+        const openModalBtn = document.getElementById('open-iklan-modal');
+        const closeModalBtn = document.getElementById('close-iklan-modal');
+        const modal = document.getElementById('iklan-modal');
+        const modalContent = modal.querySelector('.transform');
+
+        // Fungsi untuk membuka modal dengan animasi
+        function openModal() {
+            modal.classList.remove('hidden');
+            // Sedikit jeda agar transisi CSS bisa berjalan
+            setTimeout(() => {
+                modal.classList.add('opacity-100');
+                modalContent.classList.remove('scale-95');
+            }, 50);
+        }
+
+        // Fungsi untuk menutup modal dengan animasi
+        function closeModal() {
+            modal.classList.remove('opacity-100');
+            modalContent.classList.add('scale-95');
+            // Tunggu animasi selesai sebelum menyembunyikan modal
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300); // durasi harus cocok dengan `duration-300`
+        }
+
+        // Tambahkan event listener
+        if (openModalBtn && modal && closeModalBtn) {
+            openModalBtn.addEventListener('click', openModal);
+            closeModalBtn.addEventListener('click', closeModal);
+
+            // Menutup modal saat mengklik di luar area konten
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+
+            // Menutup modal saat menekan tombol "Escape"
+            window.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && !modal.classList.contains('hidden')) {
+                    closeModal();
+                }
+            });
+        }
     });
 </script>
 

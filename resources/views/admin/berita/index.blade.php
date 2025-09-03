@@ -351,7 +351,10 @@
                         </div>
 
                         <!-- Isi Berita -->
-                        <div class="text-sm text-gray-700 text-justify space-y-4" x-html="formatIsi(detailData.isi_berita)"></div>
+                        <div class="berita-content text-sm text-gray-700 text-justify space-y-1"
+                            x-html="detailData.isi_berita">
+                        </div>
+
                     </div>
                 </div>
             </div>

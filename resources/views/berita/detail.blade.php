@@ -10,6 +10,32 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <style>
+        .berita-content p {
+            margin-bottom: 0.25rem;
+        }
+
+
+        .berita-content h2,
+        .berita-content h3 {
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .berita-content ul,
+        .berita-content ol {
+            list-style: initial;
+            margin-left: 1.5rem;
+            padding-left: 1.5rem;
+        }
+
+        .berita-content img {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
 </head>
 
 <body class="bg-light">
@@ -63,7 +89,7 @@
             <!-- Konten -->
             <div class="col-lg-8">
                 <div class="text-dark berita-content" style="line-height: 1.9; text-align: justify;">
-                    {!! Str::of($berita->isi_berita)->replaceMatches('/\n{2,}/', "\n")->markdown(['html_input' => 'strip']) !!}
+                    {!! $berita->isi_berita !!}
                 </div>
             </div>
 
