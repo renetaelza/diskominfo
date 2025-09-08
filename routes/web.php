@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\TopikController;
@@ -33,27 +34,20 @@ use App\Http\Controllers\Api\AvailabilityController;
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/api/weather', function () {
-    // Ambil API Key yang sudah aman dari file .env
-    $apiKey = env('OPENWEATHER_API_KEY');
-
-    // Jika API Key tidak ada, kembalikan error
-    if (!$apiKey) {
-        return response()->json(['error' => 'API Key tidak ditemukan'], 500);
-    }
-
-    // Gunakan nama kota untuk query yang lebih andal
-    $cityQuery = 'Bandung,ID';
-
-    // Panggil API OpenWeatherMap menggunakan HTTP Client Laravel
-    $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
-        'q'     => $cityQuery,
-        'appid' => $apiKey,
-        'units' => 'metric',
-        'lang'  => 'id',
-    ]);
-
-    // Kembalikan hasil dari API sebagai response JSON
-    return $response->json();
+    // Cache data selama 10 menit (600 detik)
+    return Cache::remember('weather_bandung', 600, function () {
+        $apiKey = env('OPENWEATHER_API_KEY');
+        if (!$apiKey) {
+            return response()->json(['error' => 'API Key tidak ditemukan'], 500);
+        }
+        $response = Http::get("https://api.openweathermap.org/data/2.5/weather", [
+            'q'     => 'Bandung,ID',
+            'appid' => $apiKey,
+            'units' => 'metric',
+            'lang'  => 'id',
+        ]);
+        return $response->json();
+    });
 });
 
 Route::get('/berita', [BeritaController::class, 'index'])->name('berita.index');
