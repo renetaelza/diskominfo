@@ -8,11 +8,11 @@
     <title>Manage Pengumuman</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/alpinejs" defer></script>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    @vite('resources/css/app.css')
 
     <script>
         tailwind.config = {
@@ -39,6 +39,7 @@
     showDetailModal: false,
     detailData: {},
     formatIsi(content) {
+        if (!content) return '';
         return content
             .split(/\r?\n\s*\r?\n/)
             .map(p => `<p>${p.trim().replace(/\r?\n/g, ' ')}</p>`)
@@ -52,7 +53,7 @@
         <!-- Main Content -->
         <main class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
             <!-- Page Title & Create Button -->
-            <div x-data="topikForm()" x-init="init()">
+            <div x-data="topikForm()">
                 <div class="bg-white dark:bg-gray-800 shadow-md px-10 py-3 mb-6 flex justify-between items-center">
                     <h3 class="font-semibold text-gray-800 dark:text-white">Manajemen Pengumuman</h3>
                     <div class="flex gap-3">
@@ -222,10 +223,10 @@
                             @foreach($pengumumans as $pengumuman)
                             <tr>
                                 <!-- Judul -->
-                                <td class="px-4 py-3 font-medium">{{ $pengumuman->judul }}</td>
+                                <td class="px-4 py-3 font-medium max-w-xs truncate">{{ $pengumuman->judul }}</td>
 
                                 <!-- Isi Pengumuman -->
-                                <td class="px-4 py-3 font-medium">{{ $pengumuman->isi_pengumuman }}</td>
+                                <td class="px-4 py-3 font-medium max-w-xs truncate">{{ $pengumuman->isi_pengumuman }}</td>
 
                                 <!-- Tanggal -->
                                 <td class="px-4 py-3">{{ \Carbon\Carbon::parse($pengumuman->tanggal)->format('d M Y') }}</td>
