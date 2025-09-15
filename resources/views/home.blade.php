@@ -377,7 +377,7 @@
                     <div class="md:hidden space-y-6">
                         <template x-for="(video, index) in videos" :key="index">
                             <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
-                                <div @click="window.open('https://www.youtube.com/watch?v=' + video.youtubeId, '_blank')" class="block relative aspect-video cursor-pointer">
+                                <div @click="window.open('https://www.youtube.com/watch?v=' + video.youtubeId)" class="block relative aspect-video cursor-pointer">
                                     <img :src="'https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg'" :alt="video.title" class="w-full h-full object-cover">
                                     <div class="absolute inset-0 flex items-center justify-center">
                                         <div class="bg-black/50 text-white rounded-full w-16 h-16 flex items-center justify-center">
