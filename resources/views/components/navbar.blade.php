@@ -1,30 +1,38 @@
 <header>
-    <div class="topbar">
-        <div class="social-icons">
-            <a href="https://www.instagram.com/diskominfobdg/?hl=en" target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
-            <a href="https://x.com/diskominfobdg" target="_blank" rel="noopener noreferrer"><i class="fab fa-x-twitter"></i></a>
-            <a href="https://www.facebook.com/DiskominfoBandung/" target="_blank" rel="noopener noreferrer"><i class="fab fa-facebook-f"></i></a>
-            <a href="https://www.youtube.com/@diskominfokotabandung" target="_blank" rel="noopener noreferrer"><i class="fab fa-youtube"></i></a>
-            <a href="https://www.tiktok.com/@humasbdg" target="_blank" rel="noopener noreferrer"><i class="fab fa-tiktok"></i></a>
-        </div>
-        <div class="office-hours">Jam Beroperasi Senin - Jumat: 8.00 am - 6.00 pm</div>
-        <div class="search-box">
-            <form action="{{ route('berita.index') }}" method="GET" class="flex">
-                <input
-                    type="text"
-                    name="search"
-                    value="{{ request('search') }}"
-                    placeholder="Cari berita ..."
-                    class="text-sm px-2 py-1 border rounded-l-md focus:outline-none" />
-                <button type="submit" class="bg-blue-600 text-white px-3 rounded-r-md">
-                    <i class="fa fa-search"></i>
-                </button>
-            </form>
-        </div>
+    <div class="bg-blue-950">
+        <div class="container mx-auto px-4 sm:px-8 md:px-1 lg:px-16 flex flex-col md:flex-row items-center justify-between py-2 gap-2">
+            <!-- Social Icons -->
+            <div class="flex items-center gap-4 text-white md:text-lg">
+                <a href="https://www.instagram.com/diskominfobdg/?hl=en" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors"><i class="fab fa-instagram"></i></a>
+                <a href="https://x.com/diskominfobdg" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://www.facebook.com/DiskominfoBandung/" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.youtube.com/@diskominfokotabandung" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors"><i class="fab fa-youtube"></i></a>
+                <a href="https://www.tiktok.com/@humasbdg" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition-colors"><i class="fab fa-tiktok"></i></a>
+            </div>
 
+            <!-- Office Hours (Hidden on mobile) -->
+            <div class="hidden lg:block text-white text-xs">
+                Jam Beroperasi Senin - Jumat: 08:00 - 16:00
+            </div>
+
+            <!-- Search Box -->
+            <div>
+                <form action="{{ route('berita.index') }}" method="GET" class="flex">
+                    <input
+                        type="text"
+                        name="search"
+                        value="{{ request('search') }}"
+                        placeholder="Cari informasi..."
+                        class="text-sm px-3 py-2 border-0 rounded-l-full focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800" />
+                    <button type="submit" class=" text-gray-800 text-md bg-orange-600 hover:bg-orange-700 px-3 rounded-r-full transition-colors">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
     </div>
 
-    <nav class="main-nav">
+    <nav class="main-nav 2xl:px-[238px]">
         <div class="logo">
             <img src="{{ asset('pictures/logo_diskominfo.png') }}" alt="Diskominfo Logo" />
         </div>
