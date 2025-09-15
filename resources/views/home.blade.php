@@ -285,9 +285,7 @@
                                 <h3 class="text-xl font-bold text-blue-900">Detail Kegiatan</h3>
                                 <button @click="isModalOpen = false" class="text-gray-400 hover:text-gray-600">&times;</button>
                             </div>
-                            <a :href="modalImage" target="_blank" rel="noopener noreferrer" title="Klik untuk melihat ukuran penuh">
-                                <img :src="modalImage" alt="Gambar Kegiatan" class="w-full h-auto rounded-lg mb-4 cursor-pointer">
-                            </a>
+                            <img :src="modalImage" alt="Gambar Kegiatan" class="w-full h-auto rounded-lg mb-4 cursor-pointer">
                             <h2 class="text-2xl font-bold text-center mb-4" x-text="modalTitle"></h2>
                             <div class="space-y-3 text-gray-700">
                                 <div class="flex items-center gap-3">
