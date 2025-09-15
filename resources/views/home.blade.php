@@ -1,12 +1,11 @@
 @extends('layouts.app')
 
-{{-- Memberikan judul yang lebih spesifik untuk halaman beranda --}}
 @section('title', 'Beranda - Dinas Komunikasi dan Informatika Kota Bandung')
 
 @section('content')
 
     <!-- =================================================================== -->
-    <!-- 1. HERO & SLIDER SECTION (Struktur Baru Terintegrasi)               -->
+    <!-- 1. HERO & SLIDER SECTION-->
     <!-- =================================================================== -->
     {{-- Wadah utama hero dibuat relative untuk menjadi acuan posisi slider --}}
     <header class="relative bg-gray-800 text-white">
@@ -91,7 +90,7 @@
                     </div>
                 </div>
 
-                <!-- Tombol Navigasi Slider (Warna Diperbaiki) -->
+                <!-- Tombol Navigasi Slider -->
                 <div x-show="shouldShowControls" class="absolute inset-0 flex items-center justify-between pointer-events-none px-2 sm:px-4">
                     <button @click="prev()" :disabled="atStart" class="pointer-events-auto hover:bg-blue-950 bg-orange-600 text-white disabled:opacity-50 disabled:cursor-not-allowed w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition-colors duration-200" aria-label="Previous Slide">
                         &#8249;
@@ -108,7 +107,7 @@
     <!-- 2. KONTEN HALAMAN UTAMA                                             -->
     <!-- =================================================================== -->
 
-    <div class="bg-gray-50 pt-72 sm:pt-60 md:pt-56 lg:pt-72">
+    <div class="bg-white pt-72 sm:pt-60 md:pt-56 lg:pt-72">
         {{-- PENGUMUMAN --}}
         <section id="pengumuman" class="py-16 sm:py-20">
             <div class="container mx-auto px-6 sm:px-8 lg:px-16">
@@ -143,8 +142,6 @@
                                         </div>
                                     </div>
                                     <h3 class="text-lg font-bold text-blue-950 truncate" title="{{ $item->judul }}">{{ $item->judul }}</h3>
-                                    
-                                    {{-- INILAH PERBAIKANNYA --}}
                                     <p class="text-sm text-gray-600 mt-2 break-words line-clamp-2" title="{{ $item->isi_pengumuman }}">
                                         {{ $item->isi_pengumuman }}
                                     </p>
@@ -160,17 +157,6 @@
                                 </div>
                             @endforelse
                         </div>
-
-                        {{-- <!-- Dots Navigation -->
-                        <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
-                            <template x-for="i in totalSlides" :key="i">
-                                <button 
-                                    @click="goTo(i - 1)" 
-                                    class="w-2.5 h-2.5 rounded-full transition duration-300"
-                                    :class="currentIndex === (i - 1) ? 'bg-blue-950' : 'bg-gray-300'"
-                                ></button>
-                            </template>
-                        </div> --}}
                     </div>
                     <!-- Dots Navigation -->
                         <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
@@ -192,8 +178,8 @@
                 <!-- Header -->
                 <div class="flex justify-between items-center mb-8">
                     <h2 class="text-2xl font-bold">Berita Terkini</h2>
-                    <a href="{{ route('berita.index') }}" class="text-sm font-medium text-black hover:underline">
-                        Lihat Semua Berita
+                    <a href="{{ route('berita.index') }}" class="text-sm font-semibold text-orange-500 hover:text-orange-600 hover:underline transition-colors">
+                        Lihat Semua Berita &rarr;
                     </a>
                 </div>
 
@@ -215,10 +201,8 @@
                             </div>
 
                             <!-- Tata Letak untuk Tablet & Desktop (Vertikal) -->
-                            <div class="hidden md:block transition-transform duration-300 group-hover:-translate-y-2">
-                                {{-- PERBAIKAN: h-full dihapus dari sini untuk memungkinkan proporsi alami --}}
-                                <div class="rounded-2xl md:w-[230px] md:h-[230px] lg:w-full  lg:h-full aspect-square overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 card-news">
-                                    {{-- PERBAIKAN: h-60 diganti dengan aspect-video untuk menjaga proporsi --}}
+                            <div class="hidden md:flex flex-col aspect-[4/5] rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 group-hover:-translate-y-2">
+                                <div class="rounded-2xl lg:w-full  lg:h-full aspect-square overflow-hidden shadow-md hover:shadow-lg transition-all duration-300 card-news">
                                     <div class="aspect-video w-full bg-center bg-cover image" style="background-image: url('{{ asset($berita->foto_utama ?? 'pictures/dummy_berita.jpg') }}')"></div>
                                     <div class="bg-black/70 text-white p-4 overlay">
                                         <div class="text-sm mb-2 meta flex items-center gap-4">
@@ -237,6 +221,187 @@
                         </a>
                     @endforeach
                 </div>
+            </div>
+        </section>
+
+        <section id="agenda" class="relative bg-cover bg-center my-16 sm:my-20 pb-32 sm:pb-48" style="background-image: linear-gradient(to top, rgba(255, 255, 255, 0.918), rgba(255, 255, 255, 0.925)), url('{{ asset('pictures/bg-kalender.png') }}')">
+            <div 
+                x-data="calendarComponent()"
+                x-init="init()"
+                class="container relative mx-auto px-6 sm:px-8 lg:px-16 "
+            >
+                <!-- Header -->
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-gray-900 tracking-tight">Agenda Kegiatan</h2>
+                    <a href="{{ route('agenda.index') }}" class="text-sm font-semibold text-orange-500 hover:text-orange-600 hover:underline transition-colors">
+                        Lihat Kalender Penuh &rarr;
+                    </a>
+                </div>
+        
+                <!-- Kalender + Agenda -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Kalender -->
+                    <div class="md:col-span-2 bg-white/80 p-4 md:p-5 rounded-2xl shadow-lg border">
+                        <div id="calendar-container" x-ref="calendar"></div>
+                    </div>
+        
+                    <!-- Daftar Agenda Terdekat -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-bold text-gray-800">Agenda Terdekat</h3>
+                        <div class="space-y-4">
+                            <template x-if="!nearestAgendasList || nearestAgendasList.length === 0">
+                                <p class="text-gray-500 text-sm">Tidak ada agenda terdekat yang dijadwalkan.</p>
+                            </template>
+                            <template x-for="agenda in nearestAgendasList" :key="agenda.id">
+                                <div class="flex items-center gap-4">
+                                    <div class="flex-shrink-0 text-center font-bold text-gray-800 bg-blue-100 rounded-xl p-3 shadow-sm w-20 h-20 flex flex-col justify-center">
+                                        <div class="text-2xl" x-text="new Date(agenda.tanggal).getDate()"></div>
+                                        <div class="text-sm" x-text="new Date(agenda.tanggal).toLocaleDateString('id-ID', { month: 'short' })"></div>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="font-semibold text-gray-800 line-clamp-2" x-text="agenda.nama_agenda"></p>
+                                        <p class="text-xs text-gray-500 mt-1 line-clamp-1" x-text="agenda.deskripsi || 'Tidak ada deskripsi'"></p>
+                                        <div class="flex items-center text-gray-600 mt-1">
+                                            <i class="fa-solid fa-location-dot text-sm mr-1 just text-orange-500 flex-shrink-0"></i>
+                                            <span class="text-xs line-clamp-1" x-text="agenda.lokasi || 'Lokasi tidak tersedia'"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Detail Kegiatan -->
+                <div 
+                    x-show="isModalOpen"
+                    x-cloak
+                    @keydown.escape.window="isModalOpen = false"
+                    class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4"
+                >
+                    <div @click.away="isModalOpen = false" class="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                        <div class="p-4 sm:p-6">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-bold text-blue-900">Detail Kegiatan</h3>
+                                <button @click="isModalOpen = false" class="text-gray-400 hover:text-gray-600">&times;</button>
+                            </div>
+                            <a :href="modalImage" target="_blank" rel="noopener noreferrer" title="Klik untuk melihat ukuran penuh">
+                                <img :src="modalImage" alt="Gambar Kegiatan" class="w-full h-auto rounded-lg mb-4 cursor-pointer">
+                            </a>
+                            <h2 class="text-2xl font-bold text-center mb-4" x-text="modalTitle"></h2>
+                            <div class="space-y-3 text-gray-700">
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-calendar-alt text-blue-900"></i>
+                                    <span x-text="modalDate"></span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <i class="fa-solid fa-location-dot text-blue-900"></i>
+                                    <span x-text="modalLocation"></span>
+                                </div>
+                                <p class="pt-2" x-text="modalDescription"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute left-0 right-0 z-20 bottom-[-3rem] sm:bottom-[-7rem] md:bottom-[-4rem] lg:bottom-[-5rem]">
+                <div class="container mx-auto px-6 sm:px-8 lg:px-16">
+                    <div class="rounded-2xl shadow-xl border bg-white p-5 sm:p-8">
+                        <div class="grid grid-cols-4 gap-8 text-center">
+                            <!-- Stat 1 -->
+                            <div class="sm:border-r border-gray-200">
+                                <h3 class="text-md md:text-2xl lg:text-5xl font-bold text-blue-900">400+</h3>
+                                <p class="text-xs sm:text-sm text-gray-600 mt-2">Aplikasi Publik</p>
+                            </div>
+                            <!-- Stat 2 -->
+                            <div class="sm:border-r border-gray-200">
+                                <h3 class="text-md md:text-2xl lg:text-5xl font-bold text-blue-900">50+</h3>
+                                <p class="text-xs sm:text-sm text-gray-600 mt-2">Titik Wifi Gratis</p>
+                            </div>
+                            <!-- Stat 3 -->
+                            <div class="sm:border-r border-gray-200">
+                                <h3 class="text-md md:text-2xl lg:text-5xl font-bold text-blue-900">350+</h3>
+                                <p class="text-xs sm:text-sm text-gray-600 mt-2">CCTV Terpantau</p>
+                            </div>
+                            <!-- Stat 4 -->
+                            <div>
+                                <h3 class="text-md md:text-2xl lg:text-5xl font-bold text-blue-900">70+</h3>
+                                <p class="text-xs sm:text-sm text-gray-600 mt-2">Website OPD</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SEKSI GALERI VIDEO-->
+        {{-- <section id="video-gallery" class="pt-22 sm:pt-22"> --}}
+        <section id="video-gallery" class="relative bg-contain bg-bottom bg-no-repeat" style="background-image: url('{{ asset('pictures/last-page.png') }}')">
+            <div class="container mx-auto py-16 px-4 sm:px-6 lg:px-8">
+                <header class="text-center mb-10">
+                    <h2 class="text-4xl md:text-5xl font-bold tracking-tight text-gray-900">Galeri Video</h2>
+                    <p class="mt-3 text-lg text-gray-500">Lihat lebih dekat kegiatan dan informasi dari kami.</p>
+                </header>
+
+                @if($latestVideos->isNotEmpty())
+                <div x-data="videoGallery({{ $latestVideos->toJson() }})">
+                    <!-- Tata letak untuk Desktop -->
+                    <div @mouseleave="resetOnLeave()" class="hidden md:flex gap-4 h-[480px]">
+                        <template x-for="(video, index) in videos" :key="index">
+                            <div
+                                @mouseenter="setActive(index)"
+                                class="relative flex-grow cursor-pointer overflow-hidden rounded-2xl shadow-lg transition-all duration-500 ease-in-out group"
+                                :class="{ 'flex-grow-[5]': activeIndex === index, 'flex-grow-[2]': activeIndex !== index }"
+                            >
+                                <div class="absolute inset-0 bg-cover bg-center transition-all duration-500 ease-in-out"
+                                     :style="'background-image: url(https://img.youtube.com/vi/' + video.youtubeId + '/maxresdefault.jpg)'"
+                                     :class="{ 'blur-0 brightness-100': activeIndex === index, 'blur-sm brightness-50': activeIndex !== index }"></div>
+
+                                <template x-if="playerIndex === index">
+                                    <iframe class="w-full h-full object-cover absolute inset-0"
+                                            :src="'https://www.youtube.com/embed/' + video.youtubeId + '?autoplay=1&mute=1&controls=0&showinfo=0&rel=0&loop=1&playlist=' + video.youtubeId"
+                                            frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                                </template>
+
+                                <div class="absolute bottom-0 left-0 right-0 p-6 text-white" style="background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);">
+                                    <div class="transform transition-all duration-500 ease-in-out"
+                                         :class="{ 'translate-y-0 opacity-100': activeIndex === index, 'translate-y-10 opacity-0': activeIndex !== index }">
+                                        <h3 class="text-2xl font-bold" x-text="video.title"></h3>
+                                        <p class="text-sm mt-2 opacity-80 max-w-md" x-text="video.description"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Tata letak untuk Mobile -->
+                    <div class="md:hidden space-y-6">
+                        <template x-for="(video, index) in videos" :key="index">
+                            <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+                                <div @click="window.open('https://www.youtube.com/watch?v=' + video.youtubeId, '_blank')" class="block relative aspect-video cursor-pointer">
+                                    <img :src="'https://img.youtube.com/vi/' + video.youtubeId + '/hqdefault.jpg'" :alt="video.title" class="w-full h-full object-cover">
+                                    <div class="absolute inset-0 flex items-center justify-center">
+                                        <div class="bg-black/50 text-white rounded-full w-16 h-16 flex items-center justify-center">
+                                            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 20 20"><path d="M6.3 2.841A1.5 1.5 0 004 4.11v11.78a1.5 1.5 0 002.3 1.269l9.344-5.89a1.5 1.5 0 000-2.538L6.3 2.84z"></path></svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="p-4">
+                                    <h3 class="font-bold text-gray-900" x-text="video.title"></h3>
+                                    <p class="text-sm text-gray-600 mt-1 line-clamp-2" x-text="video.description"></p>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <!-- Tombol Lihat Semua Video -->
+                <div class="mt-12 text-center">
+                    <a href="{{ route('main.galeri.video') }}" class="inline-block bg-orange-600 hover:bg-blue-800 text-white font-semibold py-3 px-8 rounded-full shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+                        Lihat Semua Video
+                    </a>
+                </div>
+                @endif
             </div>
         </section>
     </div>
@@ -265,7 +430,7 @@
     </div>
 @endsection
 
-
+@push('styles')
 <style>
     /* Menambahkan aturan CSS untuk menyembunyikan scrollbar secara cross-browser */
     .scrollbar-hide::-webkit-scrollbar {
@@ -275,7 +440,70 @@
         -ms-overflow-style: none;  /* IE and Edge */
         scrollbar-width: none;  /* Firefox */
     }
+
+    /* Kelas utilitas kustom untuk membatasi teks ke 2 baris */
+    .line-clamp-2 {
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+    /* Kustomisasi gaya untuk FullCalendar agar sesuai dengan tema */
+    .fc .fc-button-primary {
+        background-color: #1e3a8a; /* bg-blue-900 */
+        border-color: #1e3a8a;
+    }
+    .fc .fc-button-primary:hover, .fc .fc-button-primary:active {
+        background-color: #ea580c !important; /* bg-orange-600 */
+        border-color: #ea580c !important;
+    }
+    .fc .fc-button-primary:focus {
+        box-shadow: none !important;
+    }
+    .fc .fc-daygrid-day.fc-day-today {
+        background-color: #bfdbfe; /* bg-blue-200 */
+    }
+    /* Kustomisasi gaya untuk FullCalendar List View */
+    .fc-list-event:hover td {
+        background-color: #f3f4f6; /* bg-gray-100 */
+    }
+    .fc .fc-list-event-title a {
+        color: #1e3a8a; /* text-blue-900 */
+        text-decoration: none;
+    }
+    .fc .fc-list-event-dot {
+        border-color: #ea580c; /* border-orange-600 */
+    }
+    .fc .fc-list-day-text {
+        color: #111827; /* text-gray-900 */
+        text-decoration: none;
+        font-weight: 600;
+    }
+    /* Aturan untuk x-cloak */
+    [x-cloak] { display: none !important; }
+
+    @media (max-width: 1023px) { /* Dari 767px ke 1023px */
+        .fc-header-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            row-gap: 0.75rem;
+            column-gap: 0.5rem;
+        }
+        .fc-toolbar-chunk:nth-child(2) {
+            width: 100%;
+            text-align: center;
+            order: 1;
+        }
+        .fc-toolbar-chunk:nth-child(1) {
+            order: 2;
+        }
+        .fc-toolbar-chunk:nth-child(3) {
+            order: 3;
+        }
+    }
 </style>
+@endpush
 @push('scripts')
 <script>
 
@@ -404,6 +632,102 @@
         }
     }
 
+    // Logic untuk Kalender Kegiatan
+    function calendarComponent() {
+        return {
+            events: [],
+            nearestAgendasList: [], // Data terpisah untuk daftar agenda
+            isModalOpen: false,
+            modalTitle: '',
+            modalDate: '',
+            modalLocation: '',
+            modalDescription: '',
+            modalImage: '',
+
+            init() {
+                this.isModalOpen = false; 
+                // Panggilan API untuk kalender
+                fetch('/api/public-events') 
+                    .then(response => response.json())
+                    .then(data => {
+                        this.events = data;
+                        this.renderCalendar();
+                    })
+                    .catch(error => console.error('Error fetching calendar events:', error));
+                
+                // Panggilan API untuk daftar agenda terdekat
+                fetch('/api/nearest-agendas')
+                    .then(response => response.json())
+                    .then(data => {
+                        this.nearestAgendasList = data;
+                    })
+                    .catch(error => console.error('Error fetching nearest agendas:', error));
+            },
+
+            renderCalendar() {
+                const calendarEl = this.$refs.calendar;
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'id',
+                    buttonText: { month: 'Bulan', list: 'Daftar' },
+                    headerToolbar: {
+                        left: 'prev',
+                        center: 'title',
+                        right: 'dayGridMonth,listMonth next'
+                    },
+                    events: this.events,
+                    eventClick: (info) => {
+                        if (!info.jsEvent || !info.jsEvent.isTrusted) {
+                            return;
+                        }
+                        info.jsEvent.preventDefault();
+                        this.showEventDetails(info.event);
+                    }
+                });
+                calendar.render();
+            },
+
+            showEventDetails(event) {
+                this.modalTitle = event.title;
+                this.modalDate = new Date(event.start).toLocaleDateString('id-ID', {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+                this.modalLocation = event.extendedProps.location || 'Lokasi tidak ditentukan';
+                this.modalDescription = event.extendedProps.description || 'Deskripsi tidak tersedia.';
+                this.modalImage = event.extendedProps.image || '{{ asset("pictures/dummy_berita.jpg") }}';
+                this.isModalOpen = true;
+            }
+        }
+    }
+
+    // Logic untuk Galeri Video
+    function videoGallery(videos) {
+        return {
+            activeIndex: 0,
+            playerIndex: null,
+            mobilePlayerIndex: null,
+            videos: videos,
+            setActive(index) {
+                this.activeIndex = index;
+                if (this.playerIndex === index) return;
+                this.playerIndex = null;
+                setTimeout(() => {
+                    if (this.activeIndex === index) {
+                        this.playerIndex = index;
+                    }
+                }, 600);
+            },
+            resetOnLeave() {
+                this.activeIndex = 0;
+                this.playerIndex = null;
+            },
+            // Fungsi untuk memutar video di mobile
+            playMobileVideo(index) {
+                this.mobilePlayerIndex = index;
+            }
+        }
+    }
+
     // Fungsi Share Berita
     function share(url, title, image) {
         if (navigator.share) {
@@ -495,7 +819,7 @@
                 }, 300); // Waktu transisi 
             };
             
-            // Pemicu baru: tampilkan modal saat tombol di hero diklik
+            // Pemicu menampilkan modal saat tombol di hero diklik
             openIklanModal.addEventListener('click', showIklanModal);
 
             // Pemicu untuk menutup modal

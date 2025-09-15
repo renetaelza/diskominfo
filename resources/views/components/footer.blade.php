@@ -32,11 +32,11 @@
         <div class="mt-10">
             <h3 class="text-lg font-semibold mb-4">Layanan</h3>
             <ul class="space-y-3 text-sm font-normal">
-                <li><a href="#" class="hover:text-orange-400 transition duration-300">Tautan Tes</a></li>
-                <li><a href="#" class="hover:text-orange-400 transition duration-300">Bandung Smart City</a></li>
-                <li><a href="#" class="hover:text-orange-400 transition duration-300">Open Data Kota Bandung</a></li>
-                <li><a href="#" class="hover:text-orange-400 transition duration-300">PPID Kota Bandung</a></li>
-                <li><a href="#" class="hover:text-orange-400 transition duration-300">Layanan Aspirasi</a></li>
+                <li><a href="https://smartcity.bandung.go.id/" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300">Bandung Smart City</a></li>
+                <li><a href="https://opendata.bandung.go.id/" target="_blank" rel="noopener noreferrer" class="hover:text-orange-400 transition duration-300">Open Data Kota Bandung</a></li>
+                <li><a href="https://ppid.bandung.go.id/"  class="hover:text-orange-400 transition duration-300">PPID Kota Bandung</a></li>
+                <li><a href="https://www.lapor.go.id/"  class="hover:text-orange-400 transition duration-300">Layanan Aspirasi</a></li>
+                <li><a href="https://play.google.com/store/apps/details?id=gov.bdg.smartcitybdg" target="_blank"  class="hover:text-orange-400 transition duration-300">Unduh Layanan Digital</a></li>
             </ul>
         </div>
 
