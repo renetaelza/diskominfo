@@ -32,7 +32,7 @@
         </div>
     </div>
 
-    <nav class="main-nav 2xl:px-[238px]">
+    <nav class="main-nav">
         <div class="logo">
             <img src="{{ asset('pictures/logo_diskominfo.png') }}" alt="Diskominfo Logo" />
         </div>
