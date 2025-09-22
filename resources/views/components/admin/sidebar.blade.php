@@ -78,6 +78,7 @@
 
         $others = [
         ['icon' => 'fa-handshake', 'label' => 'Kunjungan', 'route' => route('admin.kunjungan.index')],
+        ['icon' => 'fa-cog', 'label' => 'Admin Setting', 'route' => route('admin.setting.index')],
         ];
         @endphp
 

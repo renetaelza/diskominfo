@@ -39,13 +39,9 @@
         <!-- Main Content -->
         <main class="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900">
             <!-- Header -->
-            <header class="flex justify-between items-center px-5 py-4 bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700">
+            <header class="flex justify-between items-center px-5 py-5 bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-300">Selamat datang, {{ Auth::guard('admin')->user()->name }}</p>
-                </div>
-                <div class="flex items-center gap-2">
-                    <i class="fas fa-user-circle text-xl text-gray-700 dark:text-gray-200"></i>
-                    <span class="text-sm font-medium text-gray-800 dark:text-white">{{ Auth::guard('admin')->user()->name }}</span>
                 </div>
             </header>
 

@@ -12,8 +12,7 @@ class Pegawai extends Model
     protected $table = 'pegawai';
 
     protected $fillable = [
-        'nama', 'nip', 'bidang_id', 'jabatan', 'atasan_id',
-        'alamat', 'tupoksi', 'foto', 'is_assistant',
+        'nama', 'nip', 'bidang_id', 'jabatan', 'atasan_id', 'foto', 'is_assistant',
     ];
 
     public function bidang()

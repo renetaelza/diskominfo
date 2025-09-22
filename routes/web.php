@@ -10,6 +10,7 @@ use App\Http\Controllers\PengumumanController;
 use App\Http\Controllers\AplikasiController;
 use App\Http\Controllers\AplikasiLandingController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AdminSettingController;
 use App\Http\Middleware\IsAdmin;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\StrukturOrganisasiController;
@@ -231,4 +232,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:admin', IsAdmin::class
     Route::get('/ppid/informasi-dikecualikan', [PPIDController::class, 'indexInformasiDikecualikan'])->name('ppid.informasiDikecualikan');
     Route::post('/ppid/save', [PPIDController::class, 'storeOrUpdate'])->name('ppid.save');
     Route::get('/ppid/navigasi/{judul}', [PPIDController::class, 'getNavigasiData']);
+
+    //Admin setting
+    Route::get('/setting', [AdminSettingController::class, 'index'])->name('setting.index');
+    Route::put('/setting/update', [AdminSettingController::class, 'update'])->name('setting.update');
 });

@@ -43,8 +43,6 @@ class StrukturOrganisasiController extends Controller
             'bidang_id' => 'required|exists:bidang,id',
             'jabatan' => 'nullable|string',
             'atasan_id' => 'nullable|exists:pegawai,id',
-            'alamat' => 'nullable|string',
-            'tupoksi' => 'nullable|string',
             'foto' => 'nullable|image|max:2048',
             'is_assistant' => 'nullable|boolean',
         ]);
@@ -69,8 +67,6 @@ class StrukturOrganisasiController extends Controller
             'bidang_id' => 'required|exists:bidang,id',
             'jabatan' => 'nullable|string',
             'atasan_id' => 'nullable|exists:pegawai,id',
-            'alamat' => 'nullable|string',
-            'tupoksi' => 'nullable|string',
             'foto' => 'nullable|image|max:2048',
             'is_assistant' => 'nullable',
         ]);

@@ -11,7 +11,16 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->redirectGuestsTo(function ($request) {
+            // Kalau request berasal dari route admin
+            if ($request->is('admin/*')) {
+                session()->flash('timeout', 'Session expired, silakan login ulang.');
+                return route('admin.login'); // guard admin
+            }
+
+            // Default: guard web
+            return route('login');
+        });
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

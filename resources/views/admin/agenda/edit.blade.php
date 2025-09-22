@@ -21,3 +21,34 @@
         </div>
     </div>
 @endsection
+
+@push('scripts')
+<script>
+    // Cari elemen input file berdasarkan ID-nya
+    document.getElementById('foto').addEventListener('change', function(event) {
+        
+        // Ambil file yang dipilih oleh pengguna
+        const file = event.target.files[0];
+
+        // Jika ada file yang dipilih
+        if (file) {
+            // Tentukan batas maksimal ukuran file dalam bytes (2MB)
+            const maxSize = 2 * 1024 * 1024; 
+
+            // Periksa apakah ukuran file melebihi batas maksimal
+            if (file.size > maxSize) {
+                
+                // Tampilkan alert menggunakan SweetAlert2
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Ukuran file tidak boleh lebih dari 2MB!',
+                });
+
+                // Kosongkan kembali nilai input file
+                event.target.value = '';
+            }
+        }
+    });
+</script>
+@endpush

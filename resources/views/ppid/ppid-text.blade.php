@@ -5,95 +5,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dokumen Informasi</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
     @vite('resources/css/app.css')
+
+    <link rel="stylesheet" href="{{ asset('ckeditor5/ckeditor5.css') }}">
     <style>
         [x-cloak] { display: none !important; }
 
-        /* CKEditor content */
         .ck-content h1, 
         .ck-content h2, 
         .ck-content h3 {
             font-weight: 700;
-            color: #1f2937; /* gray-800 */
+            color: #1f2937;
             margin-top: 1.25rem;
             margin-bottom: 0.75rem;
         }
-
         .ck-content h1 { font-size: 2rem; line-height: 2.5rem; }
         .ck-content h2 { font-size: 1.5rem; line-height: 2rem; }
         .ck-content h3 { font-size: 1.25rem; line-height: 1.75rem; }
 
+        /* Aturan umum untuk paragraf */
         .ck-content p {
             margin-bottom: 1rem;
             line-height: 1.75;
-            color: #374151; /* gray-700 */
+            color: #374151;
             text-align: justify;
         }
 
-        .ck-content ol {
-            list-style-type: decimal;
-            padding-left: 1.5rem;
-            margin-bottom: 1rem;
-        }
-
+        /* Aturan untuk list */
+        .ck-content ol,
         .ck-content ul {
-            list-style-type: disc;
             padding-left: 1.5rem;
             margin-bottom: 1rem;
         }
+        .ck-content ol { list-style-type: decimal; }
+        .ck-content ul { list-style-type: disc; }
 
+        /* Aturan untuk tabel */
         .ck-content table {
             width: 100%;
             border-collapse: collapse;
             margin: 1.5rem 0;
-            font-size: 0.95rem;
         }
         .ck-content table th,
         .ck-content table td {
-            border: 1px solid #d1d5db; /* gray-300 */
+            border: 1px solid #d1d5db;
             padding: 0.75rem;
             text-align: left;
-            vertical-align: top;
         }
         .ck-content table th {
-            background-color: #f3f4f6; /* gray-100 */
+            background-color: #f3f4f6;
             font-weight: 600;
         }
 
-        .ck-content img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 0.5rem;
-            margin: 1rem 0;
-            display: inline-block;
-        }
-
-        .ck-content img.image-style-align-left {
-        float: left;
-        margin: 0 1rem 1rem 0;
-        max-width: 45%;
-        border-radius: 8px;
-        }
-
-        .ck-content img.image-style-align-right {
-        float: right;
-        margin: 0 0 1rem 1rem;
-        max-width: 45%;
-        border-radius: 8px;
-        }
-
-
+        /* Aturan "clearfix" untuk membersihkan float */
         .ck-content::after {
             content: "";
             display: block;
             clear: both;
-            overflow: hidden;
         }
     </style>
 </head>
@@ -122,7 +95,7 @@
             </p>
 
             <!-- Konten CKEditor -->
-            <article class="prose prose-lg max-w-none ck-content text-gray-800">
+            <article class="max-w-none ck-content text-gray-800">
                 {!! $text->konten !!}
             </article>
         </div>
