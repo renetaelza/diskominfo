@@ -35,6 +35,10 @@
             border-radius: 8px;
             margin: 1rem 0;
         }
+
+        .foto-tambahan-card:hover .overlay {
+            opacity: 1 !important; /* Gunakan !important jika perlu untuk menimpa inline style */
+        }
     </style>
 </head>
 
@@ -127,14 +131,6 @@
             document.getElementById('modalPreviewImage').src = src;
             new bootstrap.Modal(document.getElementById('imagePreviewModal')).show();
         }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelectorAll('.foto-tambahan-card').forEach(card => {
-                const overlay = card.querySelector('.overlay');
-                card.addEventListener('mouseover', () => overlay.style.opacity = '1');
-                card.addEventListener('mouseout', () => overlay.style.opacity = '0');
-            });
-        });
 
         function share(url, title) {
             if (navigator.share) {

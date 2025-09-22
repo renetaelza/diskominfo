@@ -82,7 +82,7 @@
                         </div>
 
                         <div class="space-y-1">
-                            <label for="add-bidang" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bidang</label>
+                            <label for="add-bidang" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Unit Kerja</label>
                             <select
                                 id="add-bidang"
                                 name="bidang_id"
@@ -91,7 +91,7 @@
                                 class="block w-full px-3 py-2 text-sm text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                 required
                             >
-                                <option value="">Pilih Bidang</option>
+                                <option value="">Pilih Unit Kerja</option>
                                 @foreach ($bidang as $item)
                                     <option value="{{ $item->id }}">{{ $item->nama }}</option>
                                 @endforeach
@@ -122,26 +122,6 @@
                                     <option value="{{ $atasan->id }}">{{ $atasan->nama }}</option>
                                 @endforeach
                             </select>
-                        </div>
-
-                        <div class="sm:col-span-2 space-y-1">
-                            <label for="add-alamat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Alamat</label>
-                            <textarea
-                                id="add-alamat"
-                                name="alamat"
-                                rows="2"
-                                class="block w-full px-3 py-2 text-sm text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            ></textarea>
-                        </div>
-
-                        <div class="sm:col-span-2 space-y-1">
-                            <label for="add-tupoksi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tupoksi</label>
-                            <textarea
-                                id="add-tupoksi"
-                                name="tupoksi"
-                                rows="4"
-                                class="block w-full px-3 py-2 text-sm text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            ></textarea>
                         </div>
 
                         <div class="sm:col-span-2 space-y-1">
@@ -236,7 +216,7 @@
                         <p x-text="detailPegawai.nip || 'Tidak Ada'"></p>
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-500 dark:text-gray-400">Bidang</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400">Unit Kerja</p>
                         <p x-text="detailPegawai.bidang || 'Tidak Ada'"></p>
                     </div>
                     <div>
@@ -247,16 +227,6 @@
                         <p class="font-semibold text-gray-500 dark:text-gray-400">Asisten</p>
                         <p x-text="detailPegawai.is_assistant ? 'Ya' : 'Tidak'"></p>
                     </div>
-                </div>
-
-                <div class="mt-6">
-                    <h3 class="font-semibold text-gray-500 dark:text-gray-400 mb-1">Alamat</h3>
-                    <p class="text-sm" x-text="detailPegawai.alamat || 'Tidak Ada'"></p>
-                </div>
-
-                <div class="mt-6">
-                    <h3 class="font-semibold text-gray-500 dark:text-gray-400 mb-1">Tupoksi</h3>
-                    <p class="text-sm whitespace-pre-line leading-relaxed" x-text="detailPegawai.tupoksi || 'Tidak Ada'" style="word-wrap: break-word;"></p>
                 </div>
             </div>
         </div>
@@ -335,7 +305,7 @@
                         </div>
 
                         <div class="space-y-1">
-                            <label for="edit-bidang" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bidang</label>
+                            <label for="edit-bidang" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Unit Kerja</label>
                             <select
                                 id="edit-bidang"
                                 name="bidang_id"
@@ -364,28 +334,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <div class="space-y-1">
-                            <label for="edit-alamat" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Alamat</label>
-                            <input
-                                id="edit-alamat"
-                                type="text"
-                                name="alamat"
-                                x-model="editData.alamat"
-                                class="block w-full px-3 py-2 text-sm text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                            >
-                        </div>
-                    </div>
-
-                    <div class="mt-6 space-y-1">
-                        <label for="edit-tupoksi" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tupoksi</label>
-                        <textarea
-                            id="edit-tupoksi"
-                            name="tupoksi"
-                            x-model="editData.tupoksi"
-                            rows="4"
-                            class="block w-full px-3 py-2 text-sm text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500"
-                        ></textarea>
                     </div>
 
                     <div class="mt-6 flex items-center space-x-2">
@@ -502,8 +450,6 @@
                                     'jabatan' => $item->jabatan,
                                     'bidang_id' => $item->bidang_id,
                                     'atasan_id' => $item->atasan_id,
-                                    'alamat' => $item->alamat,
-                                    'tupoksi' => $item->tupoksi,
                                     'is_assistant' => (bool) $item->is_assistant,
                                     'foto_url' => $fotoUrl,
 
@@ -579,10 +525,7 @@
                 pid: p.atasan_id,
                 name: p.nama,
                 title: p.jabatan,
-                // Pastikan foto_url tersedia di objek pegawai
                 img: fotoUrl,
-                tupoksi: p.tupoksi,
-                // Masukkan array tags ke dalam node
                 tags: tags
             };
         });
@@ -642,8 +585,6 @@
                         jabatan: p.jabatan,
                         bidang_id: p.bidang_id,
                         atasan_id: p.atasan_id,
-                        alamat: p.alamat,
-                        tupoksi: p.tupoksi,
                         is_assistant: p.is_assistant,
                         foto_url: fotoUrl,
                         bidang: bidangNama, 
@@ -770,8 +711,6 @@
                 jabatan: '',
                 bidang_id: '',
                 atasan_id: '',
-                alamat: '',
-                tupoksi: '',
                 is_assistant: false,
                 foto_url: ''
             },
@@ -784,8 +723,6 @@
                 jabatan: '',
                 bidang_id: '',
                 atasan_id: '',
-                alamat: '',
-                tupoksi: '',
                 is_assistant: false,
                 foto_url: ''
             },
