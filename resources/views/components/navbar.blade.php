@@ -11,9 +11,9 @@
             </div>
 
             <!-- Office Hours (Hidden on mobile) -->
-            <div class="hidden lg:block text-white text-xs">
+            {{-- <div class="hidden lg:block text-white text-xs">
                 Jam Beroperasi Senin - Jumat: 08:00 - 16:00
-            </div>
+            </div> --}}
 
             <!-- Search Box -->
             <div>

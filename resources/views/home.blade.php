@@ -816,6 +816,8 @@
                     iklanModal.classList.add('hidden');
                 }, 300); // Waktu transisi 
             };
+
+            setTimeout(showIklanModal, 1000); 
             
             // Pemicu menampilkan modal saat tombol di hero diklik
             openIklanModal.addEventListener('click', showIklanModal);
