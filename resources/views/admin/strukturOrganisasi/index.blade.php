@@ -125,14 +125,25 @@
                         </div>
 
                         <div class="sm:col-span-2 space-y-1">
-                            <label for="add-foto" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Foto (Opsional)</label>
+                            <label for="add-foto" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Foto (Opsional, Max: 2MB)</label>
                             <input
                                 id="add-foto"
                                 type="file"
                                 name="foto"
                                 class="block w-full text-sm text-gray-900 dark:text-white dark:file:text-gray-700 file:border-0 file:bg-gray-200 file:px-4 file:py-2 file:rounded-lg file:mr-4 file:font-semibold"
                                 accept="image/*"
+                                @change="
+                                    const file = $event.target.files[0];
+                                    if (file && file.size > 2 * 1024 * 1024) {
+                                        fileSizeError = 'Ukuran file tidak boleh melebihi 2MB.';
+                                        $event.target.value = ''; // Reset input jika file terlalu besar
+                                    } else {
+                                        fileSizeError = '';
+                                    }
+                                "
                             >
+                            {{-- Pesan error untuk validasi ukuran file --}}
+                            <p x-show="fileSizeError" x-text="fileSizeError" class="text-sm text-red-600 mt-1"></p>
                         </div>
 
                         <div class="sm:col-span-2 flex items-center space-x-2 pt-2">
@@ -145,7 +156,7 @@
                                 class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 dark:bg-gray-600 dark:border-gray-500"
                                 value="1"
                             >
-                            <label class="text-sm text-gray-700 dark:text-gray-300">Asisten (Membuat Garis Horizontal di Struktur)</label>
+                            <label class="text-sm text-gray-700 dark:text-gray-300">Sekretaris/Asisten (Membuat Garis Horizontal di Struktur)</label>
                         </div>
                     </div>
 
@@ -224,7 +235,7 @@
                         <p x-text="detailPegawai.atasan || 'Tidak Ada'"></p>
                     </div>
                     <div>
-                        <p class="font-semibold text-gray-500 dark:text-gray-400">Asisten</p>
+                        <p class="font-semibold text-gray-500 dark:text-gray-400">Sekretaris/Asisten</p>
                         <p x-text="detailPegawai.is_assistant ? 'Ya' : 'Tidak'"></p>
                     </div>
                 </div>
@@ -336,6 +347,37 @@
                         </div>
                     </div>
 
+                    <div class="sm:col-span-2 space-y-1 mt-4">
+                        <label for="edit-foto" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Foto (Max: 2MB)</label>
+                        <input
+                            id="edit-foto"
+                            type="file"
+                            name="foto"
+                            class="block w-full text-sm text-gray-900 dark:text-white dark:file:text-gray-700 file:border-0 file:bg-gray-200 file:px-4 file:py-2 file:rounded-lg file:mr-4 cursor-pointer file:font-semibold"
+                            accept="image/*"
+                            @change="
+                                const file = $event.target.files[0];
+                                if (file) {
+                                    if (file.size > 2 * 1024 * 1024) {
+                                        fileSizeError = 'Ukuran file tidak boleh melebihi 2MB.';
+                                        fileName = '';
+                                        $event.target.value = '';
+                                    } else {
+                                        fileSizeError = '';
+                                        fileName = file.name;
+                                    }
+                                } else {
+                                    fileName = '';
+                                }
+                            "
+                        >
+                        <p x-show="!fileName && editData.foto_url" class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">
+                            File saat ini: <span class="text-xs" x-text="editData.foto_url.split('/').pop()"></span>
+                        </p>
+                        <img :src="editData.foto_url" alt="Foto saat ini" class="mt-2 h-24 w-24 object-cover rounded-sm shadow-md">
+                        <p x-show="fileSizeError" x-text="fileSizeError" class="text-sm text-red-600 mt-1"></p>
+                    </div>
+
                     <div class="mt-6 flex items-center space-x-2">
                         <input type="hidden" name="is_assistant" value="0">
                         <input
@@ -346,7 +388,7 @@
                             value="1"
                             class="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500 dark:bg-gray-600 dark:border-gray-500"
                         >
-                        <label class="text-sm text-gray-700 dark:text-gray-300">Asisten</label>
+                        <label class="text-sm text-gray-700 dark:text-gray-300">Sekretaris/Asisten (Membuat Garis Horizontal di Struktur)</label>
                     </div>
 
                     <div class="flex justify-end pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
@@ -359,9 +401,14 @@
                         </button>
                         <button
                             type="submit"
-                            class="ml-3 inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700"
+                            :disabled="isLoading"
+                            class="ml-3 inline-flex items-center px-5 py-2 text-sm font-medium text-white transition-colors bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-blue-300 disabled:cursor-not-allowed"
                         >
-                            Simpan Perubahan
+                            <svg x-show="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span>Simpan Perubahan</span>
                         </button>
                     </div>
                 </form>
@@ -695,6 +742,9 @@
             showModal: false, // Untuk modal tambah
             showDetail: false,
             editModalOpen: false,
+            isLoading: false,
+            fileSizeError: '',
+            fileName: '',
 
             // Data untuk modal Tambah Pegawai
             tambahData: {
