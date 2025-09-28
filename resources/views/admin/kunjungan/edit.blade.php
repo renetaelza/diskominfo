@@ -97,12 +97,13 @@
             const selectedDate = dateInput.val();
             timeSlotMessage.text('');
             availabilityDisplay.hide();
-            availableTimesContainer.empty();
+            
             
             if (!selectedDate) return;
 
             // Pass the current visit ID to be ignored in the check
             $.get(`/api/unavailable-times?date=${selectedDate}&ignore_id=${currentKunjunganId}`, function(data) {
+                availableTimesContainer.empty();
                 timeSelect.find('option').prop('disabled', false);
 
                 if (data.is_unavailable) {
